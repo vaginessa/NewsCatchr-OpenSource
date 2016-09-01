@@ -1,3 +1,26 @@
+# NewsCatchr
+
+[Website](https://newscatchr.jlelse.eu)
+[Download](https://play.google.com/store/apps/details?id=jlelse.readit)
+
+## Why Open Source now?
+
+You know, I'm the laziest developer on earth and I'm pissed about the app now, so do whatever you want!
+No, that was just a JOKE!
+
+I believe in OPEN SOURCE, I believe, that apps will get better when they are open source and there's a community, which likes to contribute. And because I don't need yet, I thought "What could go wrong? - Nothing.".
+
+## How can YOU contribute?
+
+Some things you can help with:
+
+- Translate the app's strings
+- Improve the app's design
+- Fix bugs I didn't found
+- And more!
+
+_An better description will follow soon..._
+
 ## LICENSE
 
 NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
