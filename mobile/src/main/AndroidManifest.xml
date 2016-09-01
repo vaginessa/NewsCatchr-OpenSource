@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="jlelse.readit"
+          android:installLocation="auto">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
+    <uses-permission android:name="com.android.vending.BILLING"/>
+
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false"/>
+
+    <application
+            android:name="jlelse.newscatchr.NewsCatchr"
+            android:allowBackup="true"
+            android:fullBackupContent="@xml/backup"
+            android:icon="@drawable/icon"
+            android:label="@string/app_name"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme">
+
+        <activity
+                android:name="jlelse.newscatchr.ui.activities.MainActivity"
+                android:launchMode="singleTask"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme"
+                android:configChanges="locale">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.google.android.gms.actions.SEARCH_ACTION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="pocketapp45699"/>
+            </intent-filter>
+        </activity>
+
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version"/>
+
+        <meta-data
+                android:name="com.google.android.awareness.API_KEY"
+                android:value="AIzaSyBTWP0gD6pPT11dDQjybf3A7K1Iugo_KBQ"/>
+
+    </application>
+
+</manifest>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="prefs_key_clear_cache" translatable="false">clear_cache</string>
+    <string name="prefs_key_clear_history" translatable="false">clear_history</string>
+    <string name="prefs_key_user_name" translatable="false">username</string>
+    <string name="prefs_key_access_token" translatable="false">accesstoken</string>
+    <string name="prefs_key_custom_tabs" translatable="false">custom_tabs</string>
+    <string name="prefs_key_last_version" translatable="false">last_version</string>
+    <string name="prefs_key_night_mode" translatable="false">night_mode</string>
+    <string name="prefs_key_hide_help" translatable="false">hide_help</string>
+    <string name="prefs_key_pro_category" translatable="false">pro_category</string>
+    <string name="prefs_key_support_pref" translatable="false">support_pref</string>
+    <string name="prefs_key_about_pro" translatable="false">about_pro</string>
+    <string name="prefs_key_view_libs" translatable="false">view_libs</string>
+    <string name="prefs_key_view_apis" translatable="false">view_apis</string>
+    <string name="prefs_key_about_nc" translatable="false">about_nc</string>
+    <string name="prefs_key_amp" translatable="false">amp</string>
+    <string name="prefs_key_sync" translatable="false">sync</string>
+    <string name="prefs_key_sync_now" translatable="false">sync_now</string>
+    <string name="prefs_key_sync_interval" translatable="false">sync_interval</string>
+    <string name="prefs_key_backup" translatable="false">backup</string>
+    <string name="prefs_key_url_shortener" translatable="false">url_shortener</string>
+    <string name="prefs_key_pocket_sync" translatable="false">pocket_sync</string>
+    <string name="prefs_key_pocket_login" translatable="false">pocket_login</string>
+    <string name="prefs_key_language" translatable="false">language</string>
+
+</resources>
