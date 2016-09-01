@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<resources>
+
+    <string name="about_nc">About NewsCatchr</string>
+    <string name="about_nc_desc">View some information about this app</string>
+    <string name="loading">Loading…</string>
+    <string name="settings">Settings</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="favorites">Favorites</string>
+    <string name="about">About</string>
+    <string name="news">News</string>
+    <string name="readability" translatable="false">Readability</string>
+    <string name="search_results_for">Search results for</string>
+    <string name="suc_import">Import completed successfully!</string>
+    <string name="import_failed">Import failed!</string>
+    <string name="suc_backup">Backup completed successfully!</string>
+    <string name="backup_failed">Backup failed!</string>
+    <string name="suc_restore">Restore completed successfully!</string>
+    <string name="restore_failed">Restore failed!</string>
+    <string name="suc_share">Successfully shared!</string>
+    <string name="share_failed">Sharing failed!</string>
+    <string name="logged_in_as">Logged in as</string>
+    <string name="del_acc_info">Logout</string>
+    <string name="pocket" translatable="false">Pocket</string>
+    <string name="pocket_sync_title">Pocket synchronization</string>
+    <string name="pocket_sync_desc">Synchronize bookmarks with Pocket - and read them from every device.</string>
+    <string name="pocket_login">Login to Pocket</string>
+    <string name="pocket_logout">Logout from Pocket</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="share">Share</string>
+    <string name="what_searching">What are you searching for?</string>
+    <string name="custom_tabs_title">In-app browser</string>
+    <string name="use_custom_tabs">Use in-app browser if available to open websites faster</string>
+    <string name="clear_cache_title">Clear cache</string>
+    <string name="clear_cache_desc">Clear everything cached</string>
+    <string name="cleared_cache">Cleared cache</string>
+    <string name="clear_history_title">Clear history</string>
+    <string name="clear_history_desc">Clear feed history</string>
+    <string name="cleared_history">Cleared history</string>
+    <string name="language">Language</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
+    <string name="import_opml">Import OPML file</string>
+    <string name="mark_as_bookmark">Mark as bookmark</string>
+    <string name="used_libraries">Used code libraries</string>
+    <string name="view_all_libraries">View all in this app used libraries</string>
+    <string name="used_apis">Used APIs</string>
+    <string name="view_all_apis">View alle in this app used APIs</string>
+    <string name="night_mode">Night mode</string>
+    <string name="general">General</string>
+    <string name="refresh">Refresh</string>
+    <string name="add_shortcut">Add launcher shortcut</string>
+    <string name="shortcut_created">Shortcut created</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="help">Help</string>
+    <string name="advanced">Advanced</string>
+    <string name="nothing_found">Nothing found!</string>
+    <string name="article_image">Article Image</string>
+    <string name="donate">Donate</string>
+    <string name="subscribe_support">Get the donate subscription</string>
+    <string name="subscribe_support_desc">Support the development with just a few coins on a regular base</string>
+    <string name="prefs_amp" translatable="false">Accelerated Mobile Pages</string>
+    <string name="prefs_amp_desc">Load the accelerated website instead of the original one page. When AMP isn\'t
+        available for the article, the app tries to use Google Web Light.
+    </string>
+    <string name="share_app">Share NewsCatchr</string>
+    <string name="edit_feed_title">Edit title</string>
+    <string name="backup_restore">Backup &amp; Restore</string>
+    <string name="backup_desc">Backup or restore all favorite feeds, bookmarks and the read status.</string>
+    <string name="sort">Sort</string>
+    <string name="set">Set</string>
+    <string name="sync">Synchronization</string>
+    <string name="sync_desc">Enable synchronization to automatically download articles in the background</string>
+    <string name="sync_now">Synchronize now</string>
+    <string name="sync_interval">Synchronization interval</string>
+    <string name="prefs_url_shortener" translatable="false">URL Shortener</string>
+    <string name="prefs_url_shortener_desc" translatable="false">Shorten URLs before sharing articles.</string>
+    <string name="more">More</string>
+    <string name="last_feeds">Last feeds</string>
+    <string name="recommendations">Recommendations</string>
+    <string name="rec_topics">Recommended topics</string>
+    <string name="twitter" translatable="false">Twitter</string>
+    <string name="facebook" translatable="false">Facebook</string>
+    <string name="dropbox" translatable="false">Dropbox</string>
+    <string name="onedrive" translatable="false">OneDrive</string>
+    <string name="google_drive" translatable="false">Google Drive</string>
+    <string name="never">Never</string>
+    <string name="last_suc_sync">Last successful synchronization</string>
+    <string name="newest_first">Newest first</string>
+    <string name="oldest_first">Oldest first</string>
+    <string name="shared_with_nc">Shared with NewsCatchr ( http://bit.ly/readit-gplay )</string>
+    <string name="try_nc">Try NewsCatchr ( http://bit.ly/readit-gplay ), it\'s a really cool newsreader app for
+        Android.
+    </string>
+
+</resources>
