@@ -10,11 +10,6 @@
 
 package jlelse.newscatchr.backend.apis
 
-import android.support.annotation.Keep
-import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.Body
-import com.afollestad.bridge.annotations.ContentType
-import com.mcxiaoke.koi.async.asyncUnsafe
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.safeExtractJsonObject
 import jlelse.newscatchr.extensions.safeExtractString
@@ -113,6 +108,7 @@ class ArchiveItem {
     var access_token: String? = null
 }
 
+@Keep
 @ContentType("application/json")
 class ArchiveActionItem {
     @Body
@@ -121,6 +117,7 @@ class ArchiveActionItem {
     var item_id: String? = null
 }
 
+@Keep
 @ContentType("application/json")
 class GetRequest {
     @Body
@@ -131,6 +128,7 @@ class GetRequest {
     var access_token: String? = null
 }
 
+@Keep
 class GetResponseItemNew(val json: String?) {
     var item_id: String? = null
     var given_url: String? = null
@@ -151,6 +149,7 @@ class GetResponseItemNew(val json: String?) {
     }
 }
 
+@Keep
 class GetResponseItemImagesNew(jsonObject: JSONObject?) {
     var one: GetResponseItemImageNew? = null
 
@@ -159,6 +158,7 @@ class GetResponseItemImagesNew(jsonObject: JSONObject?) {
     }
 }
 
+@Keep
 class GetResponseItemImageNew(jsonObject: JSONObject?) {
     var src: String? = null
 

@@ -11,10 +11,7 @@
 package jlelse.newscatchr.backend.apis
 
 import android.net.Uri
-import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.Body
 import jlelse.newscatchr.backend.Article
-import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.notNullOrEmpty
 import jlelse.newscatchr.extensions.tryOrNull
 
@@ -51,6 +48,7 @@ class WordpressApi {
 
     private fun String.postSlug() = Uri.parse(this).lastPathSegment
 
+    @Keep
     private class Response {
         @Body
         var title: String? = null
