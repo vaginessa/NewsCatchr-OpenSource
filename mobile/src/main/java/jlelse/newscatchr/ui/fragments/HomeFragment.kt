@@ -70,6 +70,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 
     override val expanded = true
 
+    override val saveStateScrollViews: Array<NestedScrollView?>?
+        get() = arrayOf(scrollView)
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         //this.savedInstanceState = savedInstanceState
@@ -238,16 +241,6 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 
     private fun restoreScrollState() {
         scrollView?.restorePosition(this)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        scrollView?.savePosition(this)
-    }
-
-    override fun onPause() {
-        scrollView?.savePosition(this)
-        super.onPause()
     }
 
     override fun onDestroy() {

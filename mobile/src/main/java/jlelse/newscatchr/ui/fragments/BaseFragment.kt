@@ -13,13 +13,17 @@ package jlelse.newscatchr.ui.fragments
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.NestedScrollView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import jlelse.newscatchr.extensions.savePosition
+import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.activities.MainActivity
 
 abstract class BaseFragment : Fragment() {
     lateinit var fragmentNavigation: FragmentNavigation
+    open val saveStateScrollViews: Array<NestedScrollView?>? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         if (activity is MainActivity) (activity as MainActivity).resetToolbarBackground()
@@ -40,5 +44,15 @@ abstract class BaseFragment : Fragment() {
     interface FragmentNavigation {
         fun pushFragment(fragment: Fragment, title: String?)
         fun popFragment()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        saveStateScrollViews?.forEach { tryOrNull { it?.savePosition(this) } }
+    }
+
+    override fun onPause() {
+        saveStateScrollViews?.forEach { tryOrNull { it?.savePosition(this) } }
+        super.onPause()
     }
 }
