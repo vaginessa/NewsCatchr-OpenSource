@@ -14,7 +14,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
-import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
@@ -80,10 +80,10 @@ fun Context.setLocale() {
     }, resources.displayMetrics)
 }
 
-fun NestedScrollView.savePosition(bundle: Bundle?) {
-    bundle?.putIntArray("SCROLL_VIEW_POSITION", intArrayOf(scrollX, scrollY))
+fun NestedScrollView.savePosition(fragment: Fragment?) {
+    fragment?.addObject(intArrayOf(scrollX, scrollY), "SCROLL_VIEW_POSITION")
 }
 
-fun NestedScrollView.restorePosition(bundle: Bundle?) {
-    bundle?.getIntArray("SCROLL_VIEW_POSITION")?.let { post { scrollTo(it[0], it[1]) } }
+fun NestedScrollView.restorePosition(fragment: Fragment?) {
+    fragment?.getAddedObject<IntArray>("SCROLL_VIEW_POSITION")?.let { post { scrollTo(it[0], it[1]) } }
 }

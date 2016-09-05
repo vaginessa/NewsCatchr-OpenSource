@@ -50,7 +50,6 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
     private var fastAdapterThree: FastItemAdapter<FeedListRecyclerItem>? = null
     private var recFeeds: Array<Feed>? = null
     private var recRelated: Array<String>? = null
-    private var savedInstanceState: Bundle? = null
     private var recyclerOne: RecyclerView? = null
     private var recyclerTwo: RecyclerView? = null
     private var recyclerThree: RecyclerView? = null
@@ -62,7 +61,6 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
     private var lastFeedReceiverRegistered = false
     private var favoritesReceiver: LastFeedUpdateReceiver? = null
     private var favoritesReceiverRegistered = false
-    private var scrollRequests = 0
 
     override val fabDrawable = R.drawable.ic_search
 
@@ -100,7 +98,6 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
             }
         }
         scrollView = view?.find<NestedScrollView>(R.id.scrollView)
-        scrollRequests = 0
         loadRecommendedFeeds(true)
         loadLastFeeds()
         loadFavoriteFeeds()
@@ -166,7 +163,6 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
                 } else {
                     recyclerOne?.hideView()
                 }
-                scrollRequests++
                 restoreScrollState()
             }
         }
@@ -193,7 +189,6 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
                 } else {
                     recyclerTwo?.hideView()
                 }
-                scrollRequests++
                 restoreScrollState()
             }
         }
@@ -236,25 +231,23 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
                     tagsBox?.hideView()
                 }
                 refresh?.hideIndicator()
-                scrollRequests++
                 restoreScrollState()
             }
         }
     }
 
     private fun restoreScrollState() {
-        if (scrollRequests >= 3) scrollView?.restorePosition(savedInstanceState)
+        scrollView?.restorePosition(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        scrollView?.savePosition(outState)
+        scrollView?.savePosition(this)
     }
 
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        this.savedInstanceState = savedInstanceState
-        restoreScrollState()
+    override fun onPause() {
+        scrollView?.savePosition(this)
+        super.onPause()
     }
 
     override fun onDestroy() {
