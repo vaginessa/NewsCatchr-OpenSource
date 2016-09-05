@@ -11,6 +11,7 @@
 package jlelse.newscatchr.ui.fragments
 
 import android.os.Bundle
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -29,9 +30,13 @@ import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 
 class FeedListFragment() : BaseFragment() {
-    var feeds: Array<Feed>? = null
-    var tags: Array<String>? = null
-    var fastAdapter: FastItemAdapter<FeedListRecyclerItem>? = null
+    private var feeds: Array<Feed>? = null
+    private var tags: Array<String>? = null
+    private var fastAdapter: FastItemAdapter<FeedListRecyclerItem>? = null
+    private var scrollView: NestedScrollView? = null
+
+    override val saveStateScrollViews: Array<NestedScrollView?>?
+        get() = arrayOf(scrollView)
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         super.onCreateView(inflater, container, savedInstanceState)
@@ -40,6 +45,7 @@ class FeedListFragment() : BaseFragment() {
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
         }
+        scrollView = view?.find<NestedScrollView>(R.id.scrollView)
         val tagsBox = view?.find<FlexboxLayout>(R.id.tagsBox)
         feeds = getAddedObject<Array<Feed>>("feeds")
         if (feeds.notNullAndEmpty()) {
