@@ -13,4 +13,6 @@
 
     <style name="ToolbarPopupTheme" parent="ThemeOverlay.AppCompat.Dark"/>
 
+    <color name="bottom_bar_background">@color/bb_darkBackgroundColor</color>
+
 </resources>
