@@ -11,7 +11,11 @@
 package jlelse.newscatchr.backend.apis
 
 import android.net.Uri
+import android.support.annotation.Keep
+import com.afollestad.bridge.Bridge
+import com.afollestad.bridge.annotations.Body
 import jlelse.newscatchr.backend.Article
+import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.notNullOrEmpty
 import jlelse.newscatchr.extensions.tryOrNull
 
