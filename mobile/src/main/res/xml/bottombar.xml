@@ -13,13 +13,16 @@
     <tab
             id="@+id/bb_news"
             title="@string/news"
-            icon="@drawable/ic_explore"/>
+            icon="@drawable/ic_explore"
+            barColorWhenSelected="@color/bottom_bar_background"/>
     <tab
             id="@+id/bb_bookmarks"
             title="@string/bookmarks"
-            icon="@drawable/ic_bookmark"/>
+            icon="@drawable/ic_bookmark"
+            barColorWhenSelected="@color/bottom_bar_background"/>
     <tab
             id="@+id/bb_settings"
             title="@string/settings"
-            icon="@drawable/ic_settings"/>
+            icon="@drawable/ic_settings"
+            barColorWhenSelected="@color/bottom_bar_background"/>
 </tabs>
