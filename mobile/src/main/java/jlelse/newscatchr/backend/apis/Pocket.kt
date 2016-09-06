@@ -10,6 +10,11 @@
 
 package jlelse.newscatchr.backend.apis
 
+import android.support.annotation.Keep
+import com.afollestad.bridge.Bridge
+import com.afollestad.bridge.annotations.Body
+import com.afollestad.bridge.annotations.ContentType
+import com.mcxiaoke.koi.async.asyncUnsafe
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.safeExtractJsonObject
 import jlelse.newscatchr.extensions.safeExtractString
