@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    compile('com.mikepenz:fastadapter:1.8.1@aar') {
+    compile('com.mikepenz:fastadapter:1.8.2@aar') {
         transitive = true
     }
     compile 'com.mikepenz:fastadapter-extensions:1.8.0@aar'
@@ -65,7 +65,7 @@ dependencies {
     // Jsoup
     compile 'org.jsoup:jsoup:1.9.2'
     // CloudRail
-    compile 'com.cloudrail:cloudrail-si-android:2.6.7'
+    compile 'com.cloudrail:cloudrail-si-android:2.6.8'
     // In App Billing
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
     // Play Services
