@@ -22,32 +22,28 @@ import jlelse.newscatchr.extensions.tryOrNull
 class WordpressApi {
 
     fun reparse(article: Article?): Pair<Article?, Boolean> {
-        return if (article.notNullOrEmpty()) {
-            var result = Pair(article, false)
-            tryOrNull {
-                Bridge.get("https://public-api.wordpress.com/rest/v1.1/sites/${article?.url?.blogDomain()}/posts/slug:${article?.url?.postSlug()}")
-                        .asClass(Response::class.java)
-                        ?.let {
-                            if (it.title.notNullOrBlank() && it.content.notNullOrBlank()) {
-                                result = Pair(article?.apply {
-                                    title = it.title
-                                    content = it.content
-                                    if (it.featured_image.notNullOrBlank()) {
-                                        enclosure = null
-                                        visualUrl = it.featured_image
-                                    }
-                                    process(true)
-                                }, true)
+        return tryOrNull(article.notNullOrEmpty()) {
+            Bridge.get("https://public-api.wordpress.com/rest/v1.1/sites/${article?.url?.blogDomain()}/posts/slug:${article?.url?.postSlug()}?fields=title,content,featured_image")
+                    .asClass(Response::class.java)
+                    ?.let {
+                        val good = it.title.notNullOrBlank() && it.content.notNullOrBlank()
+                        Pair(article?.apply {
+                            if (good) {
+                                title = it.title
+                                content = it.content
+                                if (it.featured_image.notNullOrBlank()) {
+                                    enclosure = null
+                                    visualUrl = it.featured_image
+                                }
+                                process(true)
                             }
-                        }
-            }
-            result
-        } else Pair(article, false)
+                        }, good)
+                    }
+        } ?: Pair(article, false)
     }
 
     private fun String.blogDomain(): String? = tryOrNull {
-        val domain = Uri.parse(this).host
-        if (domain.startsWith("www.")) domain.substring(4) else domain
+        Uri.parse(this).host.let { if (it.startsWith("www.")) it.substring(4) else it }
     }
 
     private fun String.postSlug() = Uri.parse(this).lastPathSegment
