@@ -19,4 +19,7 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
 
+
+    <color name="bottom_bar_background">@android:color/white</color>
+
 </resources>

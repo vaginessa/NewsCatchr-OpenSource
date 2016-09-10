@@ -27,10 +27,12 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.async.mainThread
 import com.mcxiaoke.koi.async.mainThreadSafe
+import com.mcxiaoke.koi.ext.startActivity
 import jlelse.newscatchr.backend.apis.PocketAuth
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.ui.activities.IssueActivity
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.objects.Library
 import jlelse.newscatchr.ui.views.ProgressDialog
@@ -58,6 +60,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     private val pocketLoginPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_login.resStr()) }
     private val pocketSyncPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_sync.resStr()) }
     private val languagePref: Preference? by lazy { findPreference(R.string.prefs_key_language.resStr()) }
+    private val issuePref: Preference? by lazy { findPreference(R.string.prefs_key_issue.resStr()) }
 
     // Pocket stuff
     val progressDialog: ProgressDialog? by lazy { ProgressDialog(context) }
@@ -98,6 +101,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
         nightModePref?.onPreferenceClickListener = this
         pocketLoginPref?.onPreferenceClickListener = this
         languagePref?.onPreferenceClickListener = this
+        issuePref?.onPreferenceClickListener = this
 
         // Add ChangeListeners
         syncPref?.onPreferenceChangeListener = this
@@ -142,11 +146,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                         Library("CloudRail", "Integrate Multiple Services With Just One API", "https://github.com/CloudRail/cloudrail-si-android-sdk"),
                         Library("Android In-App Billing v3 Library", "A lightweight implementation of Android In-app Billing Version 3", "https://github.com/anjlab/android-inapp-billing-v3"),
                         Library("FlexboxLayout", "FlexboxLayout is a library project which brings the similar capabilities of CSS Flexible Box Layout Module to Android.", "https://github.com/google/flexbox-layout"),
-                        Library("Android-Job", "Android library to handle jobs in the background.", "https://github.com/evernote/android-job")
+                        Library("Android-Job", "Android library to handle jobs in the background.", "https://github.com/evernote/android-job"),
+                        Library("android-issue-reporter", "A powerful and simple library to open issues on GitHub directly from your app.", "https://github.com/HeinrichReimer/android-issue-reporter")
                 ).forEach {
                     html += "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}<br><br>"
                 }
-                if (html.length > 8) html.removeRange(html.lastIndex - 8, html.lastIndex)
+                if (html.length > 8) html.removeRange(html.lastIndex - 8, html.lastIndex) // Remove last useless linebreaks
                 MaterialDialog.Builder(context)
                         .title(R.string.used_libraries)
                         .content(html.toHtml())
@@ -272,6 +277,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                         .negativeText(android.R.string.cancel)
                         .show()
             }
+            issuePref -> activity.startActivity<IssueActivity>()
         }
         return true
     }

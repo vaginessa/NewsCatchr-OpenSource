@@ -102,5 +102,6 @@
     <string name="try_nc">Try NewsCatchr ( http://bit.ly/readit-gplay ), it\'s a really cool newsreader app for
         Android.
     </string>
+    <string name="submit_issue">Submit issue</string>
 
 </resources>
