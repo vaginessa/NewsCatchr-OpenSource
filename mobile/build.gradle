@@ -31,13 +31,6 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix ' debug'
         }
-        debtest {
-            debuggable true
-            versionNameSuffix ' debug'
-            // minifyEnabled true
-            // shrinkResources true
-            // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
