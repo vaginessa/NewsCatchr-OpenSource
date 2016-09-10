@@ -94,6 +94,8 @@ fun <T> tryOrNull(code: () -> T): T? = try {
     null
 }
 
+fun <T> tryOrNull(arg: Boolean?, code: () -> T): T? = if (arg ?: false) tryOrNull(code) else null
+
 inline fun <reified T> Array<T>.turnAround() = mutableListOf<T>().apply { this@turnAround.forEach { add(0, it) } }.toTypedArray()
 
 fun sharedPref() = PreferenceManager.getDefaultSharedPreferences(appContext)

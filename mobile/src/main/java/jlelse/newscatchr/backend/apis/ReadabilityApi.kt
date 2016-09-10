@@ -24,27 +24,24 @@ class ReadabilityApi {
     fun reparse(article: Article?): Pair<Article?, Boolean> {
         val wordpressResult = WordpressApi().reparse(article)
         return if (wordpressResult.second) wordpressResult
-        else if (article.notNullOrEmpty()) {
-            var result = Pair(article, false)
-            tryOrNull {
-                Bridge.get("https://readability.com/api/content/v1/parser?token=$ReadabilityApiKey&url=${article?.url}")
-                        .asClass(Response::class.java)
-                        ?.let {
-                            if (it.title.notNullOrBlank() && it.content.notNullOrBlank()) {
-                                result = Pair(article?.apply {
-                                    title = it.title
-                                    content = it.content
-                                    if (it.lead_image_url.notNullOrBlank()) {
-                                        enclosure = null
-                                        visualUrl = it.lead_image_url
-                                    }
-                                    process(true)
-                                }, true)
+        else tryOrNull(article.notNullOrEmpty()) {
+            Bridge.get("https://readability.com/api/content/v1/parser?token=$ReadabilityApiKey&url=${article?.url}")
+                    .asClass(Response::class.java)
+                    ?.let {
+                        val good = it.title.notNullOrBlank() && it.content.notNullOrBlank()
+                        Pair(article?.apply {
+                            if (good) {
+                                title = it.title
+                                content = it.content
+                                if (it.lead_image_url.notNullOrBlank()) {
+                                    enclosure = null
+                                    visualUrl = it.lead_image_url
+                                }
+                                process(true)
                             }
-                        }
-            }
-            result
-        } else Pair(article, false)
+                        }, good)
+                    }
+        } ?: Pair(article, false)
     }
 
     @Keep
