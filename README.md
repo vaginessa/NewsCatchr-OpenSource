@@ -39,6 +39,9 @@ _An better description will follow soon..._
 - Big UI changes (FABs, new colors, new icon etc.)
 - Improved Readability feature (reparsing articles), it uses the WordPress API now too
 - Totally reworked home screen with last opened feeds, favorite feeds and suggestions based on your language
+- Links in the article text will open with Custom Tabs too (if configured)
+- Added possibility to directly submit issues from within the app
+- Improved API integrations
 - Added German translation and added option to change the language manually
 - Updated many dependencies
 - And more
