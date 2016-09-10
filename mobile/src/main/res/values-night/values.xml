@@ -15,4 +15,10 @@
 
     <color name="bottom_bar_background">@color/bb_darkBackgroundColor</color>
 
+    <style name="IssueTheme" parent="Theme.IssueReporter">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
 </resources>

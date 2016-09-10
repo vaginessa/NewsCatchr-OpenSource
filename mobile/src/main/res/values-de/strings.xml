@@ -93,4 +93,6 @@
     <string name="used_libraries">Verwendete Code Bibliotheken</string>
     <string name="view_all_apis">Siehe all in dieser App verwendeten APIs</string>
     <string name="view_all_libraries">Siehe alle in dieser App verwendeten Bibliotheken</string>
+    <string name="submit_issue">Fehler melden</string>
+    <string name="set">Einstellen</string>
 </resources>

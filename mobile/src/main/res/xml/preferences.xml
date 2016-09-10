@@ -99,5 +99,8 @@
                 android:key="@string/prefs_key_view_apis"
                 android:summary="@string/view_all_apis"
                 android:title="@string/used_apis"/>
+        <android.support.v7.preference.Preference
+                android:key="@string/prefs_key_issue"
+                android:title="@string/submit_issue"/>
     </android.support.v7.preference.PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

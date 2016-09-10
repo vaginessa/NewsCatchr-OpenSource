@@ -34,5 +34,6 @@
     <string name="prefs_key_pocket_sync" translatable="false">pocket_sync</string>
     <string name="prefs_key_pocket_login" translatable="false">pocket_login</string>
     <string name="prefs_key_language" translatable="false">language</string>
+    <string name="prefs_key_issue" translatable="false">issue</string>
 
 </resources>
