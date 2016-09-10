@@ -35,6 +35,7 @@ import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.IssueActivity
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.objects.Library
+import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import java.util.*
@@ -156,7 +157,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                         .title(R.string.used_libraries)
                         .content(html.toHtml())
                         .positiveText(android.R.string.ok)
-                        .show()
+                        .build()
+                        .apply {
+                            LinkTextView().apply(contentView, activity)
+                            show()
+                        }
             }
             viewApisPref -> {
                 var html = ""
@@ -174,16 +179,24 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
                         .title(R.string.used_libraries)
                         .content(html.toHtml())
                         .positiveText(android.R.string.ok)
-                        .show()
+                        .build()
+                        .apply {
+                            LinkTextView().apply(contentView, activity)
+                            show()
+                        }
             }
             aboutPref -> {
-                val description: String = "<b>The best newsreader for Android<br><i>It's the way of reading news in 2020</i></b><br><br>Developer: <a href=\"https://plus.google.com/+JanLkElse\">Jan-Lukas Else</a><br>Icon designer: <a href=\"https://plus.google.com/+KevinAguilarC\">Kevin Aguilar</a><br>Banner designer: <a href=\"https://plus.google.com/+%C5%BDan%C4%8Cerne\">&#381;an &#268;erne</a><br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><br>"
+                val description: String = "<b>The best newsreader for Android<br><i>It's the way of reading news in 2020</i></b><br><br>Developer: <a href=\"https://plus.google.com/+JanLkElse\">Jan-Lukas Else</a><br>Icon designer: <a href=\"https://plus.google.com/+KevinAguilarC\">Kevin Aguilar</a><br>Banner designer: <a href=\"https://plus.google.com/+%C5%BDan%C4%8Cerne\">&#381;an &#268;erne</a><br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><a href=\"https://github.com/jlelse/NewsCatchr-OpenSource\">Source code on GitHub</a><br><br>"
                 val statsDesc = "You already opened ${Database().allReadUrls.size} articles. Thanks for that!"
                 MaterialDialog.Builder(context)
                         .title(R.string.app_name)
                         .content("$description$statsDesc".toHtml())
                         .positiveText(android.R.string.ok)
-                        .show()
+                        .build()
+                        .apply {
+                            LinkTextView().apply(contentView, activity)
+                            show()
+                        }
             }
             nightModePref -> {
                 val oldValue = Preferences.nightMode
@@ -290,7 +303,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
     }
 
     private fun handlePurchases() {
-        if (!(activity is MainActivity && (activity as MainActivity).IABReady)) hideAllProPrefs()
+        if (!(activity is MainActivity && (activity as MainActivity).IABReady && !Preferences.supportUser)) hideAllProPrefs()
     }
 
     private fun hideAllProPrefs() {

@@ -10,11 +10,8 @@
 
 package jlelse.newscatchr.ui.fragments
 
-import android.content.Intent
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
-import android.support.customtabs.CustomTabsIntent
 import android.text.format.DateUtils
 import android.text.method.LinkMovementMethod
 import android.view.*
@@ -23,20 +20,17 @@ import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
 import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.async.mainThread
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
 import jlelse.newscatchr.backend.Article
-import jlelse.newscatchr.backend.apis.AmpApi
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.apis.ReadabilityApi
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
+import jlelse.newscatchr.backend.helpers.UrlOpenener
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
-import jlelse.newscatchr.ui.customtabsutils.CustomTabActivityHelper
-import jlelse.newscatchr.ui.customtabsutils.Fallback
 import jlelse.newscatchr.ui.interfaces.FAB
+import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.ZoomTextView
 import jlelse.newscatchr.ui.views.addTagView
@@ -108,8 +102,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 
     private fun showArticle() {
         updateArticleContent()
-        // Make links clickable
-        contentView?.movementMethod = LinkMovementMethod.getInstance()
+        LinkTextView().apply(contentView, activity)
         // Setup zoom feature
         contentView?.setOnTouchListener { view, motionEvent ->
             view.performClick()
@@ -208,28 +201,7 @@ class ArticleFragment() : BaseFragment(), FAB {
             true
         }
         R.id.browser -> {
-            asyncSafe {
-                val finalUrl = if (Preferences.amp) AmpApi().getAmpUrl(article?.url) ?: article?.url else article?.url
-                mainThreadSafe {
-                    val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
-                    if (Preferences.customTabs) {
-                        try {
-                            val customTabsIntent = CustomTabsIntent.Builder()
-                                    .setToolbarColor(R.color.colorPrimary.resClr(context)!!)
-                                    .setShowTitle(true)
-                                    .addDefaultShareMenuItem()
-                                    .enableUrlBarHiding()
-                                    .build()
-                            CustomTabActivityHelper.openCustomTab(activity, customTabsIntent, Uri.parse(finalUrl), Fallback())
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            startActivity(alternateIntent)
-                        }
-                    } else {
-                        startActivity(alternateIntent)
-                    }
-                }
-            }
+            UrlOpenener().openUrl(article?.url ?: "", activity)
             true
         }
         R.id.readability -> {
