@@ -23,7 +23,7 @@ class ZoomTextView : TextView {
     val zoomLimit = 3.0f
 
     private var scaleFactor = 1.0f
-    private var defaultSize: Float = 0.toFloat()
+    private var defaultSize: Float = 0.0f
 
     constructor(context: Context) : super(context) {
         initialize()
