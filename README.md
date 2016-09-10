@@ -46,6 +46,7 @@ _An better description will follow soon..._
 - Updated many dependencies
 - And more
 
+You can test the beta version with all the new stuff via [this link](https://play.google.com/apps/testing/jlelse.readit). But it might be *UNSTABLE*!
 
 ## LICENSE
 

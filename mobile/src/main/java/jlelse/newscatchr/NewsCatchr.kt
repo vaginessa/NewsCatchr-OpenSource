@@ -18,7 +18,7 @@ import io.paperdb.Paper
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.setLocale
 import jlelse.newscatchr.extensions.setNightMode
-import jlelse.readit.R
+import jlelse.readit.BuildConfig
 
 /**
  * Application class
@@ -29,7 +29,7 @@ class NewsCatchr : Application() {
         appContext = applicationContext
         setLocale()
         Paper.init(this)
-        if (!applicationContext.resources.getBoolean(R.bool.debug_mode)) {
+        if (!BuildConfig.DEBUG) {
             Tracking.AnalyticsTrackers.initialize(this)
         }
         JobManager.create(this).addJobCreator { tag ->

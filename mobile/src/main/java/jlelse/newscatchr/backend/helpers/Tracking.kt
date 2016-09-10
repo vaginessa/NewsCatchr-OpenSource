@@ -15,6 +15,7 @@ import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
 import jlelse.newscatchr.extensions.resBool
+import jlelse.readit.BuildConfig
 import jlelse.readit.R
 import java.util.*
 
@@ -26,7 +27,7 @@ class Tracking {
     object GATracker {
 
         fun track(url: String?, type: TYPE) {
-            if (R.bool.debug_mode.resBool() == false) {
+            if (!BuildConfig.DEBUG) {
                 val t = AnalyticsTrackers.instance?.get(AnalyticsTrackers.Target.APP)
                 t?.send(HitBuilders.EventBuilder(when (type) {
                     TYPE.FEED -> "feed"

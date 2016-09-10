@@ -10,7 +10,7 @@
   -->
 
 <resources>
-
+    <string name="app_name" translatable="false">NewsCatchr</string>
     <string name="about_nc">About NewsCatchr</string>
     <string name="about_nc_desc">View some information about this app</string>
     <string name="loading">Loading…</string>
@@ -103,5 +103,4 @@
         Android.
     </string>
     <string name="submit_issue">Submit issue</string>
-
 </resources>

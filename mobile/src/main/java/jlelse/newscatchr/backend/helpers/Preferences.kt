@@ -11,9 +11,9 @@
 package jlelse.newscatchr.backend.helpers
 
 import android.content.SharedPreferences
-import jlelse.newscatchr.extensions.resBool
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.extensions.sharedPref
+import jlelse.readit.BuildConfig
 import jlelse.readit.R
 import java.util.*
 
@@ -82,7 +82,7 @@ object Preferences {
         set(value) = write().putLong("lastSync", value).apply()
 
     var supportUser: Boolean
-        get() = read().getBoolean("supportUser", false) || R.bool.debug_mode.resBool()!!
+        get() = read().getBoolean("supportUser", false) || BuildConfig.DEBUG
         set(value) = write().putBoolean("supportUser", value).apply()
 
 }

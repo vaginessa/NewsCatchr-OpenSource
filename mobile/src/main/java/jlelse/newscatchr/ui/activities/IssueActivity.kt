@@ -14,15 +14,14 @@ import com.heinrichreimersoftware.androidissuereporter.IssueReporterActivity
 import com.heinrichreimersoftware.androidissuereporter.model.github.ExtraInfo
 import com.heinrichreimersoftware.androidissuereporter.model.github.GithubTarget
 import jlelse.newscatchr.backend.helpers.Preferences
-import jlelse.newscatchr.extensions.resBool
-import jlelse.readit.R
+import jlelse.readit.BuildConfig
 
 class IssueActivity : IssueReporterActivity() {
 
     override fun getTarget() = GithubTarget("jlelse", "NewsCatchr-OpenSource")
 
     override fun onSaveExtraInfo(extraInfo: ExtraInfo?) {
-        extraInfo?.put("debug", R.bool.debug_mode.resBool())
+        extraInfo?.put("debug", BuildConfig.DEBUG)
         extraInfo?.put("subscribed", Preferences.supportUser)
     }
 
