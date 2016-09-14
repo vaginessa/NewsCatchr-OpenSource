@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
-import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
@@ -53,7 +52,6 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
     private val subtitle: TextView? by lazy { find<TextView>(R.id.subtitle) }
     private val toolbarBackground: ImageView? by lazy {
         find<ImageView>(R.id.toolbar_background).apply {
-            ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets -> insets.consumeSystemWindowInsets() }
             setColorFilter(Color.parseColor("#33000000"))
         }
     }
