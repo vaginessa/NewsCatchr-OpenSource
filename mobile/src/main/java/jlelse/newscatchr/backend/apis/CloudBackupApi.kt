@@ -15,6 +15,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.design.widget.Snackbar
 import com.afollestad.materialdialogs.MaterialDialog
+import com.cloudrail.si.CloudRail
 import com.cloudrail.si.interfaces.CloudStorage
 import com.cloudrail.si.services.Dropbox
 import com.cloudrail.si.services.GoogleDrive
@@ -42,6 +43,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
     private val folder = "NewsCatchr"
 
     init {
+        CloudRail.setAppKey(CloudRailApiKey)
         progressDialog = ProgressDialog(context).apply { show() }
         cloudStorage = when (storage) {
             Storage.OneDrive -> OneDrive(context, OneDriveClientID, OneDriveClientSecret)

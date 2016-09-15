@@ -15,6 +15,7 @@ package jlelse.newscatchr.backend.apis
 val GoogleApiKey = ""
 val ReadabilityApiKey = ""
 val PocketApiKey = ""
+val CloudRailApiKey = ""
 val OneDriveClientID = ""
 val OneDriveClientSecret = ""
 val DropboxClientID = ""
