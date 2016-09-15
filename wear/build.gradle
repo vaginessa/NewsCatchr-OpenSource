@@ -22,11 +22,12 @@ android {
         resConfigs "en"
     }
     buildTypes {
-        debug {
-            versionNameSuffix ' - debug'
-            applicationIdSuffix '.debug'
-        }
         release {
+            versionNameSuffix ' release'
+        }
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix ' debug'
         }
     }
     lintOptions {
