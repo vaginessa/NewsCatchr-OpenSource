@@ -59,10 +59,10 @@ dependencies {
     // Jsoup
     compile 'org.jsoup:jsoup:1.9.2'
     // CloudRail
-    compile 'com.cloudrail:cloudrail-si-android:2.6.8'
+    compile 'com.cloudrail:cloudrail-si-android:2.7.0'
     // In App Billing
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
-    // Play Services
+    // Analytics
     compile "com.google.android.gms:play-services-analytics:$rootProject.ext.PLAY_SERVICES"
     // Support libraries
     compile "com.android.support:support-v4:$rootProject.ext.SUPPORT_LIBS"
