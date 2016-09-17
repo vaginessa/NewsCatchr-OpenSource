@@ -69,7 +69,7 @@
     <string name="donate">Donate</string>
     <string name="subscribe_support">Get the donate subscription</string>
     <string name="subscribe_support_desc">Support the development with just a few coins on a regular base</string>
-    <string name="prefs_amp" translatable="false">Accelerated Mobile Pages</string>
+    <string name="prefs_amp">Accelerated Mobile Pages</string>
     <string name="prefs_amp_desc">Load the accelerated website instead of the original one page. When AMP isn\'t
         available for the article, the app tries to use Google Web Light.
     </string>
@@ -83,8 +83,8 @@
     <string name="sync_desc">Enable synchronization to automatically download articles in the background</string>
     <string name="sync_now">Synchronize now</string>
     <string name="sync_interval">Synchronization interval</string>
-    <string name="prefs_url_shortener" translatable="false">URL Shortener</string>
-    <string name="prefs_url_shortener_desc" translatable="false">Shorten URLs before sharing articles.</string>
+    <string name="prefs_url_shortener">URL Shortener</string>
+    <string name="prefs_url_shortener_desc">Shorten URLs before sharing articles.</string>
     <string name="more">More</string>
     <string name="last_feeds">Last feeds</string>
     <string name="recommendations">Recommendations</string>
