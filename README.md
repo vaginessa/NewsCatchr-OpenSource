@@ -20,12 +20,10 @@ Things you have to know:
 
 Some things you can help with:
 
-- Translate the app's strings
-- Improve the app's design
-- Fix bugs I didn't found
-- And more!
-
-_An better description will follow soon..._
+- Translate the app into your language [here](http://translate.jlelse.eu)
+- Fix bugs, described on the [issue reporter](https://github.com/jlelse/NewsCatchr-OpenSource/issues)
+- Report bugs on the [issue reporter](https://github.com/jlelse/NewsCatchr-OpenSource/issues)
+- And everything else, that comes into your mind
 
 ## What has changed since the last Play Store release?
 
