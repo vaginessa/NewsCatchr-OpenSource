@@ -22,6 +22,7 @@ import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.helpers.Preferences
+import jlelse.newscatchr.hosts
 import jlelse.readit.R
 import java.util.*
 
@@ -40,7 +41,7 @@ fun View.showView() {
 fun ImageView.loadImage(url: String?) {
     try {
         Glide.with(context)
-                .load(url)
+                .load(hosts?.checkUrl(url) ?: url)
                 .into(this)
     } catch (e: Exception) {
         e.printStackTrace()

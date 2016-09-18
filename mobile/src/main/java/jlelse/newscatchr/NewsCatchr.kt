@@ -43,7 +43,10 @@ class NewsCatchr : Application() {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         // Handle night mode settings
         setNightMode()
+        // Init Host
+        hosts = Hosts(applicationContext)
     }
 }
 
 var appContext: Context? = null
+var hosts: Hosts? = null

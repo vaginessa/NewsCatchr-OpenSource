@@ -14,7 +14,6 @@ import android.content.Context
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
-import jlelse.newscatchr.extensions.resBool
 import jlelse.readit.BuildConfig
 import jlelse.readit.R
 import java.util.*
