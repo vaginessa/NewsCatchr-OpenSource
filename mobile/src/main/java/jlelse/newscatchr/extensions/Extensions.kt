@@ -11,6 +11,7 @@
 package jlelse.newscatchr.extensions
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.DrawableCompat
@@ -98,15 +99,13 @@ fun <T> tryOrNull(arg: Boolean?, code: () -> T): T? = if (arg ?: false) tryOrNul
 
 inline fun <reified T> Array<T>.turnAround() = mutableListOf<T>().apply { this@turnAround.forEach { add(0, it) } }.toTypedArray()
 
-fun sharedPref() = PreferenceManager.getDefaultSharedPreferences(appContext)
+fun sharedPref(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
 
 fun Int.resStr() = tryOrNull { appContext?.resources?.getString(this) }
 
-fun Int.resStrArr() = tryOrNull { appContext?.resources?.getStringArray(this) }
+fun Int.resStrArr(): Array<out String>? = tryOrNull { appContext?.resources?.getStringArray(this) }
 
 fun Int.resIntArr() = tryOrNull { appContext?.resources?.getIntArray(this) }
-
-fun Int.resBool() = tryOrNull { appContext?.resources?.getBoolean(this) }
 
 // fun Int.resDrw() = resDrw(null)
 

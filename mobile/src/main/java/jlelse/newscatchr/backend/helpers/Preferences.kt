@@ -66,9 +66,6 @@ object Preferences {
         get() = read().getInt(R.string.prefs_key_night_mode.resStr(), 0)
         set(value) = write().putInt(R.string.prefs_key_night_mode.resStr(), value).apply()
 
-    val helpIcons: Boolean
-        get() = read().getBoolean(R.string.prefs_key_hide_help.resStr(), false)
-
     var syncEnabled: Boolean
         get() = read().getBoolean(R.string.prefs_key_sync.resStr(), false)
         set(value) = write().putBoolean(R.string.prefs_key_sync.resStr(), value).apply()
@@ -84,5 +81,9 @@ object Preferences {
     var supportUser: Boolean
         get() = read().getBoolean("supportUser", false) || BuildConfig.DEBUG
         set(value) = write().putBoolean("supportUser", value).apply()
+
+    var hostsVersion: Int
+        get() = read().getInt("hostsVersion", 0)
+        set(value) = write().putInt("hostsVersion", value).apply()
 
 }
