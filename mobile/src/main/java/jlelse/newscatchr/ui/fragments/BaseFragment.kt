@@ -22,37 +22,37 @@ import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.activities.MainActivity
 
 abstract class BaseFragment : Fragment() {
-    lateinit var fragmentNavigation: FragmentNavigation
-    open val saveStateScrollViews: Array<NestedScrollView?>? = null
+	lateinit var fragmentNavigation: FragmentNavigation
+	open val saveStateScrollViews: Array<NestedScrollView?>? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        if (activity is MainActivity) (activity as MainActivity).resetToolbarBackground()
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		if (activity is MainActivity) (activity as MainActivity).resetToolbarBackground()
+		return super.onCreateView(inflater, container, savedInstanceState)
+	}
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentNavigation) {
-            fragmentNavigation = context
-        }
-    }
+	override fun onAttach(context: Context) {
+		super.onAttach(context)
+		if (context is FragmentNavigation) {
+			fragmentNavigation = context
+		}
+	}
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
+	override fun onActivityCreated(savedInstanceState: Bundle?) {
+		super.onActivityCreated(savedInstanceState)
+	}
 
-    interface FragmentNavigation {
-        fun pushFragment(fragment: Fragment, title: String?)
-        fun popFragment()
-    }
+	interface FragmentNavigation {
+		fun pushFragment(fragment: Fragment, title: String?)
+		fun popFragment()
+	}
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        saveStateScrollViews?.forEach { tryOrNull { it?.savePosition(this) } }
-    }
+	override fun onSaveInstanceState(outState: Bundle?) {
+		super.onSaveInstanceState(outState)
+		saveStateScrollViews?.forEach { tryOrNull { it?.savePosition(this) } }
+	}
 
-    override fun onPause() {
-        saveStateScrollViews?.forEach { tryOrNull { it?.savePosition(this) } }
-        super.onPause()
-    }
+	override fun onPause() {
+		saveStateScrollViews?.forEach { tryOrNull { it?.savePosition(this) } }
+		super.onPause()
+	}
 }

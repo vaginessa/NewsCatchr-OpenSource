@@ -21,45 +21,45 @@ import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.tryOrNull
 
 fun scheduleSync(intervalMins: Int) {
-    val intervalMs = (intervalMins * 60000).toLong()
-    val allJobs = JobManager.instance().getAllJobRequestsForTag(SyncJob.TAG)
-    val oldIntervalMs = if (allJobs.notNullAndEmpty()) allJobs.first().intervalMs else 0.toLong()
-    if (oldIntervalMs == 0.toLong() || oldIntervalMs != intervalMs || allJobs.isEmpty()) {
-        JobRequest.Builder(SyncJob.TAG)
-                .setPeriodic(intervalMs)
-                .setPersisted(true)
-                .setUpdateCurrent(true)
-                .build()
-                .schedule()
-    }
+	val intervalMs = (intervalMins * 60000).toLong()
+	val allJobs = JobManager.instance().getAllJobRequestsForTag(SyncJob.TAG)
+	val oldIntervalMs = if (allJobs.notNullAndEmpty()) allJobs.first().intervalMs else 0.toLong()
+	if (oldIntervalMs == 0.toLong() || oldIntervalMs != intervalMs || allJobs.isEmpty()) {
+		JobRequest.Builder(SyncJob.TAG)
+				.setPeriodic(intervalMs)
+				.setPersisted(true)
+				.setUpdateCurrent(true)
+				.build()
+				.schedule()
+	}
 }
 
 fun cancelSync() {
-    JobManager.instance().cancelAllForTag(SyncJob.TAG)
+	JobManager.instance().cancelAllForTag(SyncJob.TAG)
 }
 
 class SyncJob : Job() {
-    override fun onRunJob(params: Params?): Result {
-        return if (sync(context) != null) Result.SUCCESS else Result.RESCHEDULE
-    }
+	override fun onRunJob(params: Params?): Result {
+		return if (sync(context) != null) Result.SUCCESS else Result.RESCHEDULE
+	}
 
-    companion object {
-        val TAG = "sync_job_tag"
-    }
+	companion object {
+		val TAG = "sync_job_tag"
+	}
 }
 
 fun sync(context: Context): String? = tryOrNull {
-    System.out.println("Sync started")
-    if (appContext == null) appContext = context.applicationContext
-    Database().allFavorites.forEach {
-        FeedlyLoader().apply {
-            type = FeedlyLoader.FeedTypes.FEED
-            feedUrl = "feed/" + it.url()
-            ranked = FeedlyLoader.Ranked.NEWEST
-        }.items(false)
-    }
-    System.out.println("Sync finished")
-    Preferences.lastSync = System.currentTimeMillis()
-    context.sendBroadcast(Intent("syncStatus"))
-    "not null"
+	System.out.println("Sync started")
+	if (appContext == null) appContext = context.applicationContext
+	Database().allFavorites.forEach {
+		FeedlyLoader().apply {
+			type = FeedlyLoader.FeedTypes.FEED
+			feedUrl = "feed/" + it.url()
+			ranked = FeedlyLoader.Ranked.NEWEST
+		}.items(false)
+	}
+	System.out.println("Sync finished")
+	Preferences.lastSync = System.currentTimeMillis()
+	context.sendBroadcast(Intent("syncStatus"))
+	"not null"
 }

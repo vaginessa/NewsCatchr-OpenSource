@@ -21,38 +21,38 @@ import jlelse.newscatchr.extensions.tryOrNull
 
 class ReadabilityApi {
 
-    fun reparse(article: Article?): Pair<Article?, Boolean> {
-        val wordpressResult = WordpressApi().reparse(article)
-        return if (wordpressResult.second) wordpressResult
-        else tryOrNull(article.notNullOrEmpty()) {
-            Bridge.get("https://readability.com/api/content/v1/parser?token=$ReadabilityApiKey&url=${article?.url}")
-                    .asClass(Response::class.java)
-                    ?.let {
-                        val good = it.title.notNullOrBlank() && it.content.notNullOrBlank()
-                        Pair(article?.apply {
-                            if (good) {
-                                title = it.title
-                                content = it.content
-                                if (it.lead_image_url.notNullOrBlank()) {
-                                    enclosure = null
-                                    visualUrl = it.lead_image_url
-                                }
-                                process(true)
-                            }
-                        }, good)
-                    }
-        } ?: Pair(article, false)
-    }
+	fun reparse(article: Article?): Pair<Article?, Boolean> {
+		val wordpressResult = WordpressApi().reparse(article)
+		return if (wordpressResult.second) wordpressResult
+		else tryOrNull(article.notNullOrEmpty()) {
+			Bridge.get("https://readability.com/api/content/v1/parser?token=$ReadabilityApiKey&url=${article?.url}")
+					.asClass(Response::class.java)
+					?.let {
+						val good = it.title.notNullOrBlank() && it.content.notNullOrBlank()
+						Pair(article?.apply {
+							if (good) {
+								title = it.title
+								content = it.content
+								if (it.lead_image_url.notNullOrBlank()) {
+									enclosure = null
+									visualUrl = it.lead_image_url
+								}
+								process(true)
+							}
+						}, good)
+					}
+		} ?: Pair(article, false)
+	}
 
-    @Keep
-    @ContentType("application/json")
-    private class Response {
-        @Body
-        var content: String? = ""
-        @Body
-        var title: String? = ""
-        @Body
-        var lead_image_url: String? = ""
-    }
+	@Keep
+	@ContentType("application/json")
+	private class Response {
+		@Body
+		var content: String? = ""
+		@Body
+		var title: String? = ""
+		@Body
+		var lead_image_url: String? = ""
+	}
 
 }

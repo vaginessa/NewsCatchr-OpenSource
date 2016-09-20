@@ -27,63 +27,63 @@ import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 
 fun Array<out Article?>.removeEmptyArticles(): Array<Article> {
-    return mutableListOf<Article>().apply {
-        this@removeEmptyArticles.forEach { if (it.notNullOrEmpty()) add(it!!) }
-    }.toTypedArray()
+	return mutableListOf<Article>().apply {
+		this@removeEmptyArticles.forEach { if (it.notNullOrEmpty()) add(it!!) }
+	}.toTypedArray()
 }
 
 fun Array<out Feed?>.removeEmptyFeeds(): Array<Feed> {
-    return mutableListOf<Feed>().apply {
-        this@removeEmptyFeeds.forEach { if (it.notNullOrEmpty()) add(it!!) }
-    }.toTypedArray()
+	return mutableListOf<Feed>().apply {
+		this@removeEmptyFeeds.forEach { if (it.notNullOrEmpty()) add(it!!) }
+	}.toTypedArray()
 }
 
 fun Array<Feed>.onlySaved(): Array<Feed> {
-    return toMutableList().filter { it.saved }.toTypedArray()
+	return toMutableList().filter { it.saved }.toTypedArray()
 }
 
 fun Feed?.notNullOrEmpty(): Boolean {
-    return this?.url().notNullOrBlank()
+	return this?.url().notNullOrBlank()
 }
 
 fun Article?.notNullOrEmpty(): Boolean {
-    this?.process()
-    return this?.url.notNullOrBlank()
+	this?.process()
+	return this?.url.notNullOrBlank()
 }
 
 fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNavigation, query: String?) {
-    val progressDialog = ProgressDialog(context)
-    val load = { finalQuery: String ->
-        progressDialog.show()
-        context.asyncSafe {
-            var foundFeeds: Array<Feed>? = null
-            var foundRelated: Array<String>? = null
-            Feedly().feedSearch(finalQuery.toString(), 100, null, null) { feeds, related ->
-                foundFeeds = feeds
-                foundRelated = related
-            }
-            mainThreadSafe {
-                progressDialog.dismiss()
-                if (foundFeeds.notNullAndEmpty()) {
-                    fragmentNavigation.pushFragment(FeedListFragment().addObject(foundFeeds, "feeds").addObject(foundRelated, "tags"), "${R.string.search_results_for.resStr()} $finalQuery")
-                } else context.nothingFound()
-            }
-        }
-    }
-    if (query.isNullOrBlank()) {
-        val requestView = LayoutInflater.from(context).inflate(R.layout.searchdialog, null)
-        val textView = requestView.find<AutoCompleteTextView>(R.id.autocompletetextview)
-        textView.setAdapter(AutoCompleteAdapter(context))
-        MaterialDialog.Builder(context)
-                .title(android.R.string.search_go)
-                .customView(requestView, true)
-                .onPositive { materialDialog, dialogAction ->
-                    load(textView.text.toString())
-                }
-                .negativeText(android.R.string.cancel)
-                .positiveText(android.R.string.search_go)
-                .show()
-    } else {
-        load(query!!)
-    }
+	val progressDialog = ProgressDialog(context)
+	val load = { finalQuery: String ->
+		progressDialog.show()
+		context.asyncSafe {
+			var foundFeeds: Array<Feed>? = null
+			var foundRelated: Array<String>? = null
+			Feedly().feedSearch(finalQuery.toString(), 100, null, null) { feeds, related ->
+				foundFeeds = feeds
+				foundRelated = related
+			}
+			mainThreadSafe {
+				progressDialog.dismiss()
+				if (foundFeeds.notNullAndEmpty()) {
+					fragmentNavigation.pushFragment(FeedListFragment().addObject(foundFeeds, "feeds").addObject(foundRelated, "tags"), "${R.string.search_results_for.resStr()} $finalQuery")
+				} else context.nothingFound()
+			}
+		}
+	}
+	if (query.isNullOrBlank()) {
+		val requestView = LayoutInflater.from(context).inflate(R.layout.searchdialog, null)
+		val textView = requestView.find<AutoCompleteTextView>(R.id.autocompletetextview)
+		textView.setAdapter(AutoCompleteAdapter(context))
+		MaterialDialog.Builder(context)
+				.title(android.R.string.search_go)
+				.customView(requestView, true)
+				.onPositive { materialDialog, dialogAction ->
+					load(textView.text.toString())
+				}
+				.negativeText(android.R.string.cancel)
+				.positiveText(android.R.string.search_go)
+				.show()
+	} else {
+		load(query!!)
+	}
 }

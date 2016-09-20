@@ -15,29 +15,29 @@ import jlelse.readit.R
 
 class UrlOpenener {
 
-    fun openUrl(url: String, activity: Activity) {
-        asyncSafe {
-            val finalUrl = if (Preferences.amp) AmpApi().getAmpUrl(url) ?: url else url
-            mainThreadSafe {
-                val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
-                if (Preferences.customTabs) {
-                    try {
-                        val customTabsIntent = CustomTabsIntent.Builder()
-                                .setToolbarColor(R.color.colorPrimary.resClr(activity)!!)
-                                .setShowTitle(true)
-                                .addDefaultShareMenuItem()
-                                .enableUrlBarHiding()
-                                .build()
-                        CustomTabActivityHelper.openCustomTab(activity, customTabsIntent, Uri.parse(finalUrl), Fallback())
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        activity.startActivity(alternateIntent)
-                    }
-                } else {
-                    activity.startActivity(alternateIntent)
-                }
-            }
-        }
-    }
+	fun openUrl(url: String, activity: Activity) {
+		asyncSafe {
+			val finalUrl = if (Preferences.amp) AmpApi().getAmpUrl(url) ?: url else url
+			mainThreadSafe {
+				val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
+				if (Preferences.customTabs) {
+					try {
+						val customTabsIntent = CustomTabsIntent.Builder()
+								.setToolbarColor(R.color.colorPrimary.resClr(activity)!!)
+								.setShowTitle(true)
+								.addDefaultShareMenuItem()
+								.enableUrlBarHiding()
+								.build()
+						CustomTabActivityHelper.openCustomTab(activity, customTabsIntent, Uri.parse(finalUrl), Fallback())
+					} catch (e: Exception) {
+						e.printStackTrace()
+						activity.startActivity(alternateIntent)
+					}
+				} else {
+					activity.startActivity(alternateIntent)
+				}
+			}
+		}
+	}
 
 }

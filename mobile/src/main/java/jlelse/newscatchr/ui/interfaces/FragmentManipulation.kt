@@ -12,7 +12,7 @@ package jlelse.newscatchr.ui.interfaces
 
 interface FragmentManipulation {
 
-    val expanded: Boolean?
-        get() = null
+	val expanded: Boolean?
+		get() = null
 
 }

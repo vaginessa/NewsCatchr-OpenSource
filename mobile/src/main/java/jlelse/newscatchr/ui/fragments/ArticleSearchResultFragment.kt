@@ -26,33 +26,33 @@ import jlelse.readit.R
 import java.util.*
 
 class ArticleSearchResultFragment() : BaseFragment() {
-    private var recyclerOne: RecyclerView? = null
-    private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
-    private var articles: List<Article>? = null
+	private var recyclerOne: RecyclerView? = null
+	private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
+	private var articles: List<Article>? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater?.inflate(R.layout.basicrecycler, container, false)
-        setHasOptionsMenu(true)
-        recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-            isNestedScrollingEnabled = false
-            layoutManager = LinearLayoutManager(context)
-        }
-        articles = getAddedObject<List<Article>>("articles")
-        if (articles.notNullAndEmpty()) {
-            fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
-            recyclerOne?.adapter = fastAdapter
-            fastAdapter?.setNewList(ArrayList<ArticleListRecyclerItem>())
-            articles?.forEach {
-                fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@ArticleSearchResultFragment))
-            }
-            fastAdapter?.withSavedInstanceState(savedInstanceState)
-        }
-        return view
-    }
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		super.onCreateView(inflater, container, savedInstanceState)
+		val view = inflater?.inflate(R.layout.basicrecycler, container, false)
+		setHasOptionsMenu(true)
+		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
+			isNestedScrollingEnabled = false
+			layoutManager = LinearLayoutManager(context)
+		}
+		articles = getAddedObject<List<Article>>("articles")
+		if (articles.notNullAndEmpty()) {
+			fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+			recyclerOne?.adapter = fastAdapter
+			fastAdapter?.setNewList(ArrayList<ArticleListRecyclerItem>())
+			articles?.forEach {
+				fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@ArticleSearchResultFragment))
+			}
+			fastAdapter?.withSavedInstanceState(savedInstanceState)
+		}
+		return view
+	}
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        fastAdapter?.saveInstanceState(outState)
-    }
+	override fun onSaveInstanceState(outState: Bundle?) {
+		super.onSaveInstanceState(outState)
+		fastAdapter?.saveInstanceState(outState)
+	}
 }

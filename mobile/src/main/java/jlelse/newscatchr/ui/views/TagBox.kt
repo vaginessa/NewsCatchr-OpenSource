@@ -22,12 +22,12 @@ import jlelse.newscatchr.ui.fragments.MixFragment
 import jlelse.readit.R
 
 fun FlexboxLayout.addTagView(fragment: BaseFragment, tagString: String?) = tryOrNull {
-    addView(LayoutInflater.from(fragment.context).inflate(R.layout.tagitem, null)?.apply {
-        find<TextView>(R.id.tagView).apply {
-            text = "#$tagString"
-            onClick {
-                fragment.fragmentNavigation.pushFragment(MixFragment().addString("topic/$tagString", "feedId"), "#$tagString")
-            }
-        }
-    })
+	addView(LayoutInflater.from(fragment.context).inflate(R.layout.tagitem, null)?.apply {
+		find<TextView>(R.id.tagView).apply {
+			text = "#$tagString"
+			onClick {
+				fragment.fragmentNavigation.pushFragment(MixFragment().addString("topic/$tagString", "feedId"), "#$tagString")
+			}
+		}
+	})
 }

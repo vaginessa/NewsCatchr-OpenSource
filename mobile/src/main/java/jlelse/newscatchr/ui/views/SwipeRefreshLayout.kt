@@ -18,21 +18,21 @@ import jlelse.readit.R
 
 class SwipeRefreshLayout : SwipeRefreshLayout {
 
-    constructor(context: Context?) : super(context) {
-        setColorSchemeResources(R.color.colorAccent)
-    }
+	constructor(context: Context?) : super(context) {
+		setColorSchemeResources(R.color.colorAccent)
+	}
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
-        setColorSchemeResources(R.color.colorAccent)
-    }
+	constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+		setColorSchemeResources(R.color.colorAccent)
+	}
 
-    fun showIndicator() {
-        setColorSchemeResources(R.color.colorAccent)
-        if (isRefreshing == false) isRefreshing = true
-    }
+	fun showIndicator() {
+		setColorSchemeResources(R.color.colorAccent)
+		if (isRefreshing == false) isRefreshing = true
+	}
 
-    fun hideIndicator() {
-        if (isRefreshing == true) isRefreshing = false
-    }
+	fun hideIndicator() {
+		if (isRefreshing == true) isRefreshing = false
+	}
 
 }

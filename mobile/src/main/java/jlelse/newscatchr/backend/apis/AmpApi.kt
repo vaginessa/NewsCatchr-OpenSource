@@ -18,34 +18,34 @@ import jlelse.newscatchr.extensions.notNullOrBlank
 
 class AmpApi {
 
-    fun getAmpUrl(url: String?): String? {
-        if (url.notNullOrBlank()) {
-            Bridge.post("https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet?fields=ampUrls%2FcdnAmpUrl&key=$GoogleApiKey")
-                    .body("{\"urls\":[\"$url\"]}")
-                    .connectTimeout(2500)
-                    .readTimeout(2500)
-                    .asClass(Response::class.java)
-                    ?.ampUrls?.firstOrNull()?.cdnAmpUrl
-                    ?.let {
-                        if (it.notNullOrBlank()) return it
-                    }
-            return "https://googleweblight.com/?lite_url=$url"
-        }
-        return null
-    }
+	fun getAmpUrl(url: String?): String? {
+		if (url.notNullOrBlank()) {
+			Bridge.post("https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet?fields=ampUrls%2FcdnAmpUrl&key=$GoogleApiKey")
+					.body("{\"urls\":[\"$url\"]}")
+					.connectTimeout(2500)
+					.readTimeout(2500)
+					.asClass(Response::class.java)
+					?.ampUrls?.firstOrNull()?.cdnAmpUrl
+					?.let {
+						if (it.notNullOrBlank()) return it
+					}
+			return "https://googleweblight.com/?lite_url=$url"
+		}
+		return null
+	}
 
-    @Keep
-    @ContentType("application/json")
-    private class Response {
-        @Body
-        var ampUrls: Array<AmpUrlObject>? = null
-    }
+	@Keep
+	@ContentType("application/json")
+	private class Response {
+		@Body
+		var ampUrls: Array<AmpUrlObject>? = null
+	}
 
-    @Keep
-    @ContentType("application/json")
-    private class AmpUrlObject {
-        @Body
-        var cdnAmpUrl: String? = null
-    }
+	@Keep
+	@ContentType("application/json")
+	private class AmpUrlObject {
+		@Body
+		var cdnAmpUrl: String? = null
+	}
 
 }

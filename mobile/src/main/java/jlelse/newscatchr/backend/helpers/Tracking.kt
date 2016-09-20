@@ -23,74 +23,74 @@ import java.util.*
  */
 class Tracking {
 
-    object GATracker {
+	object GATracker {
 
-        fun track(url: String?, type: TYPE) {
-            if (!BuildConfig.DEBUG) {
-                val t = AnalyticsTrackers.instance?.get(AnalyticsTrackers.Target.APP)
-                t?.send(HitBuilders.EventBuilder(when (type) {
-                    TYPE.FEED -> "feed"
-                    TYPE.MIX -> "mix"
-                    TYPE.ARTICLE -> "article"
-                    TYPE.FEED_SEARCH -> "feed_search"
-                    TYPE.ARTICLE_SEARCH -> "article_search"
-                }, url).build())
-            }
-        }
+		fun track(url: String?, type: TYPE) {
+			if (!BuildConfig.DEBUG) {
+				val t = AnalyticsTrackers.instance?.get(AnalyticsTrackers.Target.APP)
+				t?.send(HitBuilders.EventBuilder(when (type) {
+					TYPE.FEED -> "feed"
+					TYPE.MIX -> "mix"
+					TYPE.ARTICLE -> "article"
+					TYPE.FEED_SEARCH -> "feed_search"
+					TYPE.ARTICLE_SEARCH -> "article_search"
+				}, url).build())
+			}
+		}
 
-        enum class TYPE {
-            FEED,
-            MIX,
-            ARTICLE,
-            FEED_SEARCH,
-            ARTICLE_SEARCH
-        }
+		enum class TYPE {
+			FEED,
+			MIX,
+			ARTICLE,
+			FEED_SEARCH,
+			ARTICLE_SEARCH
+		}
 
-    }
+	}
 
-    class AnalyticsTrackers private constructor(context: Context) {
-        private val mTrackers = HashMap<Target, Tracker>()
-        private val mContext: Context
+	class AnalyticsTrackers private constructor(context: Context) {
+		private val mTrackers = HashMap<Target, Tracker>()
+		private val mContext: Context
 
-        init {
-            mContext = context.applicationContext
-        }
+		init {
+			mContext = context.applicationContext
+		}
 
-        @Synchronized operator fun get(target: Target): Tracker? {
-            if (!mTrackers.containsKey(target)) {
-                val tracker: Tracker
-                when (target) {
-                    Target.APP -> tracker = GoogleAnalytics.getInstance(mContext).newTracker(R.xml.app_tracker)
-                    else -> throw IllegalArgumentException("Unhandled analytics target " + target)
-                }
-                mTrackers.put(target, tracker)
-            }
-            return mTrackers[target]
-        }
+		@Synchronized operator fun get(target: Target): Tracker? {
+			if (!mTrackers.containsKey(target)) {
+				val tracker: Tracker
+				when (target) {
+					Target.APP -> tracker = GoogleAnalytics.getInstance(mContext).newTracker(R.xml.app_tracker)
+					else -> throw IllegalArgumentException("Unhandled analytics target " + target)
+				}
+				mTrackers.put(target, tracker)
+			}
+			return mTrackers[target]
+		}
 
-        enum class Target {
-            APP
-        }
+		enum class Target {
+			APP
+		}
 
-        companion object {
+		companion object {
 
-            private var sInstance: AnalyticsTrackers? = null
+			private var sInstance: AnalyticsTrackers? = null
 
-            @Synchronized fun initialize(context: Context) {
-                if (sInstance != null) {
-                    throw IllegalStateException("Extra call to initialize analytics trackers")
-                }
-                sInstance = AnalyticsTrackers(context)
-            }
+			@Synchronized fun initialize(context: Context) {
+				if (sInstance != null) {
+					throw IllegalStateException("Extra call to initialize analytics trackers")
+				}
+				sInstance = AnalyticsTrackers(context)
+			}
 
-            val instance: AnalyticsTrackers?
-                @Synchronized get() {
-                    if (sInstance == null) {
-                        throw IllegalStateException("Call initialize() before getInstance()")
-                    }
-                    return sInstance
-                }
-        }
-    }
+			val instance: AnalyticsTrackers?
+				@Synchronized get() {
+					if (sInstance == null) {
+						throw IllegalStateException("Call initialize() before getInstance()")
+					}
+					return sInstance
+				}
+		}
+	}
 
 }

@@ -17,24 +17,24 @@ import jlelse.newscatchr.extensions.notNullOrBlank
 
 class UrlShortenerApi {
 
-    fun getShortUrl(url: String?): String? {
-        if (url.notNullOrBlank()) {
-            Bridge.post("https://www.googleapis.com/urlshortener/v1/url?fields=id&key=$GoogleApiKey")
-                    .body("{\"longUrl\":\"$url\"}")
-                    .header("Content-Type", "application/json")
-                    .asClass(Response::class.java)
-                    ?.shortUrl
-                    ?.let {
-                        if (it.notNullOrBlank()) return it
-                    }
-        }
-        return url
-    }
+	fun getShortUrl(url: String?): String? {
+		if (url.notNullOrBlank()) {
+			Bridge.post("https://www.googleapis.com/urlshortener/v1/url?fields=id&key=$GoogleApiKey")
+					.body("{\"longUrl\":\"$url\"}")
+					.header("Content-Type", "application/json")
+					.asClass(Response::class.java)
+					?.shortUrl
+					?.let {
+						if (it.notNullOrBlank()) return it
+					}
+		}
+		return url
+	}
 
-    @Keep
-    private class Response {
-        @Body(name = "id")
-        var shortUrl: String? = null
-    }
+	@Keep
+	private class Response {
+		@Body(name = "id")
+		var shortUrl: String? = null
+	}
 
 }

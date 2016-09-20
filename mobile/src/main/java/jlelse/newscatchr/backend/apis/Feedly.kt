@@ -24,74 +24,74 @@ import org.json.JSONArray
 
 class Feedly {
 
-    private val BASE_URL = "https://cloud.feedly.com/v3"
-    private val STREAM_ID = "streamId="
-    private val CONTINUATION = "continuation="
-    private val COUNT = "count="
-    private val RANKED = "ranked="
-    private val QUERY = "query="
+	private val BASE_URL = "https://cloud.feedly.com/v3"
+	private val STREAM_ID = "streamId="
+	private val CONTINUATION = "continuation="
+	private val COUNT = "count="
+	private val RANKED = "ranked="
+	private val QUERY = "query="
 
-    fun streamIds(id: String?, count: Int?, continuation: String?, ranked: String?): Ids? {
-        return tryOrNull {
-            var url = "$BASE_URL/streams/ids?$STREAM_ID%s"
-            if (count != null) url += "&$COUNT$count"
-            if (continuation.notNullOrBlank()) url += "&$CONTINUATION$continuation"
-            if (ranked.notNullOrBlank()) url += "&$RANKED$ranked"
-            Bridge.get(url, id).asClass(Ids::class.java)
-        }
-    }
+	fun streamIds(id: String?, count: Int?, continuation: String?, ranked: String?): Ids? {
+		return tryOrNull {
+			var url = "$BASE_URL/streams/ids?$STREAM_ID%s"
+			if (count != null) url += "&$COUNT$count"
+			if (continuation.notNullOrBlank()) url += "&$CONTINUATION$continuation"
+			if (ranked.notNullOrBlank()) url += "&$RANKED$ranked"
+			Bridge.get(url, id).asClass(Ids::class.java)
+		}
+	}
 
-    fun mixIds(id: String?, count: Int?): Ids? {
-        return tryOrNull {
-            var url = "$BASE_URL/mixes/ids?$STREAM_ID%s"
-            if (count != null) url += "&$COUNT$count"
-            Bridge.get(url, id).asClass(Ids::class.java)
-        }
-    }
+	fun mixIds(id: String?, count: Int?): Ids? {
+		return tryOrNull {
+			var url = "$BASE_URL/mixes/ids?$STREAM_ID%s"
+			if (count != null) url += "&$COUNT$count"
+			Bridge.get(url, id).asClass(Ids::class.java)
+		}
+	}
 
-    fun entries(ids: Array<out String>): Array<Article>? = tryOrNull {
-        if (ids.size > 0) {
-            Bridge.post("$BASE_URL/entries/.mget").body(JSONArray().apply { ids.forEach { put(it) } }).asClassArray(Article::class.java)
-        } else {
-            null
-        }
-    }
+	fun entries(ids: Array<out String>): Array<Article>? = tryOrNull {
+		if (ids.size > 0) {
+			Bridge.post("$BASE_URL/entries/.mget").body(JSONArray().apply { ids.forEach { put(it) } }).asClassArray(Article::class.java)
+		} else {
+			null
+		}
+	}
 
-    fun feedSearch(query: String?, count: Int?, locale: String?, promoted: Boolean?, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
-        var feeds: Array<Feed>? = null
-        var related: Array<String>? = null
-        tryOrNull {
-            var url = "$BASE_URL/search/feeds?$QUERY%s"
-            if (count != null) url += "&$COUNT$count"
-            if (locale.notNullOrBlank()) url += "&locale=$locale"
-            if (promoted != null) url += "&promoted=$promoted"
-            val search = Bridge.get(url, query).asClass(FeedSearch::class.java)
-            feeds = search?.results
-            related = search?.related
-        }
-        callback(feeds, related)
-    }
+	fun feedSearch(query: String?, count: Int?, locale: String?, promoted: Boolean?, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
+		var feeds: Array<Feed>? = null
+		var related: Array<String>? = null
+		tryOrNull {
+			var url = "$BASE_URL/search/feeds?$QUERY%s"
+			if (count != null) url += "&$COUNT$count"
+			if (locale.notNullOrBlank()) url += "&locale=$locale"
+			if (promoted != null) url += "&promoted=$promoted"
+			val search = Bridge.get(url, query).asClass(FeedSearch::class.java)
+			feeds = search?.results
+			related = search?.related
+		}
+		callback(feeds, related)
+	}
 
-    fun recommendedFeeds(locale: String?, cache: Boolean, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
-        var feeds: Array<Feed>? = if (cache) readFromCache("recFeeds$locale") else null
-        var related: Array<String>? = if (cache) readFromCache("recFeedsRelated$locale") else null
-        if (!cache || feeds == null) {
-            tryOrNull {
-                feedSearch("news", 100, locale, true) { feedsTemp, relatedTemp ->
-                    feeds = feedsTemp.apply { saveToCache("recFeeds$locale") }
-                    related = relatedTemp.apply { saveToCache("recFeedsRelated$locale") }
-                }
-            }
-        }
-        callback(feeds, related)
-    }
+	fun recommendedFeeds(locale: String?, cache: Boolean, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
+		var feeds: Array<Feed>? = if (cache) readFromCache("recFeeds$locale") else null
+		var related: Array<String>? = if (cache) readFromCache("recFeedsRelated$locale") else null
+		if (!cache || feeds == null) {
+			tryOrNull {
+				feedSearch("news", 100, locale, true) { feedsTemp, relatedTemp ->
+					feeds = feedsTemp.apply { saveToCache("recFeeds$locale") }
+					related = relatedTemp.apply { saveToCache("recFeedsRelated$locale") }
+				}
+			}
+		}
+		callback(feeds, related)
+	}
 
-    fun articleSearch(id: String?, query: String?): ArticleSearch? {
-        return tryOrNull {
-            val url = "$BASE_URL/search/contents?$STREAM_ID%s&$QUERY%s&ct=feedly.desktop"
-            Bridge.get(url, id, query).asClass(ArticleSearch::class.java)
-        }
-    }
+	fun articleSearch(id: String?, query: String?): ArticleSearch? {
+		return tryOrNull {
+			val url = "$BASE_URL/search/contents?$STREAM_ID%s&$QUERY%s&ct=feedly.desktop"
+			Bridge.get(url, id, query).asClass(ArticleSearch::class.java)
+		}
+	}
 
 }
 
@@ -99,10 +99,10 @@ class Feedly {
 @ContentType("application/json")
 class Ids {
 
-    @Body
-    var ids: Array<String>? = null
-    @Body
-    var continuation: String? = null
+	@Body
+	var ids: Array<String>? = null
+	@Body
+	var continuation: String? = null
 
 }
 
@@ -110,10 +110,10 @@ class Ids {
 @ContentType("application/json")
 class FeedSearch {
 
-    @Body
-    var results: Array<Feed>? = null
-    @Body
-    var related: Array<String>? = null
+	@Body
+	var results: Array<Feed>? = null
+	@Body
+	var related: Array<String>? = null
 
 }
 
@@ -121,11 +121,11 @@ class FeedSearch {
 @ContentType("application/json")
 class ArticleSearch {
 
-    @Body
-    var id: String? = null
-    @Body
-    var title: String? = null
-    @Body
-    var items: Array<Article>? = null
+	@Body
+	var id: String? = null
+	@Body
+	var title: String? = null
+	@Body
+	var items: Array<Article>? = null
 
 }

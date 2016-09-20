@@ -27,64 +27,64 @@ import jlelse.readit.R
 import java.util.*
 
 fun View.hideView() {
-    visibility = View.GONE
+	visibility = View.GONE
 }
 
 fun View.makeInvisible() {
-    visibility = View.INVISIBLE
+	visibility = View.INVISIBLE
 }
 
 fun View.showView() {
-    visibility = View.VISIBLE
+	visibility = View.VISIBLE
 }
 
 fun ImageView.loadImage(url: String?) {
-    try {
-        Glide.with(context)
-                .load(hosts?.checkUrl(url) ?: url)
-                .into(this)
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+	try {
+		Glide.with(context)
+				.load(hosts?.checkUrl(url) ?: url)
+				.into(this)
+	} catch (e: Exception) {
+		e.printStackTrace()
+	}
 }
 
 fun Context.nothingFound() {
-    MaterialDialog.Builder(this)
-            .content(R.string.nothing_found)
-            .positiveText(android.R.string.ok)
-            .show()
+	MaterialDialog.Builder(this)
+			.content(R.string.nothing_found)
+			.positiveText(android.R.string.ok)
+			.show()
 }
 
 fun Context.getPrimaryTextColor(): Int {
-    return obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary)).getColor(0, Color.BLACK)
+	return obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary)).getColor(0, Color.BLACK)
 }
 
 fun setNightMode() {
-    when (Preferences.nightMode) {
-        0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
-        1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        3 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-    }
+	when (Preferences.nightMode) {
+		0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
+		1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+		2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+		3 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+	}
 }
 
 fun Context.setLocale() {
-    resources.updateConfiguration(resources.configuration.apply {
-        val prefLocale = Locale(Preferences.language)
-        if (Build.VERSION.SDK_INT >= 17) {
-            setLocale(prefLocale)
-        } else {
-            @Suppress("DEPRECATION")
-            locale = prefLocale
-        }
-        if (this@setLocale is Activity) this@setLocale.recreate()
-    }, resources.displayMetrics)
+	resources.updateConfiguration(resources.configuration.apply {
+		val prefLocale = Locale(Preferences.language)
+		if (Build.VERSION.SDK_INT >= 17) {
+			setLocale(prefLocale)
+		} else {
+			@Suppress("DEPRECATION")
+			locale = prefLocale
+		}
+		if (this@setLocale is Activity) this@setLocale.recreate()
+	}, resources.displayMetrics)
 }
 
 fun NestedScrollView.savePosition(fragment: Fragment?) {
-    fragment?.addObject(intArrayOf(scrollX, scrollY), "SCROLL_VIEW_POSITION")
+	fragment?.addObject(intArrayOf(scrollX, scrollY), "SCROLL_VIEW_POSITION")
 }
 
 fun NestedScrollView.restorePosition(fragment: Fragment?) {
-    fragment?.getAddedObject<IntArray>("SCROLL_VIEW_POSITION")?.let { post { scrollTo(it[0], it[1]) } }
+	fragment?.getAddedObject<IntArray>("SCROLL_VIEW_POSITION")?.let { post { scrollTo(it[0], it[1]) } }
 }

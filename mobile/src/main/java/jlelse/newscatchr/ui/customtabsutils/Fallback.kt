@@ -15,8 +15,8 @@ import android.content.Intent
 import android.net.Uri
 
 class Fallback : CustomTabActivityHelper.CustomTabFallback {
-    override fun openUri(activity: Activity, uri: Uri) {
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        activity.startActivity(intent)
-    }
+	override fun openUri(activity: Activity, uri: Uri) {
+		val intent = Intent(Intent.ACTION_VIEW, uri)
+		activity.startActivity(intent)
+	}
 }

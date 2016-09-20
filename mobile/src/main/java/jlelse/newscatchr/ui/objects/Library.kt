@@ -14,14 +14,14 @@ package jlelse.newscatchr.ui.objects
  * Library class to use for AboutFragment
  */
 class Library(name: String, description: String, link: String) {
-    var name: String
-    var description: String
-    var link: String
+	var name: String
+	var description: String
+	var link: String
 
-    init {
-        this.name = name
-        this.description = description
-        this.link = link
-    }
+	init {
+		this.name = name
+		this.description = description
+		this.link = link
+	}
 
 }

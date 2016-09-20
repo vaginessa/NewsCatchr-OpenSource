@@ -16,18 +16,18 @@ import android.support.customtabs.CustomTabsIntent
 
 object CustomTabActivityHelper {
 
-    fun openCustomTab(activity: Activity, customTabsIntent: CustomTabsIntent, uri: Uri, fallback: CustomTabFallback?) {
-        val packageName = CustomTabsHelper.getPackageNameToUse(activity)
-        if (packageName == null) {
-            fallback?.openUri(activity, uri)
-        } else {
-            customTabsIntent.intent.`package` = packageName
-            customTabsIntent.launchUrl(activity, uri)
-        }
-    }
+	fun openCustomTab(activity: Activity, customTabsIntent: CustomTabsIntent, uri: Uri, fallback: CustomTabFallback?) {
+		val packageName = CustomTabsHelper.getPackageNameToUse(activity)
+		if (packageName == null) {
+			fallback?.openUri(activity, uri)
+		} else {
+			customTabsIntent.intent.`package` = packageName
+			customTabsIntent.launchUrl(activity, uri)
+		}
+	}
 
-    interface CustomTabFallback {
-        fun openUri(activity: Activity, uri: Uri)
-    }
+	interface CustomTabFallback {
+		fun openUri(activity: Activity, uri: Uri)
+	}
 
 }

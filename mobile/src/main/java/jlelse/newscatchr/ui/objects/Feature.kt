@@ -11,11 +11,11 @@
 package jlelse.newscatchr.ui.objects
 
 class Feature(name: String, description: String) {
-    var name: String
-    var description: String
+	var name: String
+	var description: String
 
-    init {
-        this.name = name
-        this.description = description
-    }
+	init {
+		this.name = name
+		this.description = description
+	}
 }

@@ -36,122 +36,122 @@ import jlelse.readit.R
 import java.util.*
 
 class FavoritesFragment : BaseFragment(), ItemTouchCallback {
-    private var fastAdapter: FastItemAdapter<FeedListRecyclerItem>? = null
-    private var feeds: MutableList<Feed>? = null
-    private var savedInstanceState: Bundle? = null
-    private var recyclerOne: RecyclerView? = null
-    private var refreshOne: SwipeRefreshLayout? = null
+	private var fastAdapter: FastItemAdapter<FeedListRecyclerItem>? = null
+	private var feeds: MutableList<Feed>? = null
+	private var savedInstanceState: Bundle? = null
+	private var recyclerOne: RecyclerView? = null
+	private var refreshOne: SwipeRefreshLayout? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        this.savedInstanceState = savedInstanceState
-        val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
-        setHasOptionsMenu(true)
-        recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-            layoutManager = LinearLayoutManager(context)
-            ItemTouchHelper(SimpleDragCallback(this@FavoritesFragment)).attachToRecyclerView(this)
-        }
-        refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
-            setOnRefreshListener {
-                load()
-            }
-        }
-        load()
-        return view
-    }
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		super.onCreateView(inflater, container, savedInstanceState)
+		this.savedInstanceState = savedInstanceState
+		val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
+		setHasOptionsMenu(true)
+		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
+			layoutManager = LinearLayoutManager(context)
+			ItemTouchHelper(SimpleDragCallback(this@FavoritesFragment)).attachToRecyclerView(this)
+		}
+		refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
+			setOnRefreshListener {
+				load()
+			}
+		}
+		load()
+		return view
+	}
 
-    private fun load() {
-        mainThread {
-            refreshOne?.isRefreshing = true
-            feeds = Database().allFavorites.toMutableList()
-            if (feeds.notNullAndEmpty()) {
-                fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
-                recyclerOne?.adapter = fastAdapter
-                fastAdapter?.setNewList(mutableListOf<FeedListRecyclerItem>())
-                feeds?.forEach {
-                    fastAdapter?.add(FeedListRecyclerItem().withFeed(it).withFragment(this@FavoritesFragment).withAdapter(fastAdapter!!))
-                }
-                fastAdapter?.withSavedInstanceState(savedInstanceState)
-            }
-            refreshOne?.isRefreshing = false
-        }
-    }
+	private fun load() {
+		mainThread {
+			refreshOne?.isRefreshing = true
+			feeds = Database().allFavorites.toMutableList()
+			if (feeds.notNullAndEmpty()) {
+				fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
+				recyclerOne?.adapter = fastAdapter
+				fastAdapter?.setNewList(mutableListOf<FeedListRecyclerItem>())
+				feeds?.forEach {
+					fastAdapter?.add(FeedListRecyclerItem().withFeed(it).withFragment(this@FavoritesFragment).withAdapter(fastAdapter!!))
+				}
+				fastAdapter?.withSavedInstanceState(savedInstanceState)
+			}
+			refreshOne?.isRefreshing = false
+		}
+	}
 
-    override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
-        Collections.swap(fastAdapter?.adapterItems, oldPosition, newPosition)
-        fastAdapter?.notifyAdapterItemMoved(oldPosition, newPosition)
-        Collections.swap(feeds, oldPosition, newPosition)
-        if (feeds != null) Database().allFavorites = feeds!!.toTypedArray()
-        sendBroadcast(Intent("favorites_updated"))
-        return true
-    }
+	override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
+		Collections.swap(fastAdapter?.adapterItems, oldPosition, newPosition)
+		fastAdapter?.notifyAdapterItemMoved(oldPosition, newPosition)
+		Collections.swap(feeds, oldPosition, newPosition)
+		if (feeds != null) Database().allFavorites = feeds!!.toTypedArray()
+		sendBroadcast(Intent("favorites_updated"))
+		return true
+	}
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.backup, menu)
-        inflater?.inflate(R.menu.favoritesfragment, menu)
-    }
+	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater?.inflate(R.menu.backup, menu)
+		inflater?.inflate(R.menu.favoritesfragment, menu)
+	}
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.backup -> {
-                backupRestore(activity as MainActivity, {
-                    load()
-                })
-                return true
-            }
-            R.id.opml -> {
-                importFromFile()
-                return true
-            }
-            else -> {
-                return super.onOptionsItemSelected(item)
-            }
-        }
-    }
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+		when (item?.itemId) {
+			R.id.backup -> {
+				backupRestore(activity as MainActivity, {
+					load()
+				})
+				return true
+			}
+			R.id.opml -> {
+				importFromFile()
+				return true
+			}
+			else -> {
+				return super.onOptionsItemSelected(item)
+			}
+		}
+	}
 
-    private fun importFromFile() {
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        intent.type = "*/*"
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        startActivityForResult(intent, 555)
-    }
+	private fun importFromFile() {
+		val intent = Intent(Intent.ACTION_GET_CONTENT)
+		intent.type = "*/*"
+		intent.addCategory(Intent.CATEGORY_OPENABLE)
+		startActivityForResult(intent, 555)
+	}
 
-    private fun importOpml(opml: String?) {
-        mainThread {
-            asyncSafe {
-                var imported = 0
-                if (opml.notNullOrBlank()) {
-                    val feeds = opml?.convertOpmlToFeeds()
-                    Database().addFavorites(feeds)
-                    imported = feeds?.size ?: 0
-                }
-                mainThreadSafe {
-                    sendBroadcast(Intent("favorites_updated"))
-                    MaterialDialog.Builder(context)
-                            .title(R.string.import_opml)
-                            .content(if (imported != 0) R.string.suc_import else R.string.import_failed)
-                            .positiveText(android.R.string.ok)
-                            .show()
-                    load()
-                }
-            }
-        }
-    }
+	private fun importOpml(opml: String?) {
+		mainThread {
+			asyncSafe {
+				var imported = 0
+				if (opml.notNullOrBlank()) {
+					val feeds = opml?.convertOpmlToFeeds()
+					Database().addFavorites(feeds)
+					imported = feeds?.size ?: 0
+				}
+				mainThreadSafe {
+					sendBroadcast(Intent("favorites_updated"))
+					MaterialDialog.Builder(context)
+							.title(R.string.import_opml)
+							.content(if (imported != 0) R.string.suc_import else R.string.import_failed)
+							.positiveText(android.R.string.ok)
+							.show()
+					load()
+				}
+			}
+		}
+	}
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) {
-            asyncSafe {
-                var opml: String? = null
-                if (data != null && data.data != null) opml = activity.contentResolver.openInputStream(data.data).convertToString()
-                importOpml(opml)
-            }
-        }
-    }
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) {
+			asyncSafe {
+				var opml: String? = null
+				if (data != null && data.data != null) opml = activity.contentResolver.openInputStream(data.data).convertToString()
+				importOpml(opml)
+			}
+		}
+	}
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        fastAdapter?.saveInstanceState(outState)
-        super.onSaveInstanceState(outState)
-    }
+	override fun onSaveInstanceState(outState: Bundle?) {
+		fastAdapter?.saveInstanceState(outState)
+		super.onSaveInstanceState(outState)
+	}
 }

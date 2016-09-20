@@ -16,15 +16,15 @@ import jlelse.readit.R
 
 class ProgressDialog(context: Context) {
 
-    private val progressDialog by lazy { MaterialDialog.Builder(context).content(R.string.loading).cancelable(false).progress(true, 0).build() }
+	private val progressDialog by lazy { MaterialDialog.Builder(context).content(R.string.loading).cancelable(false).progress(true, 0).build() }
 
-    fun show() {
-        progressDialog.show()
-    }
+	fun show() {
+		progressDialog.show()
+	}
 
-    fun dismiss() {
-        progressDialog.dismiss()
-    }
+	fun dismiss() {
+		progressDialog.dismiss()
+	}
 
 }
 

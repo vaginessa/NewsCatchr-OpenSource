@@ -33,32 +33,32 @@ import javax.xml.parsers.SAXParserFactory
 
 
 fun InputStream.convertToString(): String? {
-    var string: String? = null
-    bufferedReader().let {
-        string = it.readText()
-        tryOrNull { it.close() }
-    }
-    return string
+	var string: String? = null
+	bufferedReader().let {
+		string = it.readText()
+		tryOrNull { it.close() }
+	}
+	return string
 }
 
 fun String.convertOpmlToFeeds() = tryOrNull {
-    mutableListOf<Feed>().apply {
-        SAXParserFactory.newInstance().newSAXParser().xmlReader.apply {
-            contentHandler = object : DefaultHandler() {
-                @Throws(SAXException::class)
-                override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
-                    if (qName.equals("outline", ignoreCase = true) && attributes.getValue("xmlUrl") != null) {
-                        add(Feed().apply {
-                            title = attributes.getValue("title")
-                            feedId = attributes.getValue("xmlUrl")
-                            saved = true
-                        })
-                    }
-                }
-            }
-            parse(InputSource(byteInputStream(charset("UTF-8"))))
-        }
-    }.toTypedArray()
+	mutableListOf<Feed>().apply {
+		SAXParserFactory.newInstance().newSAXParser().xmlReader.apply {
+			contentHandler = object : DefaultHandler() {
+				@Throws(SAXException::class)
+				override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
+					if (qName.equals("outline", ignoreCase = true) && attributes.getValue("xmlUrl") != null) {
+						add(Feed().apply {
+							title = attributes.getValue("title")
+							feedId = attributes.getValue("xmlUrl")
+							saved = true
+						})
+					}
+				}
+			}
+			parse(InputSource(byteInputStream(charset("UTF-8"))))
+		}
+	}.toTypedArray()
 }
 
 fun Any.toJson(): String = Gson().toJson(this)
@@ -82,17 +82,17 @@ fun Array<out String?>.removeBlankStrings() = mutableListOf<String>().apply { th
 fun String.cleanHtml(): String? = if (notNullOrBlank()) Jsoup.clean(this, Whitelist.basic().addTags("h2", "h3", "h4", "h5", "h6")) else this
 
 fun String.toHtml(): Spanned = if (android.os.Build.VERSION.SDK_INT < 24) {
-    @Suppress("DEPRECATION")
-    Html.fromHtml(this)
+	@Suppress("DEPRECATION")
+	Html.fromHtml(this)
 } else {
-    Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
+	Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
 }
 
 fun <T> tryOrNull(code: () -> T): T? = try {
-    code()
+	code()
 } catch(e: Exception) {
-    e.printStackTrace()
-    null
+	e.printStackTrace()
+	null
 }
 
 fun <T> tryOrNull(arg: Boolean?, code: () -> T): T? = if (arg ?: false) tryOrNull(code) else null
@@ -110,9 +110,9 @@ fun Int.resIntArr() = tryOrNull { appContext?.resources?.getIntArray(this) }
 // fun Int.resDrw() = resDrw(null)
 
 fun Int.resDrw(context: Context?, color: Int?) = tryOrNull {
-    AppCompatResources.getDrawable(context ?: appContext!!, this)?.apply {
-        if (color != null) DrawableCompat.setTint(this, color)
-    }
+	AppCompatResources.getDrawable(context ?: appContext!!, this)?.apply {
+		if (color != null) DrawableCompat.setTint(this, color)
+	}
 }
 
 fun Int.resClr(context: Context?) = tryOrNull { ContextCompat.getColor(context ?: appContext!!, this) }
