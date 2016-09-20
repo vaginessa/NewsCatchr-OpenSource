@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -10,16 +9,16 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-            android:id="@+id/language"
-            android:title="@string/language"
-            android:icon="@drawable/ic_language_universal"
-            app:showAsAction="ifRoom"/>
-    <item
-            android:id="@+id/favorites"
-            android:title="@string/favorites"
-            app:showAsAction="ifRoom"/>
+	<item
+		android:id="@+id/language"
+		android:icon="@drawable/ic_language_universal"
+		android:title="@string/language"
+		app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/favorites"
+		android:title="@string/favorites"
+		app:showAsAction="ifRoom" />
 
 </menu>

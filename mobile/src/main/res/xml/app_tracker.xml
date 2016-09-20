@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -10,7 +9,7 @@
   -->
 
 <resources>
-    <integer name="ga_sessionTimeout">300</integer>
-    <bool name="ga_autoActivityTracking">true</bool>
-    <string name="ga_trackingId">UA-48808104-17</string>
+	<integer name="ga_sessionTimeout">300</integer>
+	<bool name="ga_autoActivityTracking">true</bool>
+	<string name="ga_trackingId">UA-48808104-17</string>
 </resources>

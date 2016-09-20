@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,10 +10,10 @@
 
 <resources>
 
-    <item name="feedlist_item_id" type="id"/>
-    <item name="articlelist_item_id" type="id"/>
-    <item name="library_item_id" type="id"/>
-    <item name="header_item_id" type="id"/>
-    <item name="more_item_id" type="id"/>
+	<item name="feedlist_item_id" type="id" />
+	<item name="articlelist_item_id" type="id" />
+	<item name="library_item_id" type="id" />
+	<item name="header_item_id" type="id" />
+	<item name="more_item_id" type="id" />
 
 </resources>

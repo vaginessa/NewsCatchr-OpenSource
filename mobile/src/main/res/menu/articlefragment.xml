@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -10,26 +9,26 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-            android:id="@+id/bookmark"
-            android:title="@string/mark_as_bookmark"
-            app:showAsAction="ifRoom"/>
-    <item
-            android:id="@+id/readability"
-            android:title="@string/readability"
-            android:icon="@drawable/ic_weekend_universal"
-            app:showAsAction="ifRoom"/>
-    <item
-            android:id="@+id/share"
-            android:title="@string/share"
-            android:icon="@drawable/ic_share_universal"
-            app:showAsAction="ifRoom"/>
-    <item
-            android:id="@+id/browser"
-            android:title="@string/open_in_browser"
-            android:icon="@drawable/ic_language_universal"
-            app:showAsAction="ifRoom"/>
+	<item
+		android:id="@+id/bookmark"
+		android:title="@string/mark_as_bookmark"
+		app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/readability"
+		android:icon="@drawable/ic_weekend_universal"
+		android:title="@string/readability"
+		app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/share"
+		android:icon="@drawable/ic_share_universal"
+		android:title="@string/share"
+		app:showAsAction="ifRoom" />
+	<item
+		android:id="@+id/browser"
+		android:icon="@drawable/ic_language_universal"
+		android:title="@string/open_in_browser"
+		app:showAsAction="ifRoom" />
 
 </menu>
