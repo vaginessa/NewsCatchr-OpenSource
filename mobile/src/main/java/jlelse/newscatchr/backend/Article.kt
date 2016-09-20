@@ -27,83 +27,83 @@ import jlelse.readit.R
 @ContentType("application/json")
 class Article {
 
-    constructor()
+	constructor()
 
-    @Body(name = "id")
-    var originalId: String? = null
-    @Body
-    var published: Long = 0
-    @Body
-    var author: String? = null
-    @Body
-    var title: String? = null
-    @Body
-    var canonical: Array<Alternate>? = null
-    @Body
-    var alternate: Array<Alternate>? = null
-    @Body
-    var enclosure: Array<Alternate>? = null
-    @Body
-    var keywords: Array<String>? = null
-    @Body(name = "visual.url")
-    var visualUrl: String? = null
-    @Body(name = "origin.title")
-    var originTitle: String? = null
+	@Body(name = "id")
+	var originalId: String? = null
+	@Body
+	var published: Long = 0
+	@Body
+	var author: String? = null
+	@Body
+	var title: String? = null
+	@Body
+	var canonical: Array<Alternate>? = null
+	@Body
+	var alternate: Array<Alternate>? = null
+	@Body
+	var enclosure: Array<Alternate>? = null
+	@Body
+	var keywords: Array<String>? = null
+	@Body(name = "visual.url")
+	var visualUrl: String? = null
+	@Body(name = "origin.title")
+	var originTitle: String? = null
 
-    @Body(name = "summary.content")
-    var content: String? = null
-    @Body(name = "content.content")
-    var contentB: String? = null
+	@Body(name = "summary.content")
+	var content: String? = null
+	@Body(name = "content.content")
+	var contentB: String? = null
 
-    var excerpt: String? = null
+	var excerpt: String? = null
 
-    var url: String? = null
-    var pocketId: String? = null
-    var fromPocket: Boolean = false
+	var url: String? = null
+	var pocketId: String? = null
+	var fromPocket: Boolean = false
 
-    var cleanedContent = false
-    var checkedUrl = false
-    var checkedImageUrl = false
+	var cleanedContent = false
+	var checkedUrl = false
+	var checkedImageUrl = false
 
-    fun process(force: Boolean) {
-        if (force) {
-            cleanedContent = false
-            checkedUrl = false
-            checkedImageUrl = false
-        }
-        process()
-    }
+	fun process(force: Boolean) {
+		if (force) {
+			cleanedContent = false
+			checkedUrl = false
+			checkedImageUrl = false
+		}
+		process()
+	}
 
-    fun process() {
-        if (!cleanedContent) {
-            content = (if (contentB.notNullOrBlank()) contentB else content)?.cleanHtml()
-            excerpt = content?.toHtml().toString().buildExcerpt(30)
-            cleanedContent = true
-        }
-        if (!checkedUrl) {
-            if (canonical != null && canonical?.firstOrNull()?.href.notNullOrBlank()) url = canonical?.firstOrNull()?.href
-            else if (alternate != null && alternate?.firstOrNull()?.href.notNullOrBlank()) url = alternate?.firstOrNull()?.href
-            checkedUrl = true
-        }
-        if (!checkedImageUrl) {
-            if (enclosure.notNullAndEmpty() && enclosure?.firstOrNull()?.href.notNullOrBlank()) visualUrl = enclosure?.firstOrNull()?.href
-            checkedImageUrl = true
-        }
-    }
+	fun process() {
+		if (!cleanedContent) {
+			content = (if (contentB.notNullOrBlank()) contentB else content)?.cleanHtml()
+			excerpt = content?.toHtml().toString().buildExcerpt(30)
+			cleanedContent = true
+		}
+		if (!checkedUrl) {
+			if (canonical != null && canonical?.firstOrNull()?.href.notNullOrBlank()) url = canonical?.firstOrNull()?.href
+			else if (alternate != null && alternate?.firstOrNull()?.href.notNullOrBlank()) url = alternate?.firstOrNull()?.href
+			checkedUrl = true
+		}
+		if (!checkedImageUrl) {
+			if (enclosure.notNullAndEmpty() && enclosure?.firstOrNull()?.href.notNullOrBlank()) visualUrl = enclosure?.firstOrNull()?.href
+			checkedImageUrl = true
+		}
+	}
 
-    fun share(context: Activity) {
-        askForSharingService(context, { network ->
-            asyncSafe {
-                val newUrl = if (Preferences.urlShortener) UrlShortenerApi().getShortUrl(url) ?: url else url
-                mainThreadSafe {
-                    SharingApi(context, network).share("\"$title\"", when (network) {
-                        SharingApi.SocialNetwork.Twitter -> "${title?.take(136 - (newUrl?.length ?: 0))}... $newUrl"
-                        SharingApi.SocialNetwork.Native, SharingApi.SocialNetwork.Facebook -> "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}"
-                    })
-                }
-            }
-        })
-    }
+	fun share(context: Activity) {
+		askForSharingService(context, { network ->
+			asyncSafe {
+				val newUrl = if (Preferences.urlShortener) UrlShortenerApi().getShortUrl(url) ?: url else url
+				mainThreadSafe {
+					SharingApi(context, network).share("\"$title\"", when (network) {
+						SharingApi.SocialNetwork.Twitter -> "${title?.take(136 - (newUrl?.length ?: 0))}... $newUrl"
+						SharingApi.SocialNetwork.Native, SharingApi.SocialNetwork.Facebook -> "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}"
+					})
+				}
+			}
+		})
+	}
 
 }
 
@@ -111,7 +111,7 @@ class Article {
 @ContentType("application/json")
 class Alternate {
 
-    @Body
-    var href: String? = null
+	@Body
+	var href: String? = null
 
 }

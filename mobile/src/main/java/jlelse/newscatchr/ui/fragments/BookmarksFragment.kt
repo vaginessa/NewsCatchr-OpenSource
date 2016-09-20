@@ -28,76 +28,76 @@ import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 
 class BookmarksFragment : BaseFragment() {
-    private var recyclerOne: RecyclerView? = null
-    private var refreshOne: SwipeRefreshLayout? = null
-    private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
-    private var savedInstanceState: Bundle? = null
+	private var recyclerOne: RecyclerView? = null
+	private var refreshOne: SwipeRefreshLayout? = null
+	private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
+	private var savedInstanceState: Bundle? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        this.savedInstanceState = savedInstanceState
-        val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
-        setHasOptionsMenu(true)
-        recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-            layoutManager = LinearLayoutManager(context)
-        }
-        refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
-            setOnRefreshListener {
-                loadArticles(false)
-            }
-        }
-        loadArticles(true)
-        return view
-    }
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		super.onCreateView(inflater, container, savedInstanceState)
+		this.savedInstanceState = savedInstanceState
+		val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
+		setHasOptionsMenu(true)
+		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
+			layoutManager = LinearLayoutManager(context)
+		}
+		refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
+			setOnRefreshListener {
+				loadArticles(false)
+			}
+		}
+		loadArticles(true)
+		return view
+	}
 
-    fun loadArticles(cache: Boolean) {
-        refreshOne?.showIndicator()
-        asyncSafe {
-            if (!cache && (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank())) {
-                try {
-                    val pocketItems = PocketLoader().items()
-                    Database().allBookmarks = pocketItems
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-            val articles = Database().allBookmarks
-            mainThreadSafe {
-                if (articles.notNullAndEmpty()) {
-                    fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
-                    recyclerOne?.adapter = fastAdapter
-                    fastAdapter?.setNewList(mutableListOf<ArticleListRecyclerItem>())
-                    articles.forEach {
-                        fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@BookmarksFragment))
-                    }
-                    fastAdapter?.withSavedInstanceState(savedInstanceState)
-                } else {
-                    fastAdapter?.clear()
-                }
-                refreshOne?.hideIndicator()
-            }
-        }
-    }
+	fun loadArticles(cache: Boolean) {
+		refreshOne?.showIndicator()
+		asyncSafe {
+			if (!cache && (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank())) {
+				try {
+					val pocketItems = PocketLoader().items()
+					Database().allBookmarks = pocketItems
+				} catch (e: Exception) {
+					e.printStackTrace()
+				}
+			}
+			val articles = Database().allBookmarks
+			mainThreadSafe {
+				if (articles.notNullAndEmpty()) {
+					fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+					recyclerOne?.adapter = fastAdapter
+					fastAdapter?.setNewList(mutableListOf<ArticleListRecyclerItem>())
+					articles.forEach {
+						fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@BookmarksFragment))
+					}
+					fastAdapter?.withSavedInstanceState(savedInstanceState)
+				} else {
+					fastAdapter?.clear()
+				}
+				refreshOne?.hideIndicator()
+			}
+		}
+	}
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.bookmarksfragment, menu)
-    }
+	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater?.inflate(R.menu.bookmarksfragment, menu)
+	}
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.refresh -> {
-                loadArticles(false)
-                return true
-            }
-            else -> {
-                return super.onOptionsItemSelected(item)
-            }
-        }
-    }
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+		when (item?.itemId) {
+			R.id.refresh -> {
+				loadArticles(false)
+				return true
+			}
+			else -> {
+				return super.onOptionsItemSelected(item)
+			}
+		}
+	}
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        fastAdapter?.saveInstanceState(outState)
-    }
+	override fun onSaveInstanceState(outState: Bundle?) {
+		super.onSaveInstanceState(outState)
+		fastAdapter?.saveInstanceState(outState)
+	}
 }

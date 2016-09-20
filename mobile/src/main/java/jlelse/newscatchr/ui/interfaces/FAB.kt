@@ -12,10 +12,10 @@ package jlelse.newscatchr.ui.interfaces
 
 interface FAB {
 
-    val fabDrawable: Int?
-        get() = null
+	val fabDrawable: Int?
+		get() = null
 
-    val fabClick: () -> Unit?
-        get() = {}
+	val fabClick: () -> Unit?
+		get() = {}
 
 }

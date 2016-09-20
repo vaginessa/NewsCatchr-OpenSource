@@ -29,79 +29,79 @@ import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 
 class MixFragment() : BaseFragment() {
-    private var recyclerOne: RecyclerView? = null
-    private var refreshOne: SwipeRefreshLayout? = null
-    private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
-    private var feedId: String? = null
-    private var articles: Array<Article>? = null
-    private var savedInstanceState: Bundle? = null
-    private var feedlyLoader: FeedlyLoader? = null
+	private var recyclerOne: RecyclerView? = null
+	private var refreshOne: SwipeRefreshLayout? = null
+	private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
+	private var feedId: String? = null
+	private var articles: Array<Article>? = null
+	private var savedInstanceState: Bundle? = null
+	private var feedlyLoader: FeedlyLoader? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        this.savedInstanceState = savedInstanceState
-        val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
-        setHasOptionsMenu(true)
-        recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-            layoutManager = LinearLayoutManager(context)
-        }
-        refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
-            setOnRefreshListener {
-                loadArticles(false)
-            }
-        }
-        feedId = getAddedString("feedId")
-        feedlyLoader = FeedlyLoader().apply {
-            type = FeedlyLoader.FeedTypes.MIX
-            feedUrl = feedId
-        }
-        loadArticles(true)
-        Tracking.GATracker.track(feedId, Tracking.GATracker.TYPE.MIX)
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		super.onCreateView(inflater, container, savedInstanceState)
+		this.savedInstanceState = savedInstanceState
+		val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
+		setHasOptionsMenu(true)
+		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
+			layoutManager = LinearLayoutManager(context)
+		}
+		refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
+			setOnRefreshListener {
+				loadArticles(false)
+			}
+		}
+		feedId = getAddedString("feedId")
+		feedlyLoader = FeedlyLoader().apply {
+			type = FeedlyLoader.FeedTypes.MIX
+			feedUrl = feedId
+		}
+		loadArticles(true)
+		Tracking.GATracker.track(feedId, Tracking.GATracker.TYPE.MIX)
 
-        return view
-    }
+		return view
+	}
 
-    private fun loadArticles(cache: Boolean) {
-        refreshOne?.showIndicator()
-        asyncSafe {
-            if (articles == null || !cache) articles = feedlyLoader?.items(cache)
-            mainThreadSafe {
-                if (articles.notNullAndEmpty()) {
-                    fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
-                    recyclerOne?.adapter = fastAdapter
-                    fastAdapter?.setNewList(mutableListOf<ArticleListRecyclerItem>())
-                    articles?.forEach {
-                        fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@MixFragment))
-                    }
-                    fastAdapter?.withSavedInstanceState(savedInstanceState)
-                } else {
-                    context.nothingFound()
-                    fragmentNavigation.popFragment()
-                }
-                refreshOne?.hideIndicator()
-            }
-        }
-    }
+	private fun loadArticles(cache: Boolean) {
+		refreshOne?.showIndicator()
+		asyncSafe {
+			if (articles == null || !cache) articles = feedlyLoader?.items(cache)
+			mainThreadSafe {
+				if (articles.notNullAndEmpty()) {
+					fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+					recyclerOne?.adapter = fastAdapter
+					fastAdapter?.setNewList(mutableListOf<ArticleListRecyclerItem>())
+					articles?.forEach {
+						fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@MixFragment))
+					}
+					fastAdapter?.withSavedInstanceState(savedInstanceState)
+				} else {
+					context.nothingFound()
+					fragmentNavigation.popFragment()
+				}
+				refreshOne?.hideIndicator()
+			}
+		}
+	}
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.mixfragment, menu)
-    }
+	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater?.inflate(R.menu.mixfragment, menu)
+	}
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.refresh -> {
-                loadArticles(false)
-                return true
-            }
-            else -> {
-                return super.onOptionsItemSelected(item)
-            }
-        }
-    }
+	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+		when (item?.itemId) {
+			R.id.refresh -> {
+				loadArticles(false)
+				return true
+			}
+			else -> {
+				return super.onOptionsItemSelected(item)
+			}
+		}
+	}
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        fastAdapter?.saveInstanceState(outState)
-        super.onSaveInstanceState(outState)
-    }
+	override fun onSaveInstanceState(outState: Bundle?) {
+		fastAdapter?.saveInstanceState(outState)
+		super.onSaveInstanceState(outState)
+	}
 }

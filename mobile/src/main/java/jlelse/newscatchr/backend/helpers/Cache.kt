@@ -17,26 +17,26 @@ import com.mcxiaoke.koi.async.mainThreadSafe
 import io.paperdb.Paper
 
 fun Any?.saveToCache(key: String?) {
-    if (this != null) Paper.book("cache").write(key?.formatForCache(), this)
+	if (this != null) Paper.book("cache").write(key?.formatForCache(), this)
 }
 
 fun <T> readFromCache(key: String?): T = Paper.book("cache").read<T>(key?.formatForCache())
 
 fun String.formatForCache(): String {
-    return try {
-        replace("[^0-9a-zA-Z]".toRegex(), "")
-    } catch (ignored: Exception) {
-        this
-    }
+	return try {
+		replace("[^0-9a-zA-Z]".toRegex(), "")
+	} catch (ignored: Exception) {
+		this
+	}
 }
 
 fun Context.clearCache(finished: () -> Unit) {
-    asyncSafe {
-        Paper.book("cache").destroy()
-        Paper.book("article_cache").destroy()
-        Glide.get(this@clearCache).clearDiskCache()
-        mainThreadSafe {
-            finished()
-        }
-    }
+	asyncSafe {
+		Paper.book("cache").destroy()
+		Paper.book("article_cache").destroy()
+		Glide.get(this@clearCache).clearDiskCache()
+		mainThreadSafe {
+			finished()
+		}
+	}
 }

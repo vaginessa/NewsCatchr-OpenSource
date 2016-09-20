@@ -24,56 +24,56 @@ import jlelse.readit.R
 
 class AutoCompleteApi {
 
-    fun getSuggestions(query: String?): Array<String>? {
-        if (query.notNullOrBlank()) {
-            Bridge.get("https://duckduckgo.com/ac/?q=%s", query)
-                    .connectTimeout(1000)
-                    .readTimeout(1000)
-                    .asClassArray(ResponseItem::class.java)
-                    ?.let {
-                        if (it.notNullAndEmpty()) return mutableListOf<String>().apply {
-                            it.forEach { add(it.phrase ?: "") }
-                        }.toTypedArray()
-                    }
-        }
-        return null
-    }
+	fun getSuggestions(query: String?): Array<String>? {
+		if (query.notNullOrBlank()) {
+			Bridge.get("https://duckduckgo.com/ac/?q=%s", query)
+					.connectTimeout(1000)
+					.readTimeout(1000)
+					.asClassArray(ResponseItem::class.java)
+					?.let {
+						if (it.notNullAndEmpty()) return mutableListOf<String>().apply {
+							it.forEach { add(it.phrase ?: "") }
+						}.toTypedArray()
+					}
+		}
+		return null
+	}
 
-    @Keep
-    @ContentType("application/json")
-    private class ResponseItem {
-        @Body
-        var phrase: String? = null
-    }
+	@Keep
+	@ContentType("application/json")
+	private class ResponseItem {
+		@Body
+		var phrase: String? = null
+	}
 
 }
 
 class AutoCompleteAdapter(context: Context) : ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item), Filterable {
-    private var api = AutoCompleteApi()
-    private var resultList = mutableListOf<String>()
+	private var api = AutoCompleteApi()
+	private var resultList = mutableListOf<String>()
 
-    override fun getCount() = resultList.size
+	override fun getCount() = resultList.size
 
-    override fun getItem(index: Int) = resultList[index]
+	override fun getItem(index: Int) = resultList[index]
 
-    override fun getFilter(): Filter {
-        return object : Filter() {
+	override fun getFilter(): Filter {
+		return object : Filter() {
 
-            override fun performFiltering(constraint: CharSequence?) = FilterResults().apply {
-                if (constraint != null) {
-                    resultList = mutableListOf<String>().apply {
-                        api.getSuggestions(constraint.toString())?.let { addAll(it) }
-                    }
-                    values = resultList
-                    count = resultList.size
-                }
-            }
+			override fun performFiltering(constraint: CharSequence?) = FilterResults().apply {
+				if (constraint != null) {
+					resultList = mutableListOf<String>().apply {
+						api.getSuggestions(constraint.toString())?.let { addAll(it) }
+					}
+					values = resultList
+					count = resultList.size
+				}
+			}
 
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                if (results != null && results.count > 0) notifyDataSetChanged()
-                else notifyDataSetInvalidated()
-            }
-        }
-    }
+			override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+				if (results != null && results.count > 0) notifyDataSetChanged()
+				else notifyDataSetInvalidated()
+			}
+		}
+	}
 }
 

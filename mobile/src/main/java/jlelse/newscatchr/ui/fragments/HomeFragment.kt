@@ -45,219 +45,219 @@ import jlelse.readit.R
 import java.util.*
 
 class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
-    private var fastAdapterOne: FastItemAdapter<FeedListRecyclerItem>? = null
-    private var fastAdapterTwo: FastItemAdapter<FeedListRecyclerItem>? = null
-    private var fastAdapterThree: FastItemAdapter<FeedListRecyclerItem>? = null
-    private var recFeeds: Array<Feed>? = null
-    private var recRelated: Array<String>? = null
-    private var recyclerOne: RecyclerView? = null
-    private var recyclerTwo: RecyclerView? = null
-    private var recyclerThree: RecyclerView? = null
-    private var tagsTitle: TextView? = null
-    private var tagsBox: FlexboxLayout? = null
-    private var refresh: SwipeRefreshLayout? = null
-    private var scrollView: NestedScrollView? = null
-    private var lastFeedReceiver: LastFeedUpdateReceiver? = null
-    private var lastFeedReceiverRegistered = false
-    private var favoritesReceiver: LastFeedUpdateReceiver? = null
-    private var favoritesReceiverRegistered = false
+	private var fastAdapterOne: FastItemAdapter<FeedListRecyclerItem>? = null
+	private var fastAdapterTwo: FastItemAdapter<FeedListRecyclerItem>? = null
+	private var fastAdapterThree: FastItemAdapter<FeedListRecyclerItem>? = null
+	private var recFeeds: Array<Feed>? = null
+	private var recRelated: Array<String>? = null
+	private var recyclerOne: RecyclerView? = null
+	private var recyclerTwo: RecyclerView? = null
+	private var recyclerThree: RecyclerView? = null
+	private var tagsTitle: TextView? = null
+	private var tagsBox: FlexboxLayout? = null
+	private var refresh: SwipeRefreshLayout? = null
+	private var scrollView: NestedScrollView? = null
+	private var lastFeedReceiver: LastFeedUpdateReceiver? = null
+	private var lastFeedReceiverRegistered = false
+	private var favoritesReceiver: LastFeedUpdateReceiver? = null
+	private var favoritesReceiverRegistered = false
 
-    override val fabDrawable = R.drawable.ic_search
+	override val fabDrawable = R.drawable.ic_search
 
-    override val fabClick = {
-        searchForFeeds(context, fragmentNavigation, null)
-    }
+	override val fabClick = {
+		searchForFeeds(context, fragmentNavigation, null)
+	}
 
-    override val expanded = true
+	override val expanded = true
 
-    override val saveStateScrollViews: Array<NestedScrollView?>?
-        get() = arrayOf(scrollView)
+	override val saveStateScrollViews: Array<NestedScrollView?>?
+		get() = arrayOf(scrollView)
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        //this.savedInstanceState = savedInstanceState
-        val view = inflater?.inflate(R.layout.homefragment, container, false)
-        setHasOptionsMenu(true)
-        recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-            isNestedScrollingEnabled = false
-            layoutManager = LinearLayoutManager(context)
-        }
-        recyclerTwo = view?.find<RecyclerView>(R.id.recyclerTwo)?.apply {
-            isNestedScrollingEnabled = false
-            layoutManager = LinearLayoutManager(context)
-        }
-        recyclerThree = view?.find<RecyclerView>(R.id.recyclerThree)?.apply {
-            isNestedScrollingEnabled = false
-            layoutManager = LinearLayoutManager(context)
-        }
-        tagsTitle = view?.find<TextView>(R.id.headerTitle)?.apply {
-            hideView()
-            text = R.string.rec_topics.resStr()
-        }
-        tagsBox = view?.find<FlexboxLayout>(R.id.tagsBox)
-        refresh = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
-            setOnRefreshListener {
-                loadRecommendedFeeds(false)
-            }
-        }
-        scrollView = view?.find<NestedScrollView>(R.id.scrollView)
-        loadRecommendedFeeds(true)
-        loadLastFeeds()
-        loadFavoriteFeeds()
-        if (!lastFeedReceiverRegistered) {
-            lastFeedReceiver = LastFeedUpdateReceiver(this)
-            activity.registerReceiver(lastFeedReceiver, IntentFilter("last_feed_updated"))
-            lastFeedReceiverRegistered = true
-        }
-        if (!favoritesReceiverRegistered) {
-            favoritesReceiver = LastFeedUpdateReceiver(this)
-            activity.registerReceiver(favoritesReceiver, IntentFilter("favorites_updated"))
-            favoritesReceiverRegistered = true
-        }
-        return view
-    }
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		super.onCreateView(inflater, container, savedInstanceState)
+		//this.savedInstanceState = savedInstanceState
+		val view = inflater?.inflate(R.layout.homefragment, container, false)
+		setHasOptionsMenu(true)
+		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
+			isNestedScrollingEnabled = false
+			layoutManager = LinearLayoutManager(context)
+		}
+		recyclerTwo = view?.find<RecyclerView>(R.id.recyclerTwo)?.apply {
+			isNestedScrollingEnabled = false
+			layoutManager = LinearLayoutManager(context)
+		}
+		recyclerThree = view?.find<RecyclerView>(R.id.recyclerThree)?.apply {
+			isNestedScrollingEnabled = false
+			layoutManager = LinearLayoutManager(context)
+		}
+		tagsTitle = view?.find<TextView>(R.id.headerTitle)?.apply {
+			hideView()
+			text = R.string.rec_topics.resStr()
+		}
+		tagsBox = view?.find<FlexboxLayout>(R.id.tagsBox)
+		refresh = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
+			setOnRefreshListener {
+				loadRecommendedFeeds(false)
+			}
+		}
+		scrollView = view?.find<NestedScrollView>(R.id.scrollView)
+		loadRecommendedFeeds(true)
+		loadLastFeeds()
+		loadFavoriteFeeds()
+		if (!lastFeedReceiverRegistered) {
+			lastFeedReceiver = LastFeedUpdateReceiver(this)
+			activity.registerReceiver(lastFeedReceiver, IntentFilter("last_feed_updated"))
+			lastFeedReceiverRegistered = true
+		}
+		if (!favoritesReceiverRegistered) {
+			favoritesReceiver = LastFeedUpdateReceiver(this)
+			activity.registerReceiver(favoritesReceiver, IntentFilter("favorites_updated"))
+			favoritesReceiverRegistered = true
+		}
+		return view
+	}
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.homefragment, menu)
-        menu?.findItem(R.id.favorites)?.icon = R.drawable.ic_favorite_universal.resDrw(context, Color.WHITE)
-    }
+	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+		super.onCreateOptionsMenu(menu, inflater)
+		inflater?.inflate(R.menu.homefragment, menu)
+		menu?.findItem(R.id.favorites)?.icon = R.drawable.ic_favorite_universal.resDrw(context, Color.WHITE)
+	}
 
-    override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
-        R.id.favorites -> {
-            fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
-            true
-        }
-        R.id.language -> {
-            val availableLocales = arrayOf(Locale.ENGLISH, Locale.GERMAN, Locale.FRENCH, Locale.ITALIAN, Locale.CHINESE, Locale.JAPANESE, Locale.KOREAN)
-            MaterialDialog.Builder(context)
-                    .items(mutableListOf<String>().apply {
-                        availableLocales.forEach { add(it.displayName) }
-                    })
-                    .itemsCallback { dialog, view, i, charSequence ->
-                        Preferences.recommendationsLanguage = availableLocales[i].language
-                        loadRecommendedFeeds(false)
-                    }
-                    .negativeText(android.R.string.cancel)
-                    .show()
-            true
-        }
-        else -> super.onOptionsItemSelected(item)
-    }
+	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
+		R.id.favorites -> {
+			fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
+			true
+		}
+		R.id.language -> {
+			val availableLocales = arrayOf(Locale.ENGLISH, Locale.GERMAN, Locale.FRENCH, Locale.ITALIAN, Locale.CHINESE, Locale.JAPANESE, Locale.KOREAN)
+			MaterialDialog.Builder(context)
+					.items(mutableListOf<String>().apply {
+						availableLocales.forEach { add(it.displayName) }
+					})
+					.itemsCallback { dialog, view, i, charSequence ->
+						Preferences.recommendationsLanguage = availableLocales[i].language
+						loadRecommendedFeeds(false)
+					}
+					.negativeText(android.R.string.cancel)
+					.show()
+			true
+		}
+		else -> super.onOptionsItemSelected(item)
+	}
 
-    private fun loadLastFeeds() {
-        asyncSafe {
-            val lastFeeds = Database().allLastFeeds.takeLast(5).toTypedArray().turnAround()
-            mainThreadSafe {
-                if (lastFeeds.notNullAndEmpty()) {
-                    recyclerOne?.showView()
-                    fastAdapterOne = FastItemAdapter<FeedListRecyclerItem>()
-                    val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
-                    val moreAdapter = MoreAdapter<MoreRecyclerItem>()
-                    recyclerOne?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterOne))
-                    fastAdapterOne?.setNewList(mutableListOf<FeedListRecyclerItem>())
-                    headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.last_feeds.resStr()!!))
-                    lastFeeds.forEachIndexed { i, feed ->
-                        fastAdapterOne?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
-                    }
-                    moreAdapter.add(MoreRecyclerItem().withCallback {
-                        fragmentNavigation.pushFragment(FeedListFragment().addObject(Database().allLastFeeds.turnAround(), "feeds"), R.string.last_feeds.resStr())
-                    })
-                } else {
-                    recyclerOne?.hideView()
-                }
-                restoreScrollState()
-            }
-        }
-    }
+	private fun loadLastFeeds() {
+		asyncSafe {
+			val lastFeeds = Database().allLastFeeds.takeLast(5).toTypedArray().turnAround()
+			mainThreadSafe {
+				if (lastFeeds.notNullAndEmpty()) {
+					recyclerOne?.showView()
+					fastAdapterOne = FastItemAdapter<FeedListRecyclerItem>()
+					val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
+					val moreAdapter = MoreAdapter<MoreRecyclerItem>()
+					recyclerOne?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterOne))
+					fastAdapterOne?.setNewList(mutableListOf<FeedListRecyclerItem>())
+					headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.last_feeds.resStr()!!))
+					lastFeeds.forEachIndexed { i, feed ->
+						fastAdapterOne?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
+					}
+					moreAdapter.add(MoreRecyclerItem().withCallback {
+						fragmentNavigation.pushFragment(FeedListFragment().addObject(Database().allLastFeeds.turnAround(), "feeds"), R.string.last_feeds.resStr())
+					})
+				} else {
+					recyclerOne?.hideView()
+				}
+				restoreScrollState()
+			}
+		}
+	}
 
-    private fun loadFavoriteFeeds() {
-        asyncSafe {
-            val favoriteFeeds = Database().allFavorites.take(5)
-            mainThreadSafe {
-                if (favoriteFeeds.notNullAndEmpty()) {
-                    recyclerTwo?.showView()
-                    fastAdapterTwo = FastItemAdapter<FeedListRecyclerItem>()
-                    val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
-                    val moreAdapter = MoreAdapter<MoreRecyclerItem>()
-                    recyclerTwo?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterTwo))
-                    fastAdapterTwo?.setNewList(mutableListOf<FeedListRecyclerItem>())
-                    headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.favorites.resStr()!!))
-                    favoriteFeeds.forEachIndexed { i, feed ->
-                        fastAdapterTwo?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
-                    }
-                    moreAdapter.add(MoreRecyclerItem().withCallback {
-                        fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
-                    })
-                } else {
-                    recyclerTwo?.hideView()
-                }
-                restoreScrollState()
-            }
-        }
-    }
+	private fun loadFavoriteFeeds() {
+		asyncSafe {
+			val favoriteFeeds = Database().allFavorites.take(5)
+			mainThreadSafe {
+				if (favoriteFeeds.notNullAndEmpty()) {
+					recyclerTwo?.showView()
+					fastAdapterTwo = FastItemAdapter<FeedListRecyclerItem>()
+					val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
+					val moreAdapter = MoreAdapter<MoreRecyclerItem>()
+					recyclerTwo?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterTwo))
+					fastAdapterTwo?.setNewList(mutableListOf<FeedListRecyclerItem>())
+					headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.favorites.resStr()!!))
+					favoriteFeeds.forEachIndexed { i, feed ->
+						fastAdapterTwo?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
+					}
+					moreAdapter.add(MoreRecyclerItem().withCallback {
+						fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
+					})
+				} else {
+					recyclerTwo?.hideView()
+				}
+				restoreScrollState()
+			}
+		}
+	}
 
-    private fun loadRecommendedFeeds(cache: Boolean) {
-        refresh?.showIndicator()
-        asyncSafe {
-            if (recFeeds == null || !cache) Feedly().recommendedFeeds(Preferences.recommendationsLanguage, cache) { feeds, related ->
-                recFeeds = feeds
-                recRelated = related
-            }
-            mainThreadSafe {
-                if (recFeeds.notNullAndEmpty()) {
-                    recyclerThree?.showView()
-                    fastAdapterThree = FastItemAdapter<FeedListRecyclerItem>()
-                    val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
-                    val moreAdapter = MoreAdapter<MoreRecyclerItem>()
-                    recyclerThree?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterThree))
-                    fastAdapterThree?.setNewList(mutableListOf<FeedListRecyclerItem>())
-                    headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.recommendations.resStr()!!))
-                    recFeeds?.take(15)?.forEachIndexed { i, feed ->
-                        fastAdapterThree?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
-                    }
-                    moreAdapter.add(MoreRecyclerItem().withCallback {
-                        fragmentNavigation.pushFragment(FeedListFragment().addObject(recFeeds, "feeds").addObject(recRelated, "tags"), R.string.recommendations.resStr())
-                    })
-                } else {
-                    recyclerThree?.hideView()
-                }
-                if (recRelated.notNullAndEmpty()) {
-                    tagsTitle?.showView()
-                    tagsBox?.showView()
-                    tagsBox?.removeAllViews()
-                    recRelated?.forEach {
-                        tagsBox?.addTagView(this@HomeFragment, it)
-                    }
-                } else {
-                    tagsTitle?.hideView()
-                    tagsBox?.hideView()
-                }
-                refresh?.hideIndicator()
-                restoreScrollState()
-            }
-        }
-    }
+	private fun loadRecommendedFeeds(cache: Boolean) {
+		refresh?.showIndicator()
+		asyncSafe {
+			if (recFeeds == null || !cache) Feedly().recommendedFeeds(Preferences.recommendationsLanguage, cache) { feeds, related ->
+				recFeeds = feeds
+				recRelated = related
+			}
+			mainThreadSafe {
+				if (recFeeds.notNullAndEmpty()) {
+					recyclerThree?.showView()
+					fastAdapterThree = FastItemAdapter<FeedListRecyclerItem>()
+					val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
+					val moreAdapter = MoreAdapter<MoreRecyclerItem>()
+					recyclerThree?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterThree))
+					fastAdapterThree?.setNewList(mutableListOf<FeedListRecyclerItem>())
+					headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.recommendations.resStr()!!))
+					recFeeds?.take(15)?.forEachIndexed { i, feed ->
+						fastAdapterThree?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
+					}
+					moreAdapter.add(MoreRecyclerItem().withCallback {
+						fragmentNavigation.pushFragment(FeedListFragment().addObject(recFeeds, "feeds").addObject(recRelated, "tags"), R.string.recommendations.resStr())
+					})
+				} else {
+					recyclerThree?.hideView()
+				}
+				if (recRelated.notNullAndEmpty()) {
+					tagsTitle?.showView()
+					tagsBox?.showView()
+					tagsBox?.removeAllViews()
+					recRelated?.forEach {
+						tagsBox?.addTagView(this@HomeFragment, it)
+					}
+				} else {
+					tagsTitle?.hideView()
+					tagsBox?.hideView()
+				}
+				refresh?.hideIndicator()
+				restoreScrollState()
+			}
+		}
+	}
 
-    private fun restoreScrollState() {
-        scrollView?.restorePosition(this)
-    }
+	private fun restoreScrollState() {
+		scrollView?.restorePosition(this)
+	}
 
-    override fun onDestroy() {
-        tryOrNull { activity.unregisterReceiver(lastFeedReceiver) }
-        tryOrNull { activity.unregisterReceiver(favoritesReceiver) }
-        super.onDestroy()
-    }
+	override fun onDestroy() {
+		tryOrNull { activity.unregisterReceiver(lastFeedReceiver) }
+		tryOrNull { activity.unregisterReceiver(favoritesReceiver) }
+		super.onDestroy()
+	}
 
-    private class LastFeedUpdateReceiver(val fragment: HomeFragment) : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            fragment.loadLastFeeds()
-        }
-    }
+	private class LastFeedUpdateReceiver(val fragment: HomeFragment) : BroadcastReceiver() {
+		override fun onReceive(context: Context?, intent: Intent?) {
+			fragment.loadLastFeeds()
+		}
+	}
 
-    private class FavoritesUpdateReceiver(val fragment: HomeFragment) : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            fragment.loadFavoriteFeeds()
-        }
-    }
+	private class FavoritesUpdateReceiver(val fragment: HomeFragment) : BroadcastReceiver() {
+		override fun onReceive(context: Context?, intent: Intent?) {
+			fragment.loadFavoriteFeeds()
+		}
+	}
 }

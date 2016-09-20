@@ -31,90 +31,90 @@ import jlelse.readit.R
 
 @Keep
 class FeedListRecyclerItem : AbstractItem<FeedListRecyclerItem, FeedListRecyclerItem.ViewHolder>() {
-    private val FACTORY = ItemFactory()
+	private val FACTORY = ItemFactory()
 
-    private var feed: Feed? = null
-    private var isLast = false
-    private var fragment: BaseFragment? = null
-    private var adapter: FastItemAdapter<FeedListRecyclerItem>? = null
+	private var feed: Feed? = null
+	private var isLast = false
+	private var fragment: BaseFragment? = null
+	private var adapter: FastItemAdapter<FeedListRecyclerItem>? = null
 
-    fun withFeed(feed: Feed): FeedListRecyclerItem {
-        this.feed = feed
-        return this
-    }
+	fun withFeed(feed: Feed): FeedListRecyclerItem {
+		this.feed = feed
+		return this
+	}
 
-    fun withFragment(fragment: BaseFragment): FeedListRecyclerItem {
-        this.fragment = fragment
-        return this
-    }
+	fun withFragment(fragment: BaseFragment): FeedListRecyclerItem {
+		this.fragment = fragment
+		return this
+	}
 
-    fun withAdapter(adapter: FastItemAdapter<FeedListRecyclerItem>): FeedListRecyclerItem {
-        this.adapter = adapter
-        return this
-    }
+	fun withAdapter(adapter: FastItemAdapter<FeedListRecyclerItem>): FeedListRecyclerItem {
+		this.adapter = adapter
+		return this
+	}
 
-    fun withIsLast(isLast: Boolean): FeedListRecyclerItem {
-        this.isLast = isLast
-        return this
-    }
+	fun withIsLast(isLast: Boolean): FeedListRecyclerItem {
+		this.isLast = isLast
+		return this
+	}
 
-    override fun getType(): Int {
-        return R.id.feedlist_item_id
-    }
+	override fun getType(): Int {
+		return R.id.feedlist_item_id
+	}
 
-    override fun getLayoutRes(): Int {
-        return R.layout.feedlistrecycleritem
-    }
+	override fun getLayoutRes(): Int {
+		return R.layout.feedlistrecycleritem
+	}
 
-    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
-        super.bindView(viewHolder, payloads)
-        val context = viewHolder.itemView.context
-        if (feed != null) {
-            setTitleText(feed?.title, viewHolder.title)
-            viewHolder.website.text = Uri.parse(feed?.website ?: feed?.url()).host
-            viewHolder.itemView.onClick {
-                fragment?.fragmentNavigation?.pushFragment(FeedFragment().addObject(feed!!, "feed"), feed?.title)
-            }
-            viewHolder.favorite.setImageDrawable((if (Database().isSavedFavorite(feed?.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
-            viewHolder.favorite.onClick {
-                if (Database().isSavedFavorite(feed?.url())) {
-                    feed?.saved = false
-                    Database().deleteFavorite(feed?.url())
-                    viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_border_universal.resDrw(context, context.getPrimaryTextColor()))
-                } else {
-                    feed?.saved = true
-                    Database().addFavorite(feed)
-                    viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_universal.resDrw(context, context.getPrimaryTextColor()))
-                }
-                context.sendBroadcast(Intent("favorites_updated"))
-            }
-        }
-        if (isLast) viewHolder.divider.hideView() else viewHolder.divider.showView()
-    }
+	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
+		super.bindView(viewHolder, payloads)
+		val context = viewHolder.itemView.context
+		if (feed != null) {
+			setTitleText(feed?.title, viewHolder.title)
+			viewHolder.website.text = Uri.parse(feed?.website ?: feed?.url()).host
+			viewHolder.itemView.onClick {
+				fragment?.fragmentNavigation?.pushFragment(FeedFragment().addObject(feed!!, "feed"), feed?.title)
+			}
+			viewHolder.favorite.setImageDrawable((if (Database().isSavedFavorite(feed?.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
+			viewHolder.favorite.onClick {
+				if (Database().isSavedFavorite(feed?.url())) {
+					feed?.saved = false
+					Database().deleteFavorite(feed?.url())
+					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_border_universal.resDrw(context, context.getPrimaryTextColor()))
+				} else {
+					feed?.saved = true
+					Database().addFavorite(feed)
+					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_universal.resDrw(context, context.getPrimaryTextColor()))
+				}
+				context.sendBroadcast(Intent("favorites_updated"))
+			}
+		}
+		if (isLast) viewHolder.divider.hideView() else viewHolder.divider.showView()
+	}
 
-    private fun setTitleText(title: String?, textView: TextView) {
-        textView.text = "$title"
-    }
+	private fun setTitleText(title: String?, textView: TextView) {
+		textView.text = "$title"
+	}
 
-    override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
+	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
 
-    class ItemFactory : ViewHolderFactory<ViewHolder> {
-        override fun create(v: View): ViewHolder {
-            return ViewHolder(v)
-        }
-    }
+	class ItemFactory : ViewHolderFactory<ViewHolder> {
+		override fun create(v: View): ViewHolder {
+			return ViewHolder(v)
+		}
+	}
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var title: TextView
-        var website: TextView
-        var favorite: ImageView
-        var divider: View
+	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+		var title: TextView
+		var website: TextView
+		var favorite: ImageView
+		var divider: View
 
-        init {
-            this.title = view.find<TextView>(R.id.title)
-            this.website = view.find<TextView>(R.id.website)
-            this.favorite = view.find<ImageView>(R.id.favorite)
-            this.divider = view.find<View>(R.id.divider)
-        }
-    }
+		init {
+			this.title = view.find<TextView>(R.id.title)
+			this.website = view.find<TextView>(R.id.website)
+			this.favorite = view.find<ImageView>(R.id.favorite)
+			this.divider = view.find<View>(R.id.divider)
+		}
+	}
 }

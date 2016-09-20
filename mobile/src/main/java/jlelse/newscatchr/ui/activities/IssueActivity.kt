@@ -18,11 +18,11 @@ import jlelse.readit.BuildConfig
 
 class IssueActivity : IssueReporterActivity() {
 
-    override fun getTarget() = GithubTarget("jlelse", "NewsCatchr-OpenSource")
+	override fun getTarget() = GithubTarget("jlelse", "NewsCatchr-OpenSource")
 
-    override fun onSaveExtraInfo(extraInfo: ExtraInfo?) {
-        extraInfo?.put("debug", BuildConfig.DEBUG)
-        extraInfo?.put("subscribed", Preferences.supportUser)
-    }
+	override fun onSaveExtraInfo(extraInfo: ExtraInfo?) {
+		extraInfo?.put("debug", BuildConfig.DEBUG)
+		extraInfo?.put("subscribed", Preferences.supportUser)
+	}
 
 }

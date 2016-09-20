@@ -16,8 +16,8 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 class MoreAdapter<Item : IItem<*, *>> : ItemAdapter<Item>() {
 
-    override fun getOrder(): Int {
-        return 1000
-    }
+	override fun getOrder(): Int {
+		return 1000
+	}
 
 }

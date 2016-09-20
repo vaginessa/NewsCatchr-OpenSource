@@ -30,48 +30,48 @@ import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 
 class FeedListFragment() : BaseFragment() {
-    private var feeds: Array<Feed>? = null
-    private var tags: Array<String>? = null
-    private var fastAdapter: FastItemAdapter<FeedListRecyclerItem>? = null
-    private var scrollView: NestedScrollView? = null
+	private var feeds: Array<Feed>? = null
+	private var tags: Array<String>? = null
+	private var fastAdapter: FastItemAdapter<FeedListRecyclerItem>? = null
+	private var scrollView: NestedScrollView? = null
 
-    override val saveStateScrollViews: Array<NestedScrollView?>?
-        get() = arrayOf(scrollView)
+	override val saveStateScrollViews: Array<NestedScrollView?>?
+		get() = arrayOf(scrollView)
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater?.inflate(R.layout.basicrecycler, container, false)
-        val recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-            isNestedScrollingEnabled = false
-            layoutManager = LinearLayoutManager(context)
-        }
-        scrollView = view?.find<NestedScrollView>(R.id.scrollView)
-        val tagsBox = view?.find<FlexboxLayout>(R.id.tagsBox)
-        feeds = getAddedObject<Array<Feed>>("feeds")
-        if (feeds.notNullAndEmpty()) {
-            fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
-            recyclerOne?.adapter = fastAdapter
-            fastAdapter?.setNewList(mutableListOf<FeedListRecyclerItem>())
-            feeds?.forEachIndexed { i, feed ->
-                fastAdapter?.add(FeedListRecyclerItem().withFeed(feed).withIsLast(i == feeds?.lastIndex).withFragment(this@FeedListFragment).withAdapter(fastAdapter!!))
-            }
-            fastAdapter?.withSavedInstanceState(savedInstanceState)
-        }
-        tags = getAddedObject<Array<String>>("tags")
-        if (tags.notNullAndEmpty()) {
-            tagsBox?.showView()
-            tagsBox?.removeAllViews()
-            tags?.forEach {
-                tagsBox?.addTagView(this, it)
-            }
-        } else {
-            tagsBox?.hideView()
-        }
-        return view
-    }
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		super.onCreateView(inflater, container, savedInstanceState)
+		val view = inflater?.inflate(R.layout.basicrecycler, container, false)
+		val recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
+			isNestedScrollingEnabled = false
+			layoutManager = LinearLayoutManager(context)
+		}
+		scrollView = view?.find<NestedScrollView>(R.id.scrollView)
+		val tagsBox = view?.find<FlexboxLayout>(R.id.tagsBox)
+		feeds = getAddedObject<Array<Feed>>("feeds")
+		if (feeds.notNullAndEmpty()) {
+			fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
+			recyclerOne?.adapter = fastAdapter
+			fastAdapter?.setNewList(mutableListOf<FeedListRecyclerItem>())
+			feeds?.forEachIndexed { i, feed ->
+				fastAdapter?.add(FeedListRecyclerItem().withFeed(feed).withIsLast(i == feeds?.lastIndex).withFragment(this@FeedListFragment).withAdapter(fastAdapter!!))
+			}
+			fastAdapter?.withSavedInstanceState(savedInstanceState)
+		}
+		tags = getAddedObject<Array<String>>("tags")
+		if (tags.notNullAndEmpty()) {
+			tagsBox?.showView()
+			tagsBox?.removeAllViews()
+			tags?.forEach {
+				tagsBox?.addTagView(this, it)
+			}
+		} else {
+			tagsBox?.hideView()
+		}
+		return view
+	}
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-        fastAdapter?.saveInstanceState(outState)
-    }
+	override fun onSaveInstanceState(outState: Bundle?) {
+		super.onSaveInstanceState(outState)
+		fastAdapter?.saveInstanceState(outState)
+	}
 }

@@ -19,49 +19,49 @@ import android.widget.TextView
 import jlelse.newscatchr.backend.helpers.Preferences
 
 class ZoomTextView : TextView {
-    var scaleDetector: ScaleGestureDetector? = null
-    val zoomLimit = 3.0f
+	var scaleDetector: ScaleGestureDetector? = null
+	val zoomLimit = 3.0f
 
-    private var scaleFactor = 1.0f
-    private var defaultSize: Float = 0.0f
+	private var scaleFactor = 1.0f
+	private var defaultSize: Float = 0.0f
 
-    constructor(context: Context) : super(context) {
-        initialize()
-    }
+	constructor(context: Context) : super(context) {
+		initialize()
+	}
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initialize()
-    }
+	constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+		initialize()
+	}
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        initialize()
-    }
+	constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+		initialize()
+	}
 
-    private fun initialize() {
-        defaultSize = textSize
-        scaleDetector = ScaleGestureDetector(context, ScaleListener())
-        scaleFactor = Preferences.textScaleFactor
-        scaleFactor = Math.max(1.0f, Math.min(scaleFactor, zoomLimit))
-        setTextSize(TypedValue.COMPLEX_UNIT_PX, defaultSize * scaleFactor)
-    }
+	private fun initialize() {
+		defaultSize = textSize
+		scaleDetector = ScaleGestureDetector(context, ScaleListener())
+		scaleFactor = Preferences.textScaleFactor
+		scaleFactor = Math.max(1.0f, Math.min(scaleFactor, zoomLimit))
+		setTextSize(TypedValue.COMPLEX_UNIT_PX, defaultSize * scaleFactor)
+	}
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-    }
+	override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+		super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+	}
 
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        super.onTouchEvent(ev)
-        scaleDetector?.onTouchEvent(ev)
-        return true
-    }
+	override fun onTouchEvent(ev: MotionEvent): Boolean {
+		super.onTouchEvent(ev)
+		scaleDetector?.onTouchEvent(ev)
+		return true
+	}
 
-    private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-        override fun onScale(detector: ScaleGestureDetector): Boolean {
-            scaleFactor *= detector.scaleFactor
-            scaleFactor = Math.max(1.0f, Math.min(scaleFactor, zoomLimit))
-            setTextSize(TypedValue.COMPLEX_UNIT_PX, defaultSize * scaleFactor)
-            Preferences.textScaleFactor = scaleFactor
-            return true
-        }
-    }
+	private inner class ScaleListener : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+		override fun onScale(detector: ScaleGestureDetector): Boolean {
+			scaleFactor *= detector.scaleFactor
+			scaleFactor = Math.max(1.0f, Math.min(scaleFactor, zoomLimit))
+			setTextSize(TypedValue.COMPLEX_UNIT_PX, defaultSize * scaleFactor)
+			Preferences.textScaleFactor = scaleFactor
+			return true
+		}
+	}
 }

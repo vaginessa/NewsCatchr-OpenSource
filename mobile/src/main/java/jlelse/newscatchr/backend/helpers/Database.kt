@@ -22,159 +22,159 @@ import jlelse.newscatchr.extensions.*
  */
 class Database {
 
-    private val FAVORITES = "feeds_database"
-    private val BOOKMARKS = "bookmarks_database"
-    private val READ_URLS = "urls_database"
-    private val LAST_FEEDS = "last_feeds"
+	private val FAVORITES = "feeds_database"
+	private val BOOKMARKS = "bookmarks_database"
+	private val READ_URLS = "urls_database"
+	private val LAST_FEEDS = "last_feeds"
 
-    var allFavorites: Array<Feed>
-        get() = try {
-            Paper.book(FAVORITES).read<Array<Feed>>(FAVORITES)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            arrayOf<Feed>()
-        }
-        set(value) {
-            try {
-                Paper.book(FAVORITES).write(FAVORITES, value.onlySaved())
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+	var allFavorites: Array<Feed>
+		get() = try {
+			Paper.book(FAVORITES).read<Array<Feed>>(FAVORITES)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			arrayOf<Feed>()
+		}
+		set(value) {
+			try {
+				Paper.book(FAVORITES).write(FAVORITES, value.onlySaved())
+			} catch (e: Exception) {
+				e.printStackTrace()
+			}
+		}
 
-    val allFavoritesUrls = mutableListOf<String>().apply { allFavorites.forEach { add(it.url()!!) } }.toTypedArray()
+	val allFavoritesUrls = mutableListOf<String>().apply { allFavorites.forEach { add(it.url()!!) } }.toTypedArray()
 
-    fun addFavorite(feed: Feed?) = addFavorites(arrayOf(feed))
+	fun addFavorite(feed: Feed?) = addFavorites(arrayOf(feed))
 
-    fun addFavorites(feeds: Array<out Feed?>?) {
-        allFavorites = allFavorites.toMutableList().apply { feeds?.removeEmptyFeeds()?.forEach { if (!isSavedFavorite(it.url())) add(it) } }.toTypedArray()
-    }
+	fun addFavorites(feeds: Array<out Feed?>?) {
+		allFavorites = allFavorites.toMutableList().apply { feeds?.removeEmptyFeeds()?.forEach { if (!isSavedFavorite(it.url())) add(it) } }.toTypedArray()
+	}
 
-    fun deleteFavorite(url: String?) {
-        if (url.notNullOrBlank()) allFavorites = allFavorites.toMutableList().filterNot { it.url() == url }.toTypedArray()
-    }
+	fun deleteFavorite(url: String?) {
+		if (url.notNullOrBlank()) allFavorites = allFavorites.toMutableList().filterNot { it.url() == url }.toTypedArray()
+	}
 
-    fun updateFavoriteTitle(feedUrl: String?, newTitle: String?) {
-        if (feedUrl.notNullOrBlank() && newTitle.notNullOrBlank()) {
-            allFavorites = allFavorites.apply {
-                forEach {
-                    if (it.url() == feedUrl) it.title = newTitle
-                }
-            }
-        }
-    }
+	fun updateFavoriteTitle(feedUrl: String?, newTitle: String?) {
+		if (feedUrl.notNullOrBlank() && newTitle.notNullOrBlank()) {
+			allFavorites = allFavorites.apply {
+				forEach {
+					if (it.url() == feedUrl) it.title = newTitle
+				}
+			}
+		}
+	}
 
-    var allBookmarks: Array<Article>
-        get() = try {
-            Paper.book(BOOKMARKS).read<Array<Article>>(BOOKMARKS)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            arrayOf<Article>()
-        }
-        set(value) {
-            try {
-                Paper.book(BOOKMARKS).write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles())
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+	var allBookmarks: Array<Article>
+		get() = try {
+			Paper.book(BOOKMARKS).read<Array<Article>>(BOOKMARKS)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			arrayOf<Article>()
+		}
+		set(value) {
+			try {
+				Paper.book(BOOKMARKS).write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles())
+			} catch (e: Exception) {
+				e.printStackTrace()
+			}
+		}
 
-    val allBookmarkUrls = mutableListOf<String>().apply { allBookmarks.forEach { add(it.url!!) } }.toTypedArray()
+	val allBookmarkUrls = mutableListOf<String>().apply { allBookmarks.forEach { add(it.url!!) } }.toTypedArray()
 
-    private fun addBookmarks(vararg articles: Article?) {
-        allBookmarks = allBookmarks.toMutableList().apply {
-            articles.removeEmptyArticles().forEach { if (!isSavedBookmark(it.url)) add(0, it) }
-        }.toTypedArray()
-    }
+	private fun addBookmarks(vararg articles: Article?) {
+		allBookmarks = allBookmarks.toMutableList().apply {
+			articles.removeEmptyArticles().forEach { if (!isSavedBookmark(it.url)) add(0, it) }
+		}.toTypedArray()
+	}
 
-    fun addBookmark(article: Article?) {
-        if (article != null) {
-            try {
-                if (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
-                    asyncUnsafe {
-                        article.pocketId = PocketHandler().addToPocket(article)
-                        article.fromPocket = true
-                        addBookmarks(article)
-                    }
-                } else {
-                    addBookmarks(article)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
+	fun addBookmark(article: Article?) {
+		if (article != null) {
+			try {
+				if (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
+					asyncUnsafe {
+						article.pocketId = PocketHandler().addToPocket(article)
+						article.fromPocket = true
+						addBookmarks(article)
+					}
+				} else {
+					addBookmarks(article)
+				}
+			} catch (e: Exception) {
+				e.printStackTrace()
+			}
+		}
+	}
 
-    fun deleteBookmark(url: String?) {
-        if (url.notNullOrBlank()) {
-            try {
-                allBookmarks.toMutableList().filter { it.url == url }.forEach {
-                    val pocket = Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
-                    if (pocket && it.fromPocket) {
-                        asyncUnsafe {
-                            PocketHandler().archiveOnPocket(it)
-                        }
-                    }
-                }
-                allBookmarks = allBookmarks.toMutableList().filterNot { it.url == url }.toTypedArray()
-            } catch(e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
+	fun deleteBookmark(url: String?) {
+		if (url.notNullOrBlank()) {
+			try {
+				allBookmarks.toMutableList().filter { it.url == url }.forEach {
+					val pocket = Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
+					if (pocket && it.fromPocket) {
+						asyncUnsafe {
+							PocketHandler().archiveOnPocket(it)
+						}
+					}
+				}
+				allBookmarks = allBookmarks.toMutableList().filterNot { it.url == url }.toTypedArray()
+			} catch(e: Exception) {
+				e.printStackTrace()
+			}
+		}
+	}
 
-    var allReadUrls: Array<String>
-        get() = try {
-            Paper.book(READ_URLS).read<Array<String>>(READ_URLS)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            arrayOf<String>()
-        }
-        set(value) {
-            try {
-                Paper.book(READ_URLS).write(READ_URLS, value.removeBlankStrings())
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+	var allReadUrls: Array<String>
+		get() = try {
+			Paper.book(READ_URLS).read<Array<String>>(READ_URLS)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			arrayOf<String>()
+		}
+		set(value) {
+			try {
+				Paper.book(READ_URLS).write(READ_URLS, value.removeBlankStrings())
+			} catch (e: Exception) {
+				e.printStackTrace()
+			}
+		}
 
-    fun addReadUrl(url: String?) {
-        allReadUrls = allReadUrls.toMutableList().apply { if (url.notNullOrBlank() == true) add(url!!) }.toTypedArray()
-    }
+	fun addReadUrl(url: String?) {
+		allReadUrls = allReadUrls.toMutableList().apply { if (url.notNullOrBlank() == true) add(url!!) }.toTypedArray()
+	}
 
-    var allLastFeeds: Array<Feed>
-        get() = try {
-            Paper.book(LAST_FEEDS).read<Array<Feed>>(LAST_FEEDS)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            arrayOf<Feed>()
-        }
-        set(value) {
-            try {
-                Paper.book(LAST_FEEDS).write(LAST_FEEDS, value.removeEmptyFeeds().takeLast(50).toTypedArray())
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+	var allLastFeeds: Array<Feed>
+		get() = try {
+			Paper.book(LAST_FEEDS).read<Array<Feed>>(LAST_FEEDS)
+		} catch (e: Exception) {
+			e.printStackTrace()
+			arrayOf<Feed>()
+		}
+		set(value) {
+			try {
+				Paper.book(LAST_FEEDS).write(LAST_FEEDS, value.removeEmptyFeeds().takeLast(50).toTypedArray())
+			} catch (e: Exception) {
+				e.printStackTrace()
+			}
+		}
 
-    fun addLastFeed(feed: Feed?) {
-        allLastFeeds = allLastFeeds.toMutableList().apply { if (feed != null && tryOrNull { allLastFeeds.last().url() } != feed.url()) add(feed) }.toTypedArray()
-    }
+	fun addLastFeed(feed: Feed?) {
+		allLastFeeds = allLastFeeds.toMutableList().apply { if (feed != null && tryOrNull { allLastFeeds.last().url() } != feed.url()) add(feed) }.toTypedArray()
+	}
 
-    fun isSavedFavorite(url: String?) = url.notNullOrBlank() && allFavoritesUrls.contains(url)
+	fun isSavedFavorite(url: String?) = url.notNullOrBlank() && allFavoritesUrls.contains(url)
 
-    fun isSavedBookmark(url: String?) = url.notNullOrBlank() && allBookmarkUrls.contains(url)
+	fun isSavedBookmark(url: String?) = url.notNullOrBlank() && allBookmarkUrls.contains(url)
 
-    fun isSavedReadUrl(url: String?) = url.notNullOrBlank() && allReadUrls.contains(url)
+	fun isSavedReadUrl(url: String?) = url.notNullOrBlank() && allReadUrls.contains(url)
 
-    // Helpers
+	// Helpers
 
-    class PocketHandler {
+	class PocketHandler {
 
-        fun addToPocket(item: Article) = tryOrNull { Pocket().add(item.url!!) }
+		fun addToPocket(item: Article) = tryOrNull { Pocket().add(item.url!!) }
 
-        fun archiveOnPocket(item: Article) = tryOrNull { Pocket().archive(item.pocketId!!) }
+		fun archiveOnPocket(item: Article) = tryOrNull { Pocket().archive(item.pocketId!!) }
 
-    }
+	}
 
 }

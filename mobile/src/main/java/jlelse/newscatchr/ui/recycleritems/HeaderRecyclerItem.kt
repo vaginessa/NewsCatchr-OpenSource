@@ -22,41 +22,41 @@ import jlelse.readit.R
 
 @Keep
 class HeaderRecyclerItem : AbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
-    private val FACTORY = ItemFactory()
+	private val FACTORY = ItemFactory()
 
-    private var title: String? = ""
+	private var title: String? = ""
 
-    fun withTitle(title: String): HeaderRecyclerItem {
-        this.title = title
-        return this
-    }
+	fun withTitle(title: String): HeaderRecyclerItem {
+		this.title = title
+		return this
+	}
 
-    override fun getType(): Int {
-        return R.id.header_item_id
-    }
+	override fun getType(): Int {
+		return R.id.header_item_id
+	}
 
-    override fun getLayoutRes(): Int {
-        return R.layout.recyclerheaderitem
-    }
+	override fun getLayoutRes(): Int {
+		return R.layout.recyclerheaderitem
+	}
 
-    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
-        super.bindView(viewHolder, payloads)
-        viewHolder.title.text = title
-    }
+	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
+		super.bindView(viewHolder, payloads)
+		viewHolder.title.text = title
+	}
 
-    override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
+	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
 
-    class ItemFactory : ViewHolderFactory<ViewHolder> {
-        override fun create(v: View): ViewHolder {
-            return ViewHolder(v)
-        }
-    }
+	class ItemFactory : ViewHolderFactory<ViewHolder> {
+		override fun create(v: View): ViewHolder {
+			return ViewHolder(v)
+		}
+	}
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var title: TextView
+	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+		var title: TextView
 
-        init {
-            this.title = view.find<TextView>(R.id.headerTitle)
-        }
-    }
+		init {
+			this.title = view.find<TextView>(R.id.headerTitle)
+		}
+	}
 }

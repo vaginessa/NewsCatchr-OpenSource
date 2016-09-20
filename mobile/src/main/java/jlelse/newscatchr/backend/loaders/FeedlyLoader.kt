@@ -21,95 +21,95 @@ import jlelse.newscatchr.extensions.removeBlankStrings
 import jlelse.newscatchr.extensions.removeEmptyArticles
 
 class FeedlyLoader {
-    var type: FeedTypes? = null
-    var count = 20
-    var query: String? = null
-    var feedUrl: String? = null
-    var ranked: Ranked = Ranked.NEWEST
-    var continuation: String? = null
+	var type: FeedTypes? = null
+	var count = 20
+	var query: String? = null
+	var feedUrl: String? = null
+	var ranked: Ranked = Ranked.NEWEST
+	var continuation: String? = null
 
-    private val articleCache by lazy { ArticleCache() }
+	private val articleCache by lazy { ArticleCache() }
 
-    fun items(cache: Boolean): Array<Article>? = when (type) {
-        FeedTypes.MIX -> {
-            var ids: Ids? = if (cache) readFromCache("MixIds$feedUrl" + when (ranked) {
-                Ranked.OLDEST -> "oldest"
-                else -> ""
-            }) else null
-            if (ids == null) {
-                ids = Feedly().mixIds(feedUrl, count).apply {
-                    saveToCache("MixIds$feedUrl" + when (ranked) {
-                        Ranked.OLDEST -> "oldest"
-                        else -> ""
-                    })
-                }
-            }
-            itemsByIds(ids?.ids, cache)
-        }
-        FeedTypes.FEED -> {
-            var ids: Ids? = if (cache) readFromCache("StreamIds$feedUrl" + when (ranked) {
-                Ranked.OLDEST -> "oldest"
-                else -> ""
-            }) else null
-            if (ids == null) {
-                ids = Feedly().streamIds(feedUrl, count, null, when (ranked) {
-                    Ranked.NEWEST -> "newest"
-                    Ranked.OLDEST -> "oldest"
-                }).apply {
-                    saveToCache("StreamIds$feedUrl" + when (ranked) {
-                        Ranked.OLDEST -> "oldest"
-                        else -> ""
-                    })
-                }
-            }
-            continuation = ids?.continuation
-            itemsByIds(ids?.ids, cache)
-        }
-        FeedTypes.SEARCH -> {
-            Feedly().articleSearch(feedUrl, query)?.items
-        }
-        else -> null
-    }?.apply {
-        forEach {
-            it.process()
-            ArticleCache().save(it)
-        }
-    }?.removeEmptyArticles()
+	fun items(cache: Boolean): Array<Article>? = when (type) {
+		FeedTypes.MIX -> {
+			var ids: Ids? = if (cache) readFromCache("MixIds$feedUrl" + when (ranked) {
+				Ranked.OLDEST -> "oldest"
+				else -> ""
+			}) else null
+			if (ids == null) {
+				ids = Feedly().mixIds(feedUrl, count).apply {
+					saveToCache("MixIds$feedUrl" + when (ranked) {
+						Ranked.OLDEST -> "oldest"
+						else -> ""
+					})
+				}
+			}
+			itemsByIds(ids?.ids, cache)
+		}
+		FeedTypes.FEED -> {
+			var ids: Ids? = if (cache) readFromCache("StreamIds$feedUrl" + when (ranked) {
+				Ranked.OLDEST -> "oldest"
+				else -> ""
+			}) else null
+			if (ids == null) {
+				ids = Feedly().streamIds(feedUrl, count, null, when (ranked) {
+					Ranked.NEWEST -> "newest"
+					Ranked.OLDEST -> "oldest"
+				}).apply {
+					saveToCache("StreamIds$feedUrl" + when (ranked) {
+						Ranked.OLDEST -> "oldest"
+						else -> ""
+					})
+				}
+			}
+			continuation = ids?.continuation
+			itemsByIds(ids?.ids, cache)
+		}
+		FeedTypes.SEARCH -> {
+			Feedly().articleSearch(feedUrl, query)?.items
+		}
+		else -> null
+	}?.apply {
+		forEach {
+			it.process()
+			ArticleCache().save(it)
+		}
+	}?.removeEmptyArticles()
 
-    fun moreItems(): Array<Article>? = itemsByIds(
-            Feedly().streamIds(feedUrl, count, continuation, when (ranked) {
-                Ranked.NEWEST -> "newest"
-                Ranked.OLDEST -> "oldest"
-            })?.apply {
-                this@FeedlyLoader.continuation = continuation
-            }?.ids, true
-    )?.apply {
-        forEach {
-            it.process()
-            ArticleCache().save(it)
-        }
-    }
+	fun moreItems(): Array<Article>? = itemsByIds(
+			Feedly().streamIds(feedUrl, count, continuation, when (ranked) {
+				Ranked.NEWEST -> "newest"
+				Ranked.OLDEST -> "oldest"
+			})?.apply {
+				this@FeedlyLoader.continuation = continuation
+			}?.ids, true
+	)?.apply {
+		forEach {
+			it.process()
+			ArticleCache().save(it)
+		}
+	}
 
-    private fun itemsByIds(ids: Array<String>?, cache: Boolean): Array<Article>? = if (ids.notNullAndEmpty()) {
-        ids!!.removeBlankStrings().toMutableList().filter { if (cache) !articleCache.isCached(it) else true }.toTypedArray().let {
-            if (it.notNullAndEmpty()) Feedly().entries(it)?.forEach { articleCache.save(it) }
-        }
-        mutableListOf<Article>().apply {
-            ids.removeBlankStrings().forEach {
-                articleCache.getById(it)?.let { add(it) }
-            }
-        }.toTypedArray()
-    } else null
+	private fun itemsByIds(ids: Array<String>?, cache: Boolean): Array<Article>? = if (ids.notNullAndEmpty()) {
+		ids!!.removeBlankStrings().toMutableList().filter { if (cache) !articleCache.isCached(it) else true }.toTypedArray().let {
+			if (it.notNullAndEmpty()) Feedly().entries(it)?.forEach { articleCache.save(it) }
+		}
+		mutableListOf<Article>().apply {
+			ids.removeBlankStrings().forEach {
+				articleCache.getById(it)?.let { add(it) }
+			}
+		}.toTypedArray()
+	} else null
 
-    enum class FeedTypes {
-        FEED,
-        SEARCH,
-        MIX
-    }
+	enum class FeedTypes {
+		FEED,
+		SEARCH,
+		MIX
+	}
 
-    enum class Ranked {
-        NEWEST,
-        OLDEST
-    }
+	enum class Ranked {
+		NEWEST,
+		OLDEST
+	}
 
 }

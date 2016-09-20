@@ -24,28 +24,28 @@ import jlelse.readit.BuildConfig
  * Application class
  */
 class NewsCatchr : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        appContext = applicationContext
-        setLocale()
-        Paper.init(this)
-        if (!BuildConfig.DEBUG) {
-            Tracking.AnalyticsTrackers.initialize(this)
-        }
-        JobManager.create(this).addJobCreator { tag ->
-            when (tag) {
-                SyncJob.TAG -> SyncJob()
-                else -> null
-            }
-        }
-        if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
-        // Handle vectors
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-        // Handle night mode settings
-        setNightMode()
-        // Init Host
-        hosts = Hosts(applicationContext)
-    }
+	override fun onCreate() {
+		super.onCreate()
+		appContext = applicationContext
+		setLocale()
+		Paper.init(this)
+		if (!BuildConfig.DEBUG) {
+			Tracking.AnalyticsTrackers.initialize(this)
+		}
+		JobManager.create(this).addJobCreator { tag ->
+			when (tag) {
+				SyncJob.TAG -> SyncJob()
+				else -> null
+			}
+		}
+		if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
+		// Handle vectors
+		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+		// Handle night mode settings
+		setNightMode()
+		// Init Host
+		hosts = Hosts(applicationContext)
+	}
 }
 
 var appContext: Context? = null

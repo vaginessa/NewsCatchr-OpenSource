@@ -32,113 +32,113 @@ import jlelse.readit.R
 
 @Keep
 class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleListRecyclerItem.ViewHolder>() {
-    private val FACTORY = ItemFactory()
+	private val FACTORY = ItemFactory()
 
-    private var article: Article? = null
-    private var fragment: BaseFragment? = null
+	private var article: Article? = null
+	private var fragment: BaseFragment? = null
 
-    fun withArticle(article: Article): ArticleListRecyclerItem {
-        this.article = article
-        return this
-    }
+	fun withArticle(article: Article): ArticleListRecyclerItem {
+		this.article = article
+		return this
+	}
 
-    fun withFragment(fragment: BaseFragment): ArticleListRecyclerItem {
-        this.fragment = fragment
-        return this
-    }
+	fun withFragment(fragment: BaseFragment): ArticleListRecyclerItem {
+		this.fragment = fragment
+		return this
+	}
 
-    override fun getType(): Int {
-        return R.id.articlelist_item_id
-    }
+	override fun getType(): Int {
+		return R.id.articlelist_item_id
+	}
 
-    override fun getLayoutRes(): Int {
-        return R.layout.articlelistrecycleritem
-    }
+	override fun getLayoutRes(): Int {
+		return R.layout.articlelistrecycleritem
+	}
 
-    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
-        super.bindView(viewHolder, payloads)
-        val context = viewHolder.itemView.context
-        if (article?.title.notNullOrBlank()) {
-            viewHolder.title.showView()
-            viewHolder.title.text = article?.title
-            viewHolder.title.setTypeface(null, if (Database().isSavedReadUrl(article?.url)) Typeface.BOLD_ITALIC else Typeface.BOLD)
-        } else {
-            viewHolder.title.hideView()
-        }
-        if ((article?.published?.toInt() ?: 0) != 0) {
-            viewHolder.details.showView()
-            val detailText = DateUtils.getRelativeTimeSpanString(article!!.published)
-            viewHolder.details.text = detailText
-        } else {
-            viewHolder.details.hideView()
-        }
-        if (article?.content.notNullOrBlank()) {
-            viewHolder.content.showView()
-            viewHolder.content.text = article?.excerpt
-        } else {
-            viewHolder.content.hideView()
-        }
-        if (article?.keywords.notNullAndEmpty()) {
-            viewHolder.tagsBox.showView()
-            viewHolder.tagsBox.removeAllViews()
-            article?.keywords?.take(3)?.forEach {
-                viewHolder.tagsBox.addTagView(fragment!!, it)
-            }
-        } else {
-            //viewHolder.tagsBox.hideView()
-        }
-        if (article?.visualUrl.notNullOrBlank()) {
-            viewHolder.visual.showView()
-            viewHolder.visual.loadImage(article?.visualUrl)
-        } else {
-            viewHolder.visual.hideView()
-        }
-        viewHolder.itemView.onClick {
-            if (article != null) fragment?.fragmentNavigation?.pushFragment(ArticleFragment().addObject(article, "article"), article?.originTitle)
-        }
-        viewHolder.bookmark.setImageDrawable((if (Database().isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
-        viewHolder.bookmark.onClick {
-            if (article != null) {
-                if (Database().isSavedBookmark(article?.url)) {
-                    Database().deleteBookmark(article?.url)
-                    viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_border_universal.resDrw(context, context.getPrimaryTextColor()))
-                } else {
-                    Database().addBookmark(article)
-                    viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_universal.resDrw(context, context.getPrimaryTextColor()))
-                }
-            }
-        }
-        viewHolder.share.setImageDrawable(R.drawable.ic_share_universal.resDrw(context, context.getPrimaryTextColor()))
-        viewHolder.share.onClick {
-            if (fragment != null) article?.share(fragment!!.activity)
-        }
-    }
+	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
+		super.bindView(viewHolder, payloads)
+		val context = viewHolder.itemView.context
+		if (article?.title.notNullOrBlank()) {
+			viewHolder.title.showView()
+			viewHolder.title.text = article?.title
+			viewHolder.title.setTypeface(null, if (Database().isSavedReadUrl(article?.url)) Typeface.BOLD_ITALIC else Typeface.BOLD)
+		} else {
+			viewHolder.title.hideView()
+		}
+		if ((article?.published?.toInt() ?: 0) != 0) {
+			viewHolder.details.showView()
+			val detailText = DateUtils.getRelativeTimeSpanString(article!!.published)
+			viewHolder.details.text = detailText
+		} else {
+			viewHolder.details.hideView()
+		}
+		if (article?.content.notNullOrBlank()) {
+			viewHolder.content.showView()
+			viewHolder.content.text = article?.excerpt
+		} else {
+			viewHolder.content.hideView()
+		}
+		if (article?.keywords.notNullAndEmpty()) {
+			viewHolder.tagsBox.showView()
+			viewHolder.tagsBox.removeAllViews()
+			article?.keywords?.take(3)?.forEach {
+				viewHolder.tagsBox.addTagView(fragment!!, it)
+			}
+		} else {
+			//viewHolder.tagsBox.hideView()
+		}
+		if (article?.visualUrl.notNullOrBlank()) {
+			viewHolder.visual.showView()
+			viewHolder.visual.loadImage(article?.visualUrl)
+		} else {
+			viewHolder.visual.hideView()
+		}
+		viewHolder.itemView.onClick {
+			if (article != null) fragment?.fragmentNavigation?.pushFragment(ArticleFragment().addObject(article, "article"), article?.originTitle)
+		}
+		viewHolder.bookmark.setImageDrawable((if (Database().isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
+		viewHolder.bookmark.onClick {
+			if (article != null) {
+				if (Database().isSavedBookmark(article?.url)) {
+					Database().deleteBookmark(article?.url)
+					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_border_universal.resDrw(context, context.getPrimaryTextColor()))
+				} else {
+					Database().addBookmark(article)
+					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_universal.resDrw(context, context.getPrimaryTextColor()))
+				}
+			}
+		}
+		viewHolder.share.setImageDrawable(R.drawable.ic_share_universal.resDrw(context, context.getPrimaryTextColor()))
+		viewHolder.share.onClick {
+			if (fragment != null) article?.share(fragment!!.activity)
+		}
+	}
 
-    override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
+	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
 
-    class ItemFactory : ViewHolderFactory<ViewHolder> {
-        override fun create(v: View): ViewHolder {
-            return ViewHolder(v)
-        }
-    }
+	class ItemFactory : ViewHolderFactory<ViewHolder> {
+		override fun create(v: View): ViewHolder {
+			return ViewHolder(v)
+		}
+	}
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var bookmark: ImageView
-        var share: ImageView
-        var title: TextView
-        var details: TextView
-        var content: TextView
-        var visual: ImageView
-        var tagsBox: FlexboxLayout
+	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+		var bookmark: ImageView
+		var share: ImageView
+		var title: TextView
+		var details: TextView
+		var content: TextView
+		var visual: ImageView
+		var tagsBox: FlexboxLayout
 
-        init {
-            this.bookmark = view.find<ImageView>(R.id.bookmark)
-            this.share = view.find<ImageView>(R.id.share)
-            this.title = view.find<TextView>(R.id.title)
-            this.details = view.find<TextView>(R.id.details)
-            this.content = view.find<TextView>(R.id.content)
-            this.visual = view.find<ImageView>(R.id.visual)
-            this.tagsBox = view.find<FlexboxLayout>(R.id.tagsBox)
-        }
-    }
+		init {
+			this.bookmark = view.find<ImageView>(R.id.bookmark)
+			this.share = view.find<ImageView>(R.id.share)
+			this.title = view.find<TextView>(R.id.title)
+			this.details = view.find<TextView>(R.id.details)
+			this.content = view.find<TextView>(R.id.content)
+			this.visual = view.find<ImageView>(R.id.visual)
+			this.tagsBox = view.find<FlexboxLayout>(R.id.tagsBox)
+		}
+	}
 }

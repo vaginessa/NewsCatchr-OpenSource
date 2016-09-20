@@ -21,41 +21,41 @@ import jlelse.newscatchr.extensions.tryOrNull
 
 class WordpressApi {
 
-    fun reparse(article: Article?): Pair<Article?, Boolean> {
-        return tryOrNull(article.notNullOrEmpty()) {
-            Bridge.get("https://public-api.wordpress.com/rest/v1.1/sites/${article?.url?.blogDomain()}/posts/slug:${article?.url?.postSlug()}?fields=title,content,featured_image")
-                    .asClass(Response::class.java)
-                    ?.let {
-                        val good = it.title.notNullOrBlank() && it.content.notNullOrBlank()
-                        Pair(article?.apply {
-                            if (good) {
-                                title = it.title
-                                content = it.content
-                                if (it.featured_image.notNullOrBlank()) {
-                                    enclosure = null
-                                    visualUrl = it.featured_image
-                                }
-                                process(true)
-                            }
-                        }, good)
-                    }
-        } ?: Pair(article, false)
-    }
+	fun reparse(article: Article?): Pair<Article?, Boolean> {
+		return tryOrNull(article.notNullOrEmpty()) {
+			Bridge.get("https://public-api.wordpress.com/rest/v1.1/sites/${article?.url?.blogDomain()}/posts/slug:${article?.url?.postSlug()}?fields=title,content,featured_image")
+					.asClass(Response::class.java)
+					?.let {
+						val good = it.title.notNullOrBlank() && it.content.notNullOrBlank()
+						Pair(article?.apply {
+							if (good) {
+								title = it.title
+								content = it.content
+								if (it.featured_image.notNullOrBlank()) {
+									enclosure = null
+									visualUrl = it.featured_image
+								}
+								process(true)
+							}
+						}, good)
+					}
+		} ?: Pair(article, false)
+	}
 
-    private fun String.blogDomain(): String? = tryOrNull {
-        Uri.parse(this).host.let { if (it.startsWith("www.")) it.substring(4) else it }
-    }
+	private fun String.blogDomain(): String? = tryOrNull {
+		Uri.parse(this).host.let { if (it.startsWith("www.")) it.substring(4) else it }
+	}
 
-    private fun String.postSlug() = Uri.parse(this).lastPathSegment
+	private fun String.postSlug() = Uri.parse(this).lastPathSegment
 
-    @Keep
-    private class Response {
-        @Body
-        var title: String? = null
-        @Body
-        var content: String? = null
-        @Body
-        var featured_image: String? = null
-    }
+	@Keep
+	private class Response {
+		@Body
+		var title: String? = null
+		@Body
+		var content: String? = null
+		@Body
+		var featured_image: String? = null
+	}
 
 }

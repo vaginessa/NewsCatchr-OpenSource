@@ -23,41 +23,41 @@ import jlelse.readit.R
 
 @Keep
 class MoreRecyclerItem : AbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
-    private val FACTORY = ItemFactory()
+	private val FACTORY = ItemFactory()
 
-    private var callback: () -> Unit = {}
+	private var callback: () -> Unit = {}
 
-    fun withCallback(callback: () -> Unit): MoreRecyclerItem {
-        this.callback = callback
-        return this
-    }
+	fun withCallback(callback: () -> Unit): MoreRecyclerItem {
+		this.callback = callback
+		return this
+	}
 
-    override fun getType(): Int {
-        return R.id.more_item_id
-    }
+	override fun getType(): Int {
+		return R.id.more_item_id
+	}
 
-    override fun getLayoutRes(): Int {
-        return R.layout.recyclershowmoreitem
-    }
+	override fun getLayoutRes(): Int {
+		return R.layout.recyclershowmoreitem
+	}
 
-    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
-        super.bindView(viewHolder, payloads)
-        viewHolder.button.onClick { callback() }
-    }
+	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
+		super.bindView(viewHolder, payloads)
+		viewHolder.button.onClick { callback() }
+	}
 
-    override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
+	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
 
-    class ItemFactory : ViewHolderFactory<ViewHolder> {
-        override fun create(v: View): ViewHolder {
-            return ViewHolder(v)
-        }
-    }
+	class ItemFactory : ViewHolderFactory<ViewHolder> {
+		override fun create(v: View): ViewHolder {
+			return ViewHolder(v)
+		}
+	}
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var button: Button
+	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+		var button: Button
 
-        init {
-            this.button = view.find<Button>(R.id.moreButton)
-        }
-    }
+		init {
+			this.button = view.find<Button>(R.id.moreButton)
+		}
+	}
 }
