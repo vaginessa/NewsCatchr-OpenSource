@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -10,22 +9,22 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content">
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
 
-    <Button
-            android:id="@+id/moreButton"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/spacing_48"
-            android:layout_marginLeft="@dimen/spacing_16"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginRight="@dimen/spacing_16"
-            android:layout_marginEnd="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_8"
-            android:layout_marginBottom="@dimen/spacing_8"
-            android:singleLine="true"
-            android:text="@string/more"
-            android:textColor="@android:color/white"/>
+	<Button
+		android:id="@+id/moreButton"
+		android:layout_width="wrap_content"
+		android:layout_height="@dimen/spacing_48"
+		android:layout_marginBottom="@dimen/spacing_8"
+		android:layout_marginEnd="@dimen/spacing_16"
+		android:layout_marginLeft="@dimen/spacing_16"
+		android:layout_marginRight="@dimen/spacing_16"
+		android:layout_marginStart="@dimen/spacing_16"
+		android:layout_marginTop="@dimen/spacing_8"
+		android:singleLine="true"
+		android:text="@string/more"
+		android:textColor="@android:color/white" />
 
 </LinearLayout>

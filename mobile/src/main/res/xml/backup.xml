@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -10,11 +9,25 @@
   -->
 
 <full-backup-content>
-    <exclude domain="file" path="bookmarks.nc"/>
-    <exclude domain="file" path="feeds.nc"/>
-    <exclude domain="file" path="readurls.nc"/>
-    <exclude domain="file" path="temp_bookmarks.nc"/>
-    <exclude domain="file" path="temp_feeds.nc"/>
-    <exclude domain="sharedpref" path="evernote_jobs.xml"/>
-    <exclude domain="database" path="evernote_jobs.db"/>
+	<exclude
+		domain="file"
+		path="bookmarks.nc" />
+	<exclude
+		domain="file"
+		path="feeds.nc" />
+	<exclude
+		domain="file"
+		path="readurls.nc" />
+	<exclude
+		domain="file"
+		path="temp_bookmarks.nc" />
+	<exclude
+		domain="file"
+		path="temp_feeds.nc" />
+	<exclude
+		domain="sharedpref"
+		path="evernote_jobs.xml" />
+	<exclude
+		domain="database"
+		path="evernote_jobs.db" />
 </full-backup-content>

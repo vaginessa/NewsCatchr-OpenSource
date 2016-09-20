@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -9,21 +8,20 @@
   ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/spacing_4">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:padding="@dimen/spacing_4">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:textColor="#ffffff"
-            android:textSize="13sp"
-            android:gravity="center"
-            android:id="@+id/tagView"
-            android:background="@drawable/chip"/>
+	<TextView
+		android:id="@+id/tagView"
+		android:layout_width="wrap_content"
+		android:layout_height="32dp"
+		android:background="@drawable/chip"
+		android:gravity="center"
+		android:paddingLeft="12dp"
+		android:paddingRight="12dp"
+		android:textColor="#ffffff"
+		android:textSize="13sp" />
 
 </FrameLayout>

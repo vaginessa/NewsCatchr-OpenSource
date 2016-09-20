@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
@@ -11,15 +10,15 @@
 
 <resources>
 
-    <dimen name="spacing_4">4dp</dimen>
-    <dimen name="spacing_8">8dp</dimen>
-    <dimen name="spacing_12">12dp</dimen>
-    <dimen name="spacing_16">16dp</dimen>
-    <dimen name="spacing_24">24dp</dimen>
-    <dimen name="spacing_32">32dp</dimen>
-    <dimen name="spacing_48">48dp</dimen>
-    <dimen name="spacing_64">64dp</dimen>
+	<dimen name="spacing_4">4dp</dimen>
+	<dimen name="spacing_8">8dp</dimen>
+	<dimen name="spacing_12">12dp</dimen>
+	<dimen name="spacing_16">16dp</dimen>
+	<dimen name="spacing_24">24dp</dimen>
+	<dimen name="spacing_32">32dp</dimen>
+	<dimen name="spacing_48">48dp</dimen>
+	<dimen name="spacing_64">64dp</dimen>
 
-    <dimen name="fab_margin">@dimen/spacing_16</dimen>
+	<dimen name="fab_margin">@dimen/spacing_16</dimen>
 
 </resources>
