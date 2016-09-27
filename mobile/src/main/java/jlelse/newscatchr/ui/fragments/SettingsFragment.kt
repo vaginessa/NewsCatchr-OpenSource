@@ -278,7 +278,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				}
 			}
 			languagePref -> {
-				val availableLocales = arrayOf(Locale.ENGLISH, Locale.GERMAN)
+				val availableLocales = mutableListOf<Locale>().apply {
+					arrayOf("en", "de", "fa", "fr").forEach {
+						add(Locale(it))
+					}
+				}.toTypedArray()
 				MaterialDialog.Builder(context)
 						.items(mutableListOf<String>().apply {
 							availableLocales.forEach { add(it.displayName) }

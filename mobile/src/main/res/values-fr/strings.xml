@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+  ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="about_nc">À propos de NewsCatchr</string>
+    <string name="about_nc_desc">Plus d’informations sur cette appli</string>
+    <string name="loading">Chargement…</string>
+    <string name="settings">Paramètres</string>
+    <string name="bookmarks">Favoris</string>
+    <string name="favorites">Favoris</string>
+    <string name="about">À propos</string>
+    <string name="news">Actualités</string>
+    <string name="search_results_for">Résultats de recherche pour</string>
+    <string name="suc_import">Importation réussie !</string>
+    <string name="import_failed">L’importation a échoué !</string>
+    <string name="suc_backup">Sauvegarde réussie !</string>
+    <string name="backup_failed">La sauvegarde a échoué !</string>
+    <string name="suc_restore">Restauration réussie !</string>
+    <string name="restore_failed">La restauration a échoué !</string>
+    <string name="suc_share">Partage réussi !</string>
+    <string name="share_failed">Le partage a échoué !</string>
+    <string name="logged_in_as">Connecté en tant que</string>
+    <string name="del_acc_info">Déconnexion</string>
+    <string name="pocket_sync_title">Synchronisation avec Pocket</string>
+    <string name="pocket_sync_desc">Synchronisez vos marque-pages avec Pocket – et consultez-les sur tous vos appareils.</string>
+    <string name="pocket_login">Se connecter à Pocket</string>
+    <string name="pocket_logout">Se déconnecter de Pocket</string>
+    <string name="open_in_browser">Ouvrir dans le navigateur</string>
+    <string name="share">Partager</string>
+    <string name="what_searching">Que recherchez-vous ?</string>
+    <string name="custom_tabs_title">Navigateur intégré</string>
+    <string name="use_custom_tabs">Utiliser le navigateur interne à l’appli quand il est disponible, afin d’accélérer le chargement des sites web</string>
+    <string name="clear_cache_title">Vider le cache</string>
+    <string name="clear_cache_desc">Vider toutes les données en cache</string>
+    <string name="cleared_cache">Cache supprimé</string>
+    <string name="clear_history_title">Effacer l’historique</string>
+    <string name="clear_history_desc">Effacer l’historique des flux</string>
+    <string name="cleared_history">Historique effacé</string>
+    <string name="language">Langue</string>
+    <string name="backup">Sauvegarde</string>
+    <string name="restore">Restauration</string>
+    <string name="import_opml">Import d’un fichier OPML</string>
+    <string name="mark_as_bookmark">Ajouter aux marque-pages</string>
+    <string name="used_libraries">Bibliothèques logicielles utilisées</string>
+    <string name="view_all_libraries">Voir les bibliothèques utilisées par cette appli</string>
+    <string name="used_apis">API utilisées</string>
+    <string name="view_all_apis">Voir les API utilisées par cette appli</string>
+    <string name="night_mode">Mode nuit</string>
+    <string name="general">Général</string>
+    <string name="refresh">Actualiser</string>
+    <string name="add_shortcut">Ajouter à l’écran d’accueil</string>
+    <string name="shortcut_created">Ajouté à l’écran d’accueil</string>
+    <string name="mark_as_favorite">Ajouter aux favoris</string>
+    <string name="help">Aide</string>
+    <string name="advanced">Avancé</string>
+    <string name="nothing_found">Rien n’a été trouvé !</string>
+    <string name="article_image">Image de l’article</string>
+    <string name="donate">Faire un don</string>
+    <string name="subscribe_support">Recevez l’abonnement réservé aux donateurs</string>
+    <string name="subscribe_support_desc">Soutenez le développeur en faisant une petite contribution régulière</string>
+    <string name="prefs_amp_desc">Charge la version simplifiée et accélérée d’un site via AMP, au lieu de sa version originale. Si l’article n’est pas disponible en format AMP, l’appli utilise Google Web Light.</string>
+    <string name="share_app">Partager NewsCatchr</string>
+    <string name="edit_feed_title">Modifier le titre</string>
+    <string name="backup_restore">Sauvegarde &amp; restauration</string>
+    <string name="backup_desc">Sauvegarde ou restaure tous les flux favoris, marque-pages et le statut lu/non lu.</string>
+    <string name="sort">Tri</string>
+    <string name="set">Collection</string>
+    <string name="sync">Synchronisation</string>
+    <string name="sync_desc">Activer la synchronisation afin de télécharger automatiquement les articles en arrière-plan</string>
+    <string name="sync_now">Synchroniser maintenant</string>
+    <string name="sync_interval">Intervale de synchronisation</string>
+    <string name="more">Plus</string>
+    <string name="last_feeds">Derniers flux</string>
+    <string name="recommendations">Recommandations</string>
+    <string name="rec_topics">Sujets recommandés</string>
+    <string name="never">Jamais</string>
+    <string name="last_suc_sync">Dernière synchronisation réussie</string>
+    <string name="newest_first">Le plus récent en premier</string>
+    <string name="oldest_first">Le plus ancien en premier</string>
+    <string name="shared_with_nc">Partagé via NewsCatchr ( http://bit.ly/readit-gplay )</string>
+    <string name="try_nc">Essayez NewsCatchr ( http://bit.ly/readit-gplay ), un lecteur d’actualités plutôt cool sur Android.</string>
+    <string name="submit_issue">Soumettre un problème</string>
+</resources>
