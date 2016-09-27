@@ -28,7 +28,7 @@ ext {
     TARGET_SDK = 24
     BUILD_TOOLS = "24.0.2"
     SUPPORT_LIBS = "24.2.1"
-    PLAY_SERVICES = "9.6.0"
+    PLAY_SERVICES = "9.6.1"
     KOTLIN = "1.0.4"
 }
 

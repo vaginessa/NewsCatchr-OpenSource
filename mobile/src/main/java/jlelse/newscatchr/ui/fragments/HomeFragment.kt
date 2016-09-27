@@ -129,7 +129,11 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			true
 		}
 		R.id.language -> {
-			val availableLocales = arrayOf(Locale.ENGLISH, Locale.GERMAN, Locale.FRENCH, Locale.ITALIAN, Locale.CHINESE, Locale.JAPANESE, Locale.KOREAN)
+			val availableLocales = mutableListOf<Locale>().apply {
+				Locale.getISOLanguages().forEach {
+					add(Locale(it))
+				}
+			}.toTypedArray()
 			MaterialDialog.Builder(context)
 					.items(mutableListOf<String>().apply {
 						availableLocales.forEach { add(it.displayName) }

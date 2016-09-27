@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+  ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string name="about_nc">درباره NewsCatchr</string>
+    <string name="about_nc_desc">نمایش اطلاعاتی در مورد این اپ</string>
+    <string name="loading">در حال بارگیری ...</string>
+    <string name="settings">تنظیمات</string>
+    <string name="bookmarks">نشان شده ها</string>
+    <string name="favorites">علاقه مندی ها</string>
+    <string name="about">درباره</string>
+    <string name="news">خبرها</string>
+    <string name="search_results_for">جستجوی نمایش برای</string>
+    <string name="suc_import">با موفقیت اضافه شد!</string>
+    <string name="import_failed">مشکل در اضافه کردن!</string>
+    <string name="suc_backup">پشتیبان گیری با موفقیت انجام شد!</string>
+    <string name="backup_failed">مشکل در پشتیبان گیری!</string>
+    <string name="suc_restore">بازگردانی با موفقیت انجام شد!</string>
+    <string name="restore_failed">مشکل در بازگردانی!</string>
+    <string name="suc_share">به اشتراک گذاشته شد!</string>
+    <string name="share_failed">مشکل در به اشتراک گذاری!</string>
+    <string name="logged_in_as">ورود به عنوان</string>
+    <string name="del_acc_info">خروج</string>
+    <string name="pocket_sync_title">هماهنگ سازی با Pocket</string>
+    <string name="pocket_sync_desc">هماهنگ سازی نشان شده ها با Pocket - با هر دستگاهی که خواستید مطالعه کنید.</string>
+    <string name="pocket_login">ورود با Pocket</string>
+    <string name="pocket_logout">خروج از Pocket</string>
+    <string name="open_in_browser">در مرورگر باز کن</string>
+    <string name="share">به اشتراک گذاری</string>
+    <string name="what_searching">به دنبال چه چیزی می گردی؟</string>
+    <string name="custom_tabs_title">مرورگر درون اپ</string>
+    <string name="use_custom_tabs">در صورت فعال بودن از مرورگر درون اپ استفاده کن</string>
+    <string name="clear_cache_title">پاکسازی منبع موقت</string>
+    <string name="clear_cache_desc">پاکسازی همه منابع موقت</string>
+    <string name="cleared_cache">منبع موقت پاکسازی شد</string>
+    <string name="clear_history_title">پاکسازی تاریخچه</string>
+    <string name="clear_history_desc">پاکسازی تاریخچه فید</string>
+    <string name="cleared_history">تاریخچه پاکسازی شد</string>
+    <string name="language">زبان</string>
+    <string name="backup">پشتیبان گیری</string>
+    <string name="restore">بازگردانی</string>
+    <string name="import_opml">اضافه کردن فایل OPML</string>
+    <string name="mark_as_bookmark">به نشان شده ها اضافه شد</string>
+    <string name="used_libraries">کتابخانه های استفاده شده</string>
+    <string name="view_all_libraries">نمایش تمامی کتابخانه های استفاده شده در اپ</string>
+    <string name="used_apis">API های استفاده شده</string>
+    <string name="view_all_apis">نمایش تمامی API های استفاده شد در اپ</string>
+    <string name="night_mode">حالت شب</string>
+    <string name="general">عمومی</string>
+    <string name="refresh">به روز رسانی</string>
+    <string name="add_shortcut">اضافه کردن میانبر به صفحه اصلی</string>
+    <string name="shortcut_created">میانبر اضافه شد</string>
+    <string name="mark_as_favorite">به علاقه مندی ها اضافه شد</string>
+    <string name="help">راهنما</string>
+    <string name="advanced">پیشرفته</string>
+    <string name="nothing_found">چیزی پیدا نشد!</string>
+    <string name="article_image">عکس مطلب</string>
+    <string name="donate">دانیت</string>
+    <string name="subscribe_support">دریافت اشتراک دانیت</string>
+    <string name="subscribe_support_desc">حمایت از توسعه اپ تنها با مبلغی کم</string>
+    <string name="prefs_amp_desc">لود کردن نسخه سریع شده وب سایت به جای نسخه اصلی وب. در مواقعه ای که AMP برای مطلب فعال نیست، اپ از طریق Google Web Light این کار را انجام می دهد.</string>
+    <string name="share_app">به اشتراک گذاری NewsCatchr</string>
+    <string name="edit_feed_title">ویرایش عنوان</string>
+    <string name="backup_restore">پشتیبان گیری و بازگردانی</string>
+    <string name="backup_desc">پشتیبان گیری یا بازگردانی همه علاقه مندی ها، نشان شده ها و وضعیت خواندن</string>
+    <string name="sort">ترتیب</string>
+    <string name="set">قرار دادن</string>
+    <string name="sync">هماهنگ سازی</string>
+    <string name="sync_desc">فعال کردن هماهنگ ساز برای دریافت مطالب در پس زمینه</string>
+    <string name="sync_now">در حال هماهنگ سازی</string>
+    <string name="sync_interval">فاصله زمانی همگام سازی</string>
+    <string name="more">بیشتر</string>
+    <string name="last_feeds">آخرین فیدها</string>
+    <string name="recommendations">پیشنهادات</string>
+    <string name="rec_topics">تاپیک های پیشنهاد شده</string>
+    <string name="never">هرگز</string>
+    <string name="last_suc_sync">آخرین هماهنگ سازی موفق</string>
+    <string name="newest_first">جدیدترین ها اول</string>
+    <string name="oldest_first">قدیمی ترین ها اول</string>
+    <string name="shared_with_nc">به اشتراک گذاری شده توسط NewsCatchr (http://bit.ly/readit-gplay)</string>
+    <string name="try_nc">NewsCatchr رو امتحان کن، خیلی با حاله
+ http://bit.ly/readit-gpla
+اپ خبر خوان برای اندروید</string>
+    <string name="submit_issue">ارسال مشکل</string>
+</resources>
