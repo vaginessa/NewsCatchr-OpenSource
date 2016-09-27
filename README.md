@@ -1,14 +1,14 @@
 # NewsCatchr
 
 [Website](https://newscatchr.jlelse.eu)  
-[Google Play](https://play.google.com/store/apps/details?id=jlelse.readit)
+[Google Play](https://play.google.com/store/apps/details?id=jlelse.readit)  
 [Beta](https://play.google.com/apps/testing/jlelse.readit)
 
 ## How YOU can help...
 
 Things you have to know:
 
-- The app is mostly written in Kotlin (but it's very similar to Java)
+- The app is mostly written in Kotlin (but it's very similar to Java). Check out [kotlinlang.org](kotlinlang.org).
 - When you want to build the app, you should use Android Studio or IntelliJ IDEA with the Kotlin plugin installed
 - The API keys, used buy the Play Store version are removed from this code, enter your own under `mobile/src/main/java/jlelse/newscatchr/backend/apis/ApiKeys.kt`
 
