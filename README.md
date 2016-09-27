@@ -1,8 +1,8 @@
 # NewsCatchr
 
 [Website](https://newscatchr.jlelse.eu)  
-[Download on Google Play](https://play.google.com/store/apps/details?id=jlelse.readit)
-[Beta sign-up](https://play.google.com/apps/testing/jlelse.readit)
+[Google Play](https://play.google.com/store/apps/details?id=jlelse.readit)
+[Beta](https://play.google.com/apps/testing/jlelse.readit)
 
 ## How YOU can help...
 
