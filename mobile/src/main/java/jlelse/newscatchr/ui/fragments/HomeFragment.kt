@@ -129,11 +129,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			true
 		}
 		R.id.language -> {
-			val availableLocales = mutableListOf<Locale>().apply {
-				Locale.getISOLanguages().forEach {
-					add(Locale(it))
-				}
-			}.toTypedArray()
+			val availableLocales = Locale.getAvailableLocales()
 			MaterialDialog.Builder(context)
 					.items(mutableListOf<String>().apply {
 						availableLocales.forEach { add(it.displayName) }
