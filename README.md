@@ -1,16 +1,10 @@
 # NewsCatchr
 
 [Website](https://newscatchr.jlelse.eu)  
-[Download](https://play.google.com/store/apps/details?id=jlelse.readit)
+[Download on Google Play](https://play.google.com/store/apps/details?id=jlelse.readit)
+[Beta sign-up](https://play.google.com/apps/testing/jlelse.readit)
 
-## Why Open Source now?
-
-You know, I'm the laziest developer on earth and I'm pissed about the app now, so do whatever you want!
-No, that was just a JOKE!
-
-I believe in OPEN SOURCE, I believe, that apps will get better when they are open source and there's a community, which likes to contribute. And because I don't need yet, I thought "What could go wrong? - Nothing.".
-
-## How can YOU contribute?
+## How YOU can help...
 
 Things you have to know:
 
@@ -27,24 +21,7 @@ Some things you can help with:
 
 ## What has changed since the last Play Store release?
 
-- Read state indicator (_italic title_) including backup / restore of it
-- Big changes to the way, the app gets the articles from feedly
-- Restructured some settings
-- Sync feature (download new articles on a specific time interval)
-- Google Voice Search implementation
-- Direct posting to Facebook and Twitter
-- Url Shortener (very useful when sharing to Twitter)
-- Big UI changes (FABs, new colors, new icon etc.)
-- Improved Readability feature (reparsing articles), it uses the WordPress API now too
-- Totally reworked home screen with last opened feeds, favorite feeds and suggestions based on your language
-- Links in the article text will open with Custom Tabs too (if configured)
-- Added possibility to directly submit issues from within the app
-- Improved API integrations
-- Added German translation and added option to change the language manually
-- Updated many dependencies
-- And more
-
-You can test the beta version with all the new stuff via [this link](https://play.google.com/apps/testing/jlelse.readit). But it might be *UNSTABLE*!
+See the [release page](https://github.com/jlelse/NewsCatchr-OpenSource/releases)!
 
 ## LICENSE
 
