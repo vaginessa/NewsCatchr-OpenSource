@@ -133,7 +133,6 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		if (intent != null) {
 			// Shortcut
 			intent.getStringExtra("feedid")?.let {
-				// If this get's executed it's the shortcut
 				fragNavController.clearStack()
 				val feedTitle = intent.getStringExtra("feedtitle")
 				if (it.notNullOrBlank()) pushFragment(FeedFragment().addObject(Feed().apply {
@@ -141,16 +140,21 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 					title = feedTitle
 				}, "feed"), feedTitle)
 			}
+			// Browser
+			if (intent.scheme == "http" || intent.scheme == "https") {
+				intent.dataString?.let {
+					searchForFeeds(this, this, it)
+				}
+			}
 			// Google Voice Search
 			if (intent.action == "com.google.android.gms.actions.SEARCH_ACTION") {
-				// It's Google request
 				intent.getStringExtra(SearchManager.QUERY)?.let {
 					searchForFeeds(this, this, it)
 				}
 			}
 			// Pocket
 			val currentFrag = fragNavController.currentFragment
-			if (currentFrag is SettingsFragment && intent.data?.toString()?.startsWith("pocketapp45699") == true) {
+			if (currentFrag is SettingsFragment && intent.scheme == "pocketapp45699") {
 				currentFrag.progressDialog?.show()
 				currentFrag.pocketAuth?.authenticate()
 			}
