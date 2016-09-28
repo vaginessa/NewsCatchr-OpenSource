@@ -86,7 +86,6 @@
     <string name="newest_first">Neuste zuerst</string>
     <string name="oldest_first">Alte zuerst</string>
     <string name="shared_with_nc">Geteilt mit NewsCatchr ( http://bit.ly/readit-gplay )</string>
-    <string name="try_nc">Probier NewsCatchr ( http://bit.ly/readit-gplay ), es ist eine ziemlich colle Newsreader app
-        für Android.</string>
+    <string name="try_nc">Probier NewsCatchr ( http://bit.ly/readit-gplay ), es ist eine ziemlich coole Newsreader-App für Android.</string>
     <string name="submit_issue">Fehler melden</string>
 </resources>
