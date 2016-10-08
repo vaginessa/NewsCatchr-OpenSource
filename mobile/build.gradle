@@ -61,7 +61,7 @@ dependencies {
     // Jsoup
     compile 'org.jsoup:jsoup:1.9.2'
     // CloudRail
-    compile 'com.cloudrail:cloudrail-si-android:2.7.1'
+    compile 'com.cloudrail:cloudrail-si-android:2.7.2'
     // In App Billing
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
     // Analytics
