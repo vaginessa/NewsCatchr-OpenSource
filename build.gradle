@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
+        classpath 'com.android.tools.build:gradle:2.2.1'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.4'
     }
 }
@@ -26,7 +26,7 @@ ext {
     VERSION_NAME = "5.1.0"
     VERSION_CODE = 46
     TARGET_SDK = 24
-    BUILD_TOOLS = "24.0.2"
+    BUILD_TOOLS = "24.0.3"
     SUPPORT_LIBS = "24.2.1"
     PLAY_SERVICES = "9.6.1"
     KOTLIN = "1.0.4"
