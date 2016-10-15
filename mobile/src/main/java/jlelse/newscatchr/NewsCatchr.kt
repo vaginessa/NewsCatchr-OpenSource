@@ -18,7 +18,6 @@ import io.paperdb.Paper
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.setLocale
 import jlelse.newscatchr.extensions.setNightMode
-import jlelse.readit.BuildConfig
 
 /**
  * Application class

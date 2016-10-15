@@ -78,10 +78,6 @@
 			android:name="com.google.android.gms.version"
 			android:value="@integer/google_play_services_version"/>
 
-		<meta-data
-			android:name="com.google.android.awareness.API_KEY"
-			android:value="AIzaSyBTWP0gD6pPT11dDQjybf3A7K1Iugo_KBQ"/>
-
 	</application>
 
 </manifest>
