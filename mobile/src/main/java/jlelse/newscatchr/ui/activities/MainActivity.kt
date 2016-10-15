@@ -36,6 +36,7 @@ import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.askForSharingService
 import jlelse.newscatchr.backend.helpers.Preferences
+import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.fragments.*
 import jlelse.newscatchr.ui.interfaces.FAB
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 		setContentView(R.layout.mainactivity)
 
+		Tracking.init(this)
 		googleApiClient = GoogleApiClient.Builder(this)
 				.addApiIfAvailable(Wearable.API)
 				.addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
