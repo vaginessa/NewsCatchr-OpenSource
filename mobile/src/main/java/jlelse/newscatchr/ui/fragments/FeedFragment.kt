@@ -73,7 +73,7 @@ class FeedFragment() : BaseFragment() {
 			}
 		}
 		loadArticles(true)
-		Tracking.GATracker.track(feed?.url(), Tracking.GATracker.TYPE.FEED)
+		Tracking.track(type = Tracking.TYPE.FEED, url = feed?.url())
 		Database().addLastFeed(feed)
 		sendBroadcast(Intent("last_feed_updated"))
 		return view

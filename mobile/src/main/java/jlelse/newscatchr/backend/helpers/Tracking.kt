@@ -11,86 +11,63 @@
 package jlelse.newscatchr.backend.helpers
 
 import android.content.Context
-import com.google.android.gms.analytics.GoogleAnalytics
-import com.google.android.gms.analytics.HitBuilders
-import com.google.android.gms.analytics.Tracker
-import jlelse.readit.BuildConfig
-import jlelse.readit.R
-import java.util.*
+import android.os.Bundle
+import com.google.firebase.analytics.FirebaseAnalytics
 
 /**
  * Everything Google Analytics related
  */
-class Tracking {
+object Tracking {
+	private var analyticsInstance: FirebaseAnalytics? = null
 
-	object GATracker {
-
-		fun track(url: String?, type: TYPE) {
-			if (!BuildConfig.DEBUG) {
-				val t = AnalyticsTrackers.instance?.get(AnalyticsTrackers.Target.APP)
-				t?.send(HitBuilders.EventBuilder(when (type) {
-					TYPE.FEED -> "feed"
-					TYPE.MIX -> "mix"
-					TYPE.ARTICLE -> "article"
-					TYPE.FEED_SEARCH -> "feed_search"
-					TYPE.ARTICLE_SEARCH -> "article_search"
-				}, url).build())
-			}
-		}
-
-		enum class TYPE {
-			FEED,
-			MIX,
-			ARTICLE,
-			FEED_SEARCH,
-			ARTICLE_SEARCH
-		}
-
+	fun init(context: Context) {
+		analyticsInstance = FirebaseAnalytics.getInstance(context)
 	}
 
-	class AnalyticsTrackers private constructor(context: Context) {
-		private val mTrackers = HashMap<Target, Tracker>()
-		private val mContext: Context
-
-		init {
-			mContext = context.applicationContext
-		}
-
-		@Synchronized operator fun get(target: Target): Tracker? {
-			if (!mTrackers.containsKey(target)) {
-				val tracker: Tracker
-				when (target) {
-					Target.APP -> tracker = GoogleAnalytics.getInstance(mContext).newTracker(R.xml.app_tracker)
-					else -> throw IllegalArgumentException("Unhandled analytics target " + target)
-				}
-				mTrackers.put(target, tracker)
+	fun track(
+			type: TYPE,
+			url: String? = null,
+			query: String? = null
+	) {
+		when (type) {
+			TYPE.FEED -> {
+				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
+					putString(FirebaseAnalytics.Param.CONTENT_TYPE, "feed")
+					putString(FirebaseAnalytics.Param.ITEM_ID, url)
+				})
 			}
-			return mTrackers[target]
-		}
-
-		enum class Target {
-			APP
-		}
-
-		companion object {
-
-			private var sInstance: AnalyticsTrackers? = null
-
-			@Synchronized fun initialize(context: Context) {
-				if (sInstance != null) {
-					throw IllegalStateException("Extra call to initialize analytics trackers")
-				}
-				sInstance = AnalyticsTrackers(context)
+			TYPE.MIX -> {
+				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
+					putString(FirebaseAnalytics.Param.CONTENT_TYPE, "mix")
+					putString(FirebaseAnalytics.Param.ITEM_ID, url)
+				})
 			}
-
-			val instance: AnalyticsTrackers?
-				@Synchronized get() {
-					if (sInstance == null) {
-						throw IllegalStateException("Call initialize() before getInstance()")
-					}
-					return sInstance
-				}
+			TYPE.ARTICLE -> {
+				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
+					putString(FirebaseAnalytics.Param.CONTENT_TYPE, "article")
+					putString(FirebaseAnalytics.Param.ITEM_ID, url)
+				})
+			}
+			TYPE.FEED_SEARCH -> {
+				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
+					putString(FirebaseAnalytics.Param.SEARCH_TERM, query)
+					putString("search_type", "feed")
+				})
+			}
+			TYPE.ARTICLE_SEARCH -> {
+				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
+					putString(FirebaseAnalytics.Param.SEARCH_TERM, query)
+					putString("search_type", "article")
+				})
+			}
 		}
 	}
 
+	enum class TYPE {
+		FEED,
+		MIX,
+		ARTICLE,
+		FEED_SEARCH,
+		ARTICLE_SEARCH
+	}
 }

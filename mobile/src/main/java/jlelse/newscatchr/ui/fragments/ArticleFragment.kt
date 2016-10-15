@@ -94,7 +94,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 		showArticle()
 		showWearNotification()
 		Database().addReadUrl(article?.url)
-		Tracking.GATracker.track(article?.url, Tracking.GATracker.TYPE.ARTICLE)
+		Tracking.track(type = Tracking.TYPE.ARTICLE, url = article?.url)
 
 		return fragmentView
 	}
