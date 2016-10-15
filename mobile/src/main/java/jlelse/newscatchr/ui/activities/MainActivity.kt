@@ -18,7 +18,6 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -41,6 +40,7 @@ import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.fragments.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
+import jlelse.newscatchr.ui.views.Toolbar
 import jlelse.readit.R
 
 class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
@@ -135,10 +135,10 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 			intent.getStringExtra("feedid")?.let {
 				fragNavController.clearStack()
 				val feedTitle = intent.getStringExtra("feedtitle")
-				if (it.notNullOrBlank()) pushFragment(FeedFragment().addObject(Feed().apply {
-					feedId = it
-					title = feedTitle
-				}, "feed"), feedTitle)
+				if (it.notNullOrBlank()) pushFragment(FeedFragment().addObject(Feed(
+						feedId = it,
+						title = feedTitle
+				), "feed"), feedTitle)
 			}
 			// Browser
 			if (intent.scheme == "http" || intent.scheme == "https") {
