@@ -64,8 +64,9 @@ dependencies {
     compile 'com.cloudrail:cloudrail-si-android:2.8.0'
     // In App Billing
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
-    // Analytics
-    compile "com.google.android.gms:play-services-analytics:$rootProject.ext.PLAY_SERVICES"
+    // Firebase
+    compile "com.google.firebase:firebase-core:$rootProject.ext.PLAY_SERVICES"
+    compile "com.google.firebase:firebase-messaging:$rootProject.ext.PLAY_SERVICES"
     // Support libraries
     compile "com.android.support:support-v4:$rootProject.ext.SUPPORT_LIBS"
     compile "com.android.support:appcompat-v7:$rootProject.ext.SUPPORT_LIBS"
@@ -82,3 +83,5 @@ dependencies {
     compile 'com.mcxiaoke.koi:core:0.5.3@aar'
     compile 'com.mcxiaoke.koi:async:0.5.3@aar'
 }
+
+apply plugin: 'com.google.gms.google-services'

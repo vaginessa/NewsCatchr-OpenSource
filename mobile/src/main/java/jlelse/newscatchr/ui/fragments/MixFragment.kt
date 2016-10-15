@@ -56,7 +56,7 @@ class MixFragment() : BaseFragment() {
 			feedUrl = feedId
 		}
 		loadArticles(true)
-		Tracking.GATracker.track(feedId, Tracking.GATracker.TYPE.MIX)
+		Tracking.track(type = Tracking.TYPE.MIX, url = feedId)
 
 		return view
 	}

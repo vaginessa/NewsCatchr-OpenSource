@@ -29,9 +29,6 @@ class NewsCatchr : Application() {
 		appContext = applicationContext
 		setLocale()
 		Paper.init(this)
-		if (!BuildConfig.DEBUG) {
-			Tracking.AnalyticsTrackers.initialize(this)
-		}
 		JobManager.create(this).addJobCreator { tag ->
 			when (tag) {
 				SyncJob.TAG -> SyncJob()
