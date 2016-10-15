@@ -16,23 +16,17 @@ import com.afollestad.bridge.annotations.ContentType
 
 @Keep
 @ContentType("application/json")
-class Feed {
-
-	constructor()
-
-	@Body
-	var title: String? = null
-	@Body(name = "id")
-	var feedIdA: String? = null
-	@Body
-	var feedId: String? = null
-	@Body
-	var website: String? = null
-	@Body
-	var topics: Array<String>? = null
-
-	var saved: Boolean = false
-
+class Feed(
+		@Body
+		var title: String? = null,
+		@Body(name = "id")
+		var feedIdA: String? = null,
+		@Body
+		var feedId: String? = null,
+		@Body
+		var website: String? = null,
+		var saved: Boolean = false
+) {
 	fun url(): String? {
 		return if (feedId != null) {
 			if (feedId?.startsWith("feed") ?: false) feedId?.substring(5) else feedId
@@ -40,5 +34,4 @@ class Feed {
 			if (feedIdA?.startsWith("feed") ?: false) feedIdA?.substring(5) else feedIdA
 		} else null
 	}
-
 }

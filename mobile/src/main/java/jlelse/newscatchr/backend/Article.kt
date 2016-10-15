@@ -25,56 +25,45 @@ import jlelse.readit.R
 
 @Keep
 @ContentType("application/json")
-class Article {
-
-	constructor()
-
-	@Body(name = "id")
-	var originalId: String? = null
-	@Body
-	var published: Long = 0
-	@Body
-	var author: String? = null
-	@Body
-	var title: String? = null
-	@Body
-	var canonical: Array<Alternate>? = null
-	@Body
-	var alternate: Array<Alternate>? = null
-	@Body
-	var enclosure: Array<Alternate>? = null
-	@Body
-	var keywords: Array<String>? = null
-	@Body(name = "visual.url")
-	var visualUrl: String? = null
-	@Body(name = "origin.title")
-	var originTitle: String? = null
-
-	@Body(name = "summary.content")
-	var content: String? = null
-	@Body(name = "content.content")
-	var contentB: String? = null
-
-	var excerpt: String? = null
-
-	var url: String? = null
-	var pocketId: String? = null
-	var fromPocket: Boolean = false
-
-	var cleanedContent = false
-	var checkedUrl = false
-	var checkedImageUrl = false
-
-	fun process(force: Boolean) {
+class Article(
+		@Body(name = "id")
+		var originalId: String? = null,
+		@Body
+		var published: Long = 0,
+		@Body
+		var author: String? = null,
+		@Body
+		var title: String? = null,
+		@Body
+		var canonical: Array<Alternate>? = null,
+		@Body
+		var alternate: Array<Alternate>? = null,
+		@Body
+		var enclosure: Array<Alternate>? = null,
+		@Body
+		var keywords: Array<String>? = null,
+		@Body(name = "visual.url")
+		var visualUrl: String? = null,
+		@Body(name = "origin.title")
+		var originTitle: String? = null,
+		@Body(name = "summary.content")
+		var content: String? = null,
+		@Body(name = "content.content")
+		var contentB: String? = null,
+		var excerpt: String? = null,
+		var url: String? = null,
+		var pocketId: String? = null,
+		var fromPocket: Boolean = false,
+		var cleanedContent: Boolean = false,
+		var checkedUrl: Boolean = false,
+		var checkedImageUrl: Boolean = false
+) {
+	fun process(force: Boolean = false): Article {
 		if (force) {
 			cleanedContent = false
 			checkedUrl = false
 			checkedImageUrl = false
 		}
-		process()
-	}
-
-	fun process() {
 		if (!cleanedContent) {
 			content = (if (contentB.notNullOrBlank()) contentB else content)?.cleanHtml()
 			excerpt = content?.toHtml().toString().buildExcerpt(30)
@@ -89,6 +78,7 @@ class Article {
 			if (enclosure.notNullAndEmpty() && enclosure?.firstOrNull()?.href.notNullOrBlank()) visualUrl = enclosure?.firstOrNull()?.href
 			checkedImageUrl = true
 		}
+		return this
 	}
 
 	fun share(context: Activity) {
@@ -104,14 +94,10 @@ class Article {
 			}
 		})
 	}
-
 }
 
 @Keep
 @ContentType("application/json")
-class Alternate {
-
-	@Body
-	var href: String? = null
-
-}
+class Alternate(
+		@Body var href: String? = null
+)

@@ -71,8 +71,7 @@ class FeedlyLoader {
 		else -> null
 	}?.apply {
 		forEach {
-			it.process()
-			ArticleCache().save(it)
+			ArticleCache().save(it.process())
 		}
 	}?.removeEmptyArticles()
 
@@ -85,8 +84,7 @@ class FeedlyLoader {
 			}?.ids, true
 	)?.apply {
 		forEach {
-			it.process()
-			ArticleCache().save(it)
+			ArticleCache().save(it.process())
 		}
 	}
 

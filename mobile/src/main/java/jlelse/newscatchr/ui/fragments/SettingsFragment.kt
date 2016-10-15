@@ -140,7 +140,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("jsoup", "Java HTML Parser, with best of DOM, CSS, and jquery", "https://github.com/jhy/jsoup"),
 						Library("Bridge", "A simple but powerful HTTP networking library for Android. It features a Fluent chainable API, powered by Java/Android's URLConnection classes for maximum compatibility and speed.", "https://github.com/afollestad/bridge"),
 						Library("Glide", "An image loading and caching library for Android focused on smooth scrolling", "https://github.com/bumptech/glide"),
-						Library("Paper", "Fast and simple data storage library for Android - edited by @jlelse", "https://github.com/jlelse/Paper"),
+						Library("Paper", "Fast and simple data storage library for Android", "https://github.com/pilgr/Paper"),
 						Library("BottomBar", "A custom view component that mimics the new Material Design Bottom Navigation pattern.", "https://github.com/roughike/BottomBar"),
 						Library("FragNav", "An Android library for managing multiple stacks of fragments", "https://github.com/ncapdevi/FragNav/"),
 						Library("google-gson", "A Java serialization/deserialization library that can convert Java Objects into JSON and back.", "https://github.com/google/gson"),

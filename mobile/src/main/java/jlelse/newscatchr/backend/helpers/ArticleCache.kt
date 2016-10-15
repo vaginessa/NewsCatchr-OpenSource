@@ -25,9 +25,7 @@ class ArticleCache {
 	fun isCached(id: String): Boolean = BOOK?.exist(id.formatForCache()) ?: false
 
 	fun getById(id: String): Article? = tryOrNull {
-		Gson().fromJson<Article>(BOOK?.read<String>(id.formatForCache()) ?: "").apply {
-			process(true)
-		}
+		Gson().fromJson<Article>(BOOK?.read<String>(id.formatForCache()) ?: "").process(true)
 	}
 
 	fun save(article: Article) {

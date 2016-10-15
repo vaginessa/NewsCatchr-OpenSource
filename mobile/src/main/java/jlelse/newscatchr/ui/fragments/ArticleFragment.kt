@@ -48,7 +48,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 
 	private fun replaceArticle(newArticle: Article?) {
 		if (newArticle?.notNullOrEmpty() == true) {
-			article = newArticle?.apply { process(true) }
+			article = newArticle?.process(true)
 			mainThread {
 				updateArticleContent()
 				showWearNotification()

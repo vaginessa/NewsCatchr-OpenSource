@@ -39,7 +39,7 @@ fun Array<out Feed?>.removeEmptyFeeds(): Array<Feed> {
 }
 
 fun Array<Feed>.onlySaved(): Array<Feed> {
-	return toMutableList().filter { it.saved }.toTypedArray()
+	return toMutableList().filter(Feed::saved).toTypedArray()
 }
 
 fun Feed?.notNullOrEmpty(): Boolean {
@@ -47,8 +47,7 @@ fun Feed?.notNullOrEmpty(): Boolean {
 }
 
 fun Article?.notNullOrEmpty(): Boolean {
-	this?.process()
-	return this?.url.notNullOrBlank()
+	return this?.process()?.url.notNullOrBlank()
 }
 
 fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNavigation, query: String?) {

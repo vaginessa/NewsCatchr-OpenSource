@@ -48,11 +48,11 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 				@Throws(SAXException::class)
 				override fun startElement(uri: String, localName: String, qName: String, attributes: Attributes) {
 					if (qName.equals("outline", ignoreCase = true) && attributes.getValue("xmlUrl") != null) {
-						add(Feed().apply {
-							title = attributes.getValue("title")
-							feedId = attributes.getValue("xmlUrl")
-							saved = true
-						})
+						add(Feed(
+								title = attributes.getValue("title"),
+								feedId = attributes.getValue("xmlUrl"),
+								saved = true
+						))
 					}
 				}
 			}
