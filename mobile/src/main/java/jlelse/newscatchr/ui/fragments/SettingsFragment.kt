@@ -279,7 +279,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			}
 			languagePref -> {
 				val availableLocales = mutableListOf<Locale>().apply {
-					arrayOf("en", "de", "fa", "fr").forEach {
+					arrayOf("en", "de", "fa", "fr", "zh").forEach {
 						add(Locale(it))
 					}
 				}.toTypedArray()
