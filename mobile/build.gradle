@@ -57,11 +57,11 @@ dependencies {
     compile 'com.evernote:android-job:1.1.0'
     compile 'com.heinrichreimersoftware:android-issue-reporter:1aa5796b76'
     // Constraint Layout
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     // Jsoup
     compile 'org.jsoup:jsoup:1.9.2'
     // CloudRail
-    compile 'com.cloudrail:cloudrail-si-android:2.7.2'
+    compile 'com.cloudrail:cloudrail-si-android:2.8.0'
     // In App Billing
     compile 'com.anjlab.android.iab.v3:library:1.0.32'
     // Analytics
