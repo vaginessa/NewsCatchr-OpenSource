@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<shortcut
+		enabled="true"
+		icon="@drawable/ic_search_universal"
+		shortcutId="search"
+		shortcutLongLabel="@android:string/search_go"
+		shortcutShortLabel="@android:string/search_go">
+		<intent
+			android:action="com.google.android.gms.actions.SEARCH_ACTION"
+			android:data=""
+			android:targetClass="jlelse.newscatchr.ui.activities.MainActivity"
+			android:targetPackage="jlelse.readit"/>
+	</shortcut>
+</shortcuts>

@@ -150,7 +150,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 			}
 			// Google Voice Search
 			if (intent.action == "com.google.android.gms.actions.SEARCH_ACTION") {
-				intent.getStringExtra(SearchManager.QUERY)?.let {
+				intent.getStringExtra(SearchManager.QUERY).let {
 					searchForFeeds(this, this, it)
 				}
 			}

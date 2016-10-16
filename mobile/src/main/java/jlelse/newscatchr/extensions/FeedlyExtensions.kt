@@ -50,7 +50,7 @@ fun Article?.notNullOrEmpty(): Boolean {
 	return this?.process()?.url.notNullOrBlank()
 }
 
-fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNavigation, query: String?) {
+fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNavigation, query: String? = null) {
 	val progressDialog = ProgressDialog(context)
 	val load = { finalQuery: String ->
 		progressDialog.show()
