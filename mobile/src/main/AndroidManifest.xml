@@ -36,6 +36,7 @@
 		<activity
 			android:name="jlelse.newscatchr.ui.activities.MainActivity"
 			android:configChanges="locale"
+			android:exported="true"
 			android:label="@string/app_name"
 			android:launchMode="singleTask"
 			android:theme="@style/AppTheme">
@@ -68,6 +69,10 @@
 
 				<data android:scheme="pocketapp45699"/>
 			</intent-filter>
+			<!-- Launcher shortcuts -->
+			<meta-data
+				android:name="android.app.shortcuts"
+				android:resource="@xml/shortcuts"/>
 		</activity>
 
 		<activity

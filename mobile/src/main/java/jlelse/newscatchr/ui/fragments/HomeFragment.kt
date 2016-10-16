@@ -65,7 +65,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	override val fabDrawable = R.drawable.ic_search
 
 	override val fabClick = {
-		searchForFeeds(context, fragmentNavigation, null)
+		searchForFeeds(context, fragmentNavigation)
 	}
 
 	override val expanded = true

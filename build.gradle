@@ -24,8 +24,8 @@ buildScan {
 
 ext {
     APP_ID = "jlelse.readit"
-    VERSION_NAME = "5.1.1"
-    VERSION_CODE = 48
+    VERSION_NAME = "5.1.2"
+    VERSION_CODE = 49
     TARGET_SDK = 24
     BUILD_TOOLS = "24.0.3"
     SUPPORT_LIBS = "24.2.1"
