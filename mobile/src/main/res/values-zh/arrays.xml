@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <!--
+  ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<resources>
+    <string-array name="night_mode_pref_titles">
+        <item>自动切换</item>
+        <item>开启</item>
+        <item>关闭</item>
+        <item>跟随系统</item>
+    </string-array>
+    <string-array name="sync_interval_titles">
+        <item>15分钟</item>
+        <item>30分钟</item>
+        <item>45分钟</item>
+        <item>1小时</item>
+        <item>2小时</item>
+        <item>3小时</item>
+        <item>6小时</item>
+        <item>12小时</item>
+        <item>24小时</item>
+    </string-array>
+</resources>
