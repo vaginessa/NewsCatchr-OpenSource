@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.4'
         classpath 'com.google.gms:google-services:3.0.0'
     }
@@ -26,9 +26,9 @@ ext {
     APP_ID = "jlelse.readit"
     VERSION_NAME = "5.1.2"
     VERSION_CODE = 49
-    TARGET_SDK = 24
-    BUILD_TOOLS = "24.0.3"
-    SUPPORT_LIBS = "24.2.1"
+    TARGET_SDK = 25
+    BUILD_TOOLS = "25.0.0"
+    SUPPORT_LIBS = "25.0.0"
     PLAY_SERVICES = "9.6.1"
     KOTLIN = "1.0.4"
 }

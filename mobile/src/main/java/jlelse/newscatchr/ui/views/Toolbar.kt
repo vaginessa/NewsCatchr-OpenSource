@@ -14,13 +14,13 @@ import android.content.Context
 import android.util.AttributeSet
 
 class Toolbar : android.support.v7.widget.Toolbar {
-	private var offset: Int? = null
+	//private var offset: Int? = null
 
 	constructor(context: Context) : super(context)
 	constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
 	constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-	override fun offsetTopAndBottom(offset: Int) {
+	/*override fun offsetTopAndBottom(offset: Int) {
 		super.offsetTopAndBottom(offset)
 		if (this.offset == null) this.offset = offset
 	}
@@ -31,6 +31,6 @@ class Toolbar : android.support.v7.widget.Toolbar {
 
 	override fun getTitleMarginBottom(): Int {
 		return if (offset == null) super.getTitleMarginBottom() else top - offset!! + super.getTitleMarginBottom()
-	}
+	}*/
 
 }

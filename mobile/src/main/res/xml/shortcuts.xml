@@ -2,11 +2,11 @@
 <shortcuts
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<shortcut
-		enabled="true"
-		icon="@drawable/ic_search_universal"
-		shortcutId="search"
-		shortcutLongLabel="@android:string/search_go"
-		shortcutShortLabel="@android:string/search_go">
+		android:enabled="true"
+		android:icon="@drawable/ic_search_universal"
+		android:shortcutId="search"
+		android:shortcutLongLabel="@android:string/search_go"
+		android:shortcutShortLabel="@android:string/search_go">
 		<intent
 			android:action="com.google.android.gms.actions.SEARCH_ACTION"
 			android:data=""
