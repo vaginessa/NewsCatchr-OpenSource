@@ -59,11 +59,11 @@ dependencies {
     // Constraint Layout
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     // Jsoup
-    compile 'org.jsoup:jsoup:1.9.2'
+    compile 'org.jsoup:jsoup:1.10.1'
     // CloudRail
     compile 'com.cloudrail:cloudrail-si-android:2.8.0'
     // In App Billing
-    compile 'com.anjlab.android.iab.v3:library:1.0.32'
+    compile 'com.anjlab.android.iab.v3:library:1.0.33'
     // Firebase
     compile "com.google.firebase:firebase-core:$rootProject.ext.PLAY_SERVICES"
     compile "com.google.firebase:firebase-messaging:$rootProject.ext.PLAY_SERVICES"
