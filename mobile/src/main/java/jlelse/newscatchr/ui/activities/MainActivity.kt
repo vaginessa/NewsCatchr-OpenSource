@@ -69,21 +69,39 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 		setContentView(R.layout.mainactivity)
 
-		Tracking.init(this)
-		googleApiClient = GoogleApiClient.Builder(this)
-				.addApiIfAvailable(Wearable.API)
-				.addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
-					override fun onConnected(p0: Bundle?) { /* Ignore */
+		asyncSafe {
+			// Init Tracking
+			Tracking.init(this@MainActivity)
+			// Init Google Api Client for Android Wear
+			googleApiClient = GoogleApiClient.Builder(this@MainActivity)
+					.addApiIfAvailable(Wearable.API)
+					.addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
+						override fun onConnected(p0: Bundle?) {
+						}
+
+						override fun onConnectionSuspended(p0: Int) {
+						}
+					})
+					.addOnConnectionFailedListener {}
+					.build()
+					.apply { connect() }
+			// Check purchases
+			if (BillingProcessor.isIabServiceAvailable(this@MainActivity)) {
+				billingProcessor = BillingProcessor(this@MainActivity, licenceKey, object : BillingProcessor.IBillingHandler {
+					override fun onBillingInitialized() {
+						IABReady = true
+						billingProcessor?.loadOwnedPurchasesFromGoogle()
+						checkProStatus()
 					}
 
-					override fun onConnectionSuspended(p0: Int) { /* Ignore */
+					override fun onBillingError(errorCode: Int, error: Throwable?) {
 					}
+
+					override fun onProductPurchased(productId: String?, details: TransactionDetails?) = checkProStatus()
+					override fun onPurchaseHistoryRestored() = checkProStatus()
 				})
-				.addOnConnectionFailedListener { /* Ignore */ }
-				.build()
-				.apply {
-					connect()
-				}
+			}
+		}
 
 		setSupportActionBar(toolbar)
 
@@ -112,23 +130,6 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		// Check Intent
 		handleIntent(intent)
 
-		// Check purchases
-		if (BillingProcessor.isIabServiceAvailable(this)) {
-			billingProcessor = BillingProcessor(this, licenceKey, object : BillingProcessor.IBillingHandler {
-				override fun onBillingInitialized() {
-					IABReady = true
-					billingProcessor?.loadOwnedPurchasesFromGoogle()
-					checkProStatus()
-				}
-
-				override fun onBillingError(errorCode: Int, error: Throwable?) {
-					// TODO
-				}
-
-				override fun onProductPurchased(productId: String?, details: TransactionDetails?) = checkProStatus()
-				override fun onPurchaseHistoryRestored() = checkProStatus()
-			})
-		}
 	}
 
 	private fun handleIntent(intent: Intent?) {
