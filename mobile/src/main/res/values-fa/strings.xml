@@ -85,8 +85,6 @@
 	<string name="newest_first">جدیدترین ها اول</string>
 	<string name="oldest_first">قدیمی ترین ها اول</string>
 	<string name="shared_with_nc">به اشتراک گذاری شده توسط NewsCatchr (http://bit.ly/readit-gplay)</string>
-    <string name="try_nc">NewsCatchr رو امتحان کن، خیلی با حاله
- http://bit.ly/readit-gpla
-اپ خبر خوان برای اندروید</string>
+    <string name="try_nc">NewsCatchr رو امتحان کن، خیلی با حاله\n http://bit.ly/readit-gplay\nاپ خبر خوان برای اندروید</string>
 	<string name="submit_issue">ارسال مشکل</string>
 </resources>
