@@ -24,6 +24,6 @@
 		<item name="colorAccent">@color/colorAccent</item>
 	</style>
 
-	<style name="ToolbarPopupTheme" parent="ThemeOverlay.AppCompat.Light" />
+	<style name="ToolbarPopupTheme" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

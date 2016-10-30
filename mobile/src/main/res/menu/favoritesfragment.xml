@@ -9,13 +9,13 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	  xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<item
 		android:id="@+id/opml"
 		android:icon="@drawable/ic_folder_universal"
 		android:title="@string/import_opml"
-		app:showAsAction="ifRoom" />
+		app:showAsAction="ifRoom"/>
 
 
 </menu>

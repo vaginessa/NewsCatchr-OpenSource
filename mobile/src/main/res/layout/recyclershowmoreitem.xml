@@ -9,9 +9,9 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content"
-	android:orientation="vertical">
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content"
+			  android:orientation="vertical">
 
 	<Button
 		android:id="@+id/moreButton"
@@ -25,6 +25,6 @@
 		android:layout_marginTop="@dimen/spacing_8"
 		android:singleLine="true"
 		android:text="@string/more"
-		android:textColor="@android:color/white" />
+		android:textColor="@android:color/white"/>
 
 </LinearLayout>

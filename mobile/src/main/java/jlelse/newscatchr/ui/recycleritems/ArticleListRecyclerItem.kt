@@ -61,7 +61,7 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 		if (article?.title.notNullOrBlank()) {
 			viewHolder.title.showView()
 			viewHolder.title.text = article?.title
-			viewHolder.title.setTypeface(null, if (Database().isSavedReadUrl(article?.url)) Typeface.BOLD_ITALIC else Typeface.BOLD)
+			viewHolder.title.setTypeface(null, if (Database.isSavedReadUrl(article?.url)) Typeface.BOLD_ITALIC else Typeface.BOLD)
 		} else {
 			viewHolder.title.hideView()
 		}
@@ -96,14 +96,14 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 		viewHolder.itemView.onClick {
 			if (article != null) fragment?.fragmentNavigation?.pushFragment(ArticleFragment().addObject(article, "article"), article?.originTitle)
 		}
-		viewHolder.bookmark.setImageDrawable((if (Database().isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
+		viewHolder.bookmark.setImageDrawable((if (Database.isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
 		viewHolder.bookmark.onClick {
 			if (article != null) {
-				if (Database().isSavedBookmark(article?.url)) {
-					Database().deleteBookmark(article?.url)
+				if (Database.isSavedBookmark(article?.url)) {
+					Database.deleteBookmark(article?.url)
 					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_border_universal.resDrw(context, context.getPrimaryTextColor()))
 				} else {
-					Database().addBookmark(article)
+					Database.addBookmark(article)
 					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_universal.resDrw(context, context.getPrimaryTextColor()))
 				}
 			}

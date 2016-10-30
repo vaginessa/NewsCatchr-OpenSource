@@ -62,7 +62,7 @@ class FeedFragment() : BaseFragment() {
 			}
 		}
 		feed = getAddedObject<Feed>("feed")
-		favorite = Database().isSavedFavorite(feed?.url())
+		favorite = Database.isSavedFavorite(feed?.url())
 		feedlyLoader = FeedlyLoader().apply {
 			type = FeedlyLoader.FeedTypes.FEED
 			feedUrl = "feed/" + feed?.url()
@@ -74,7 +74,7 @@ class FeedFragment() : BaseFragment() {
 		}
 		loadArticles(true)
 		Tracking.track(type = Tracking.TYPE.FEED, url = feed?.url())
-		Database().addLastFeed(feed)
+		Database.addLastFeed(feed)
 		sendBroadcast(Intent("last_feed_updated"))
 		return view
 	}
@@ -133,9 +133,9 @@ class FeedFragment() : BaseFragment() {
 				favorite = !favorite
 				feed?.saved = favorite
 				if (favorite) {
-					Database().addFavorite(feed)
+					Database.addFavorite(feed)
 				} else {
-					Database().deleteFavorite(feed?.url())
+					Database.deleteFavorite(feed?.url())
 				}
 				item?.icon = (if (favorite) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, Color.WHITE)
 				editMenuItem?.isVisible = favorite
@@ -205,7 +205,7 @@ class FeedFragment() : BaseFragment() {
 						.title(R.string.edit_feed_title)
 						.input(null, feed?.title, { materialDialog, input ->
 							if (input.toString().notNullOrBlank()) {
-								Database().updateFavoriteTitle(feed?.url(), input.toString())
+								Database.updateFavoriteTitle(feed?.url(), input.toString())
 								feed?.title = input.toString()
 								if (feed != null) addObject(feed!!, "feed")
 								addTitle(feed?.title)

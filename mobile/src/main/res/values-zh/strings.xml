@@ -1,90 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <!--
-  ~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
-  ~
-  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-  ~
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  -->
+<!--
+~ NewsCatchr  Copyright (C) 2016  Jan-Lukas Else
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+~
+~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
-    <string name="about_nc">关于NewsCatchr</string>
-    <string name="about_nc_desc">浏览此应用相关信息</string>
-    <string name="loading">加载中…</string>
-    <string name="settings">设置</string>
-    <string name="bookmarks">书签</string>
-    <string name="favorites">收藏</string>
-    <string name="about">关于</string>
-    <string name="news">新闻</string>
-    <string name="search_results_for">搜索结果</string>
-    <string name="suc_import">导入成功！</string>
-    <string name="import_failed">导入失败！</string>
-    <string name="suc_backup">备份成功！</string>
-    <string name="backup_failed">备份失败！</string>
-    <string name="suc_restore">还原成功！</string>
-    <string name="restore_failed">还原失败！</string>
-    <string name="suc_share">分享成功！</string>
-    <string name="share_failed">分享失败！</string>
-    <string name="logged_in_as">登录为</string>
-    <string name="del_acc_info">登出</string>
-    <string name="pocket_sync_title">Pocket同步</string>
-    <string name="pocket_sync_desc">通过Pocket同步书签-可在任何设备上进行读取.</string>
-    <string name="pocket_login">登录到Pocket</string>
-    <string name="pocket_logout">从Pocket登出</string>
-    <string name="open_in_browser">在浏览器中打开</string>
-    <string name="share">分享</string>
-    <string name="what_searching">你想寻访什么内容？</string>
-    <string name="custom_tabs_title">应用内浏览器</string>
-    <string name="use_custom_tabs">通过可用的应用内浏览器更快打开网站</string>
-    <string name="clear_cache_title">清理缓存</string>
-    <string name="clear_cache_desc">清理所有缓存</string>
-    <string name="cleared_cache">已清理缓存</string>
-    <string name="clear_history_title">清理历史记录</string>
-    <string name="clear_history_desc">清理信息流记录</string>
-    <string name="cleared_history">已清理历史记录</string>
-    <string name="language">语言</string>
-    <string name="backup">备份</string>
-    <string name="restore">还原</string>
-    <string name="import_opml">导入OPML文件</string>
-    <string name="mark_as_bookmark">标记为书签</string>
-    <string name="used_libraries">代码库</string>
-    <string name="view_all_libraries">查看此程序使用的所有库</string>
-    <string name="used_apis">接口</string>
-    <string name="view_all_apis">查看此程序使用的所有接口</string>
-    <string name="night_mode">夜间模式</string>
-    <string name="general">常规</string>
-    <string name="refresh">刷新</string>
-    <string name="add_shortcut">添加启动快捷方式</string>
-    <string name="shortcut_created">创建快捷方式</string>
-    <string name="mark_as_favorite">标记为收藏</string>
-    <string name="help">帮助</string>
-    <string name="advanced">进阶设置</string>
-    <string name="nothing_found">搜寻无结果！</string>
-    <string name="article_image">文章图片</string>
-    <string name="donate">捐赠</string>
-    <string name="subscribe_support">获得捐赠订阅</string>
-    <string name="subscribe_support_desc">众人拾柴火焰高</string>
-    <string name="prefs_amp_desc">加载加速网页而非原网页时,若文章中AMP不可用,程序将试图使用Google Web Light.</string>
-    <string name="share_app">分享NewsCatchr</string>
-    <string name="edit_feed_title">编辑标题</string>
-    <string name="backup_restore">备份 &amp; 还原</string>
-    <string name="backup_desc">备份或还原所有收藏,书签以及读取状态.</string>
-    <string name="sort">排序</string>
-    <string name="set">确定</string>
-    <string name="sync">同步</string>
-    <string name="sync_desc">后台启用同步自动下载文章</string>
-    <string name="sync_now">开始同步</string>
-    <string name="sync_interval">同步时间间隔</string>
-    <string name="more">更多</string>
-    <string name="last_feeds">最近提要</string>
-    <string name="recommendations">推荐</string>
-    <string name="rec_topics">推荐主题</string>
-    <string name="never">从未</string>
-    <string name="last_suc_sync">最新同步成功</string>
-    <string name="newest_first">最近优先</string>
-    <string name="oldest_first">最早优先</string>
-    <string name="shared_with_nc">共享NewsCatchr ( http://bit.ly/readit-gplay )</string>
-    <string name="try_nc">"请尝试NewsCatchr ( http://bit.ly/readit-gplay ), 一款趣味十足的安卓资讯阅读应用. "</string>
-    <string name="submit_issue">事故报告</string>
+	<string name="about_nc">关于NewsCatchr</string>
+	<string name="about_nc_desc">浏览此应用相关信息</string>
+	<string name="loading">加载中…</string>
+	<string name="settings">设置</string>
+	<string name="bookmarks">书签</string>
+	<string name="favorites">收藏</string>
+	<string name="about">关于</string>
+	<string name="news">新闻</string>
+	<string name="search_results_for">搜索结果</string>
+	<string name="suc_import">导入成功！</string>
+	<string name="import_failed">导入失败！</string>
+	<string name="suc_backup">备份成功！</string>
+	<string name="backup_failed">备份失败！</string>
+	<string name="suc_restore">还原成功！</string>
+	<string name="restore_failed">还原失败！</string>
+	<string name="suc_share">分享成功！</string>
+	<string name="share_failed">分享失败！</string>
+	<string name="logged_in_as">登录为</string>
+	<string name="del_acc_info">登出</string>
+	<string name="pocket_sync_title">Pocket同步</string>
+	<string name="pocket_sync_desc">通过Pocket同步书签-可在任何设备上进行读取.</string>
+	<string name="pocket_login">登录到Pocket</string>
+	<string name="pocket_logout">从Pocket登出</string>
+	<string name="open_in_browser">在浏览器中打开</string>
+	<string name="share">分享</string>
+	<string name="what_searching">你想寻访什么内容？</string>
+	<string name="custom_tabs_title">应用内浏览器</string>
+	<string name="use_custom_tabs">通过可用的应用内浏览器更快打开网站</string>
+	<string name="clear_cache_title">清理缓存</string>
+	<string name="clear_cache_desc">清理所有缓存</string>
+	<string name="cleared_cache">已清理缓存</string>
+	<string name="clear_history_title">清理历史记录</string>
+	<string name="clear_history_desc">清理信息流记录</string>
+	<string name="cleared_history">已清理历史记录</string>
+	<string name="language">语言</string>
+	<string name="backup">备份</string>
+	<string name="restore">还原</string>
+	<string name="import_opml">导入OPML文件</string>
+	<string name="mark_as_bookmark">标记为书签</string>
+	<string name="used_libraries">代码库</string>
+	<string name="view_all_libraries">查看此程序使用的所有库</string>
+	<string name="used_apis">接口</string>
+	<string name="view_all_apis">查看此程序使用的所有接口</string>
+	<string name="night_mode">夜间模式</string>
+	<string name="general">常规</string>
+	<string name="refresh">刷新</string>
+	<string name="add_shortcut">添加启动快捷方式</string>
+	<string name="shortcut_created">创建快捷方式</string>
+	<string name="mark_as_favorite">标记为收藏</string>
+	<string name="help">帮助</string>
+	<string name="advanced">进阶设置</string>
+	<string name="nothing_found">搜寻无结果！</string>
+	<string name="article_image">文章图片</string>
+	<string name="donate">捐赠</string>
+	<string name="subscribe_support">获得捐赠订阅</string>
+	<string name="subscribe_support_desc">众人拾柴火焰高</string>
+	<string name="prefs_amp_desc">加载加速网页而非原网页时,若文章中AMP不可用,程序将试图使用Google Web Light.</string>
+	<string name="share_app">分享NewsCatchr</string>
+	<string name="edit_feed_title">编辑标题</string>
+	<string name="backup_restore">备份 &amp; 还原</string>
+	<string name="backup_desc">备份或还原所有收藏,书签以及读取状态.</string>
+	<string name="sort">排序</string>
+	<string name="set">确定</string>
+	<string name="sync">同步</string>
+	<string name="sync_desc">后台启用同步自动下载文章</string>
+	<string name="sync_now">开始同步</string>
+	<string name="sync_interval">同步时间间隔</string>
+	<string name="more">更多</string>
+	<string name="last_feeds">最近提要</string>
+	<string name="recommendations">推荐</string>
+	<string name="rec_topics">推荐主题</string>
+	<string name="never">从未</string>
+	<string name="last_suc_sync">最新同步成功</string>
+	<string name="newest_first">最近优先</string>
+	<string name="oldest_first">最早优先</string>
+	<string name="shared_with_nc">共享NewsCatchr ( http://bit.ly/readit-gplay )</string>
+	<string name="try_nc">"请尝试NewsCatchr ( http://bit.ly/readit-gplay ), 一款趣味十足的安卓资讯阅读应用. "</string>
+	<string name="submit_issue">事故报告</string>
 </resources>

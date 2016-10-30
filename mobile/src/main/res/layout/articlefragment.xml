@@ -9,9 +9,9 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+			 xmlns:app="http://schemas.android.com/apk/res-auto"
+			 android:layout_width="match_parent"
+			 android:layout_height="wrap_content">
 
 	<jlelse.newscatchr.ui.views.SwipeRefreshLayout
 		android:id="@+id/refreshOne"
@@ -30,7 +30,7 @@
 
 				<View
 					android:layout_width="match_parent"
-					android:layout_height="@dimen/spacing_32" />
+					android:layout_height="@dimen/spacing_32"/>
 
 				<TextView
 					android:id="@+id/title"
@@ -42,7 +42,7 @@
 					android:layout_marginRight="@dimen/spacing_16"
 					android:layout_marginStart="@dimen/spacing_16"
 					android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
-					android:textStyle="bold" />
+					android:textStyle="bold"/>
 
 				<ImageView
 					android:id="@+id/visual"
@@ -54,7 +54,7 @@
 					android:layout_marginRight="@dimen/spacing_16"
 					android:layout_marginStart="@dimen/spacing_16"
 					android:adjustViewBounds="true"
-					android:contentDescription="@string/article_image" />
+					android:contentDescription="@string/article_image"/>
 
 				<TextView
 					android:id="@+id/details"
@@ -65,7 +65,7 @@
 					android:layout_marginLeft="@dimen/spacing_16"
 					android:layout_marginRight="@dimen/spacing_16"
 					android:layout_marginStart="@dimen/spacing_16"
-					android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
+					android:textAppearance="@style/TextAppearance.AppCompat.Caption"/>
 
 				<jlelse.newscatchr.ui.views.ZoomTextView
 					android:id="@+id/content"
@@ -78,7 +78,7 @@
 					android:layout_marginStart="@dimen/spacing_16"
 					android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
 					android:textIsSelectable="true"
-					android:textSize="16sp" />
+					android:textSize="16sp"/>
 
 				<com.google.android.flexbox.FlexboxLayout
 					android:id="@+id/tagsBox"
@@ -90,7 +90,7 @@
 					android:paddingRight="@dimen/spacing_12"
 					android:paddingStart="@dimen/spacing_12"
 					app:flexWrap="wrap"
-					app:justifyContent="flex_start" />
+					app:justifyContent="flex_start"/>
 
 			</LinearLayout>
 		</android.support.v4.widget.NestedScrollView>

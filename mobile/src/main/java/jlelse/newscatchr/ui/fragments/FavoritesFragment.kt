@@ -63,7 +63,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 	private fun load() {
 		mainThread {
 			refreshOne?.isRefreshing = true
-			feeds = Database().allFavorites.toMutableList()
+			feeds = Database.allFavorites.toMutableList()
 			if (feeds.notNullAndEmpty()) {
 				fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
 				recyclerOne?.adapter = fastAdapter
@@ -81,7 +81,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		Collections.swap(fastAdapter?.adapterItems, oldPosition, newPosition)
 		fastAdapter?.notifyAdapterItemMoved(oldPosition, newPosition)
 		Collections.swap(feeds, oldPosition, newPosition)
-		if (feeds != null) Database().allFavorites = feeds!!.toTypedArray()
+		if (feeds != null) Database.allFavorites = feeds!!.toTypedArray()
 		sendBroadcast(Intent("favorites_updated"))
 		return true
 	}
@@ -123,7 +123,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 				var imported = 0
 				if (opml.notNullOrBlank()) {
 					val feeds = opml?.convertOpmlToFeeds()
-					Database().addFavorites(feeds)
+					Database.addFavorites(feeds)
 					imported = feeds?.size ?: 0
 				}
 				mainThreadSafe {

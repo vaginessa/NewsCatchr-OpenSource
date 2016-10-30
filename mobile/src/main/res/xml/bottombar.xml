@@ -13,15 +13,15 @@
 		barColorWhenSelected="@color/bottom_bar_background"
 		icon="@drawable/ic_explore"
 		id="@+id/bb_news"
-		title="@string/news" />
+		title="@string/news"/>
 	<tab
 		barColorWhenSelected="@color/bottom_bar_background"
 		icon="@drawable/ic_bookmark"
 		id="@+id/bb_bookmarks"
-		title="@string/bookmarks" />
+		title="@string/bookmarks"/>
 	<tab
 		barColorWhenSelected="@color/bottom_bar_background"
 		icon="@drawable/ic_settings"
 		id="@+id/bb_settings"
-		title="@string/settings" />
+		title="@string/settings"/>
 </tabs>

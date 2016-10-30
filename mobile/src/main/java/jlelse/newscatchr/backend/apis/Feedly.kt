@@ -77,9 +77,9 @@ class Feedly {
 		var related: Array<String>? = if (cache) readFromCache("recFeedsRelated$locale") else null
 		if (!cache || feeds == null) {
 			tryOrNull {
-				feedSearch("news", 100, locale, true) { feedsTemp, relatedTemp ->
-					feeds = feedsTemp.apply { saveToCache("recFeeds$locale") }
-					related = relatedTemp.apply { saveToCache("recFeedsRelated$locale") }
+				feedSearch("news", 30, locale, true) { feedsTemp, relatedTemp ->
+					feeds = feedsTemp?.take(30)?.toTypedArray().apply { saveToCache("recFeeds$locale") }
+					related = relatedTemp?.apply { saveToCache("recFeedsRelated$locale") }
 				}
 			}
 		}
