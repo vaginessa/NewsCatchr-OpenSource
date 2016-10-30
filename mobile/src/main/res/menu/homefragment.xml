@@ -9,16 +9,16 @@
   -->
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto">
+	  xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<item
 		android:id="@+id/language"
 		android:icon="@drawable/ic_language_universal"
 		android:title="@string/language"
-		app:showAsAction="ifRoom" />
+		app:showAsAction="ifRoom"/>
 	<item
 		android:id="@+id/favorites"
 		android:title="@string/favorites"
-		app:showAsAction="ifRoom" />
+		app:showAsAction="ifRoom"/>
 
 </menu>

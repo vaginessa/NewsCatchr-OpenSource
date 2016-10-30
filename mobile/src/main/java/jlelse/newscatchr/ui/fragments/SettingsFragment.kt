@@ -124,7 +124,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			}
 			clearHistoryPref -> {
 				asyncSafe {
-					Database().allLastFeeds = arrayOf()
+					Database.allLastFeeds = arrayOf()
 					mainThreadSafe {
 						context.sendBroadcast(Intent("last_feed_updated"))
 						Snackbar.make(activity.findViewById(R.id.container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()
@@ -187,7 +187,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			}
 			aboutPref -> {
 				val description: String = "<b>The best newsreader for Android<br><i>It's the way of reading news in 2020</i></b><br><br>Developer: <a href=\"https://plus.google.com/+JanLkElse\">Jan-Lukas Else</a><br>Icon designer: <a href=\"https://plus.google.com/+KevinAguilarC\">Kevin Aguilar</a><br>Banner designer: <a href=\"https://plus.google.com/+%C5%BDan%C4%8Cerne\">&#381;an &#268;erne</a><br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><a href=\"https://github.com/jlelse/NewsCatchr-OpenSource\">Source code on GitHub</a><br><br>"
-				val statsDesc = "You already opened ${Database().allReadUrls.size} articles. Thanks for that!"
+				val statsDesc = "You already opened ${Database.allReadUrls.size} articles. Thanks for that!"
 				MaterialDialog.Builder(context)
 						.title(R.string.app_name)
 						.content("$description$statsDesc".toHtml())
@@ -251,7 +251,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						override fun authenticated(accessToken: String, userName: String) {
 							mainThread {
 								asyncSafe {
-									val database = Database()
+									val database = Database
 									database.allBookmarks.apply {
 										forEach {
 											database.deleteBookmark(it.url ?: "")

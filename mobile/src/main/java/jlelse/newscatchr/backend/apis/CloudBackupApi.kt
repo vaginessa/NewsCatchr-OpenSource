@@ -73,7 +73,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$bookmarksFile").apply {
 			delete()
 			createNewFile()
-			writeText(Database().allBookmarks.toList().toJson())
+			writeText(Database.allBookmarks.toList().toJson())
 		}
 		return if (file.exists()) uploadFile(bookmarksFile, file.inputStream(), file.length()) else false
 	}
@@ -82,7 +82,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$favoritesFile").apply {
 			delete()
 			createNewFile()
-			writeText(Database().allFavorites.toList().toJson())
+			writeText(Database.allFavorites.toList().toJson())
 		}
 		return if (file.exists()) uploadFile(favoritesFile, file.inputStream(), file.length()) else false
 	}
@@ -91,7 +91,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$readUrlsFile").apply {
 			delete()
 			createNewFile()
-			writeText(Database().allReadUrls.toList().toJson())
+			writeText(Database.allReadUrls.toList().toJson())
 		}
 		return if (file.exists()) uploadFile(readUrlsFile, file.inputStream(), file.length()) else false
 	}
@@ -119,7 +119,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		return if (downloadFile(bookmarksFile, file)) {
 			try {
 				Gson().fromJson<List<Article>>(file.readText(), object : TypeToken<List<Article>>() {}.type)?.let {
-					if (it.notNullAndEmpty()) Database().allBookmarks = it.toTypedArray()
+					if (it.notNullAndEmpty()) Database.allBookmarks = it.toTypedArray()
 				}
 				true
 			} catch (e: Exception) {
@@ -134,7 +134,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		return if (downloadFile(favoritesFile, file)) {
 			try {
 				Gson().fromJson<List<Feed>>(file.readText(), object : TypeToken<List<Feed>>() {}.type)?.let {
-					if (it.notNullAndEmpty()) Database().allFavorites = it.toTypedArray()
+					if (it.notNullAndEmpty()) Database.allFavorites = it.toTypedArray()
 				}
 				true
 			} catch (e: Exception) {
@@ -149,7 +149,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		return if (downloadFile(readUrlsFile, file)) {
 			try {
 				Gson().fromJson<List<String>>(file.readText(), object : TypeToken<List<String>>() {}.type)?.let {
-					if (it.notNullAndEmpty()) Database().allReadUrls = it.toTypedArray()
+					if (it.notNullAndEmpty()) Database.allReadUrls = it.toTypedArray()
 				}
 				true
 			} catch (e: Exception) {

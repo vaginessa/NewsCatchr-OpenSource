@@ -89,11 +89,11 @@ class ArticleFragment() : BaseFragment(), FAB {
 		}
 
 		article = getAddedObject("article") ?: savedInstanceState?.getObject("article")
-		bookmark = Database().isSavedBookmark(article?.url)
+		bookmark = Database.isSavedBookmark(article?.url)
 
 		showArticle()
 		showWearNotification()
-		Database().addReadUrl(article?.url)
+		Database.addReadUrl(article?.url)
 		Tracking.track(type = Tracking.TYPE.ARTICLE, url = article?.url)
 
 		return fragmentView
@@ -190,8 +190,8 @@ class ArticleFragment() : BaseFragment(), FAB {
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
 		R.id.bookmark -> {
 			bookmark = !bookmark
-			if (bookmark) Database().addBookmark(article)
-			else Database().deleteBookmark(article?.url)
+			if (bookmark) Database.addBookmark(article)
+			else Database.deleteBookmark(article?.url)
 			item?.icon = (if (bookmark) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, Color.WHITE)
 			true
 		}

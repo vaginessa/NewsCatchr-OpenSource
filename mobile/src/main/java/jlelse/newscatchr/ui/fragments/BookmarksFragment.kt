@@ -56,12 +56,12 @@ class BookmarksFragment : BaseFragment() {
 			if (!cache && (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank())) {
 				try {
 					val pocketItems = PocketLoader().items()
-					Database().allBookmarks = pocketItems
+					Database.allBookmarks = pocketItems
 				} catch (e: Exception) {
 					e.printStackTrace()
 				}
 			}
-			val articles = Database().allBookmarks
+			val articles = Database.allBookmarks
 			mainThreadSafe {
 				if (articles.notNullAndEmpty()) {
 					fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()

@@ -20,7 +20,7 @@ import jlelse.newscatchr.extensions.*
 /**
  * Database
  */
-class Database {
+object Database {
 
 	private val FAVORITES = "feeds_database"
 	private val BOOKMARKS = "bookmarks_database"
@@ -28,12 +28,7 @@ class Database {
 	private val LAST_FEEDS = "last_feeds"
 
 	var allFavorites: Array<Feed>
-		get() = try {
-			Paper.book(FAVORITES).read<Array<Feed>>(FAVORITES)
-		} catch (e: Exception) {
-			e.printStackTrace()
-			arrayOf<Feed>()
-		}
+		get() = Paper.book(FAVORITES).read<Array<Feed>>(FAVORITES, arrayOf<Feed>())
 		set(value) {
 			try {
 				Paper.book(FAVORITES).write(FAVORITES, value.onlySaved())
@@ -65,12 +60,7 @@ class Database {
 	}
 
 	var allBookmarks: Array<Article>
-		get() = try {
-			Paper.book(BOOKMARKS).read<Array<Article>>(BOOKMARKS)
-		} catch (e: Exception) {
-			e.printStackTrace()
-			arrayOf<Article>()
-		}
+		get() = Paper.book(BOOKMARKS).read<Array<Article>>(BOOKMARKS, arrayOf<Article>())
 		set(value) {
 			try {
 				Paper.book(BOOKMARKS).write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles())
@@ -124,15 +114,10 @@ class Database {
 	}
 
 	var allReadUrls: Array<String>
-		get() = try {
-			Paper.book(READ_URLS).read<Array<String>>(READ_URLS)
-		} catch (e: Exception) {
-			e.printStackTrace()
-			arrayOf<String>()
-		}
+		get() = Paper.book(READ_URLS).read<Array<String>>(READ_URLS, arrayOf<String>())
 		set(value) {
 			try {
-				Paper.book(READ_URLS).write(READ_URLS, value.removeBlankStrings())
+				Paper.book(READ_URLS).write(READ_URLS, value.removeBlankStrings().takeLast(100).toTypedArray())
 			} catch (e: Exception) {
 				e.printStackTrace()
 			}
@@ -143,15 +128,10 @@ class Database {
 	}
 
 	var allLastFeeds: Array<Feed>
-		get() = try {
-			Paper.book(LAST_FEEDS).read<Array<Feed>>(LAST_FEEDS)
-		} catch (e: Exception) {
-			e.printStackTrace()
-			arrayOf<Feed>()
-		}
+		get() = Paper.book(LAST_FEEDS).read<Array<Feed>>(LAST_FEEDS, arrayOf<Feed>())
 		set(value) {
 			try {
-				Paper.book(LAST_FEEDS).write(LAST_FEEDS, value.removeEmptyFeeds().takeLast(50).toTypedArray())
+				Paper.book(LAST_FEEDS).write(LAST_FEEDS, value.removeEmptyFeeds().takeLast(30).toTypedArray())
 			} catch (e: Exception) {
 				e.printStackTrace()
 			}

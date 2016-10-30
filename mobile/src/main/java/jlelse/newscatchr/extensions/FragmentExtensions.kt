@@ -59,7 +59,7 @@ fun Fragment.addObject(objectToAdd: Any?, key: String): Fragment {
 }
 
 inline fun <reified T> Fragment.getAddedObject(key: String): T? {
-	return if (arguments != null) arguments.getObject(key)
+	return if (arguments != null && arguments.containsKey(key)) arguments.getObject(key)
 	else null
 }
 

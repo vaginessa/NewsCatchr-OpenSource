@@ -75,15 +75,15 @@ class FeedListRecyclerItem : AbstractItem<FeedListRecyclerItem, FeedListRecycler
 			viewHolder.itemView.onClick {
 				fragment?.fragmentNavigation?.pushFragment(FeedFragment().addObject(feed!!, "feed"), feed?.title)
 			}
-			viewHolder.favorite.setImageDrawable((if (Database().isSavedFavorite(feed?.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
+			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed?.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
 			viewHolder.favorite.onClick {
-				if (Database().isSavedFavorite(feed?.url())) {
+				if (Database.isSavedFavorite(feed?.url())) {
 					feed?.saved = false
-					Database().deleteFavorite(feed?.url())
+					Database.deleteFavorite(feed?.url())
 					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_border_universal.resDrw(context, context.getPrimaryTextColor()))
 				} else {
 					feed?.saved = true
-					Database().addFavorite(feed)
+					Database.addFavorite(feed)
 					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_universal.resDrw(context, context.getPrimaryTextColor()))
 				}
 				context.sendBroadcast(Intent("favorites_updated"))

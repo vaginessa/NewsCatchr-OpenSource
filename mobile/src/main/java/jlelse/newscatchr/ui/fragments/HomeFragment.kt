@@ -75,7 +75,6 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
-		//this.savedInstanceState = savedInstanceState
 		val view = inflater?.inflate(R.layout.homefragment, container, false)
 		setHasOptionsMenu(true)
 		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
@@ -147,7 +146,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 
 	private fun loadLastFeeds() {
 		asyncSafe {
-			val lastFeeds = Database().allLastFeeds.takeLast(5).toTypedArray().turnAround()
+			val lastFeeds = Database.allLastFeeds.takeLast(5).toTypedArray().turnAround()
 			mainThreadSafe {
 				if (lastFeeds.notNullAndEmpty()) {
 					recyclerOne?.showView()
@@ -161,7 +160,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 						fastAdapterOne?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
 					}
 					moreAdapter.add(MoreRecyclerItem().withCallback {
-						fragmentNavigation.pushFragment(FeedListFragment().addObject(Database().allLastFeeds.turnAround(), "feeds"), R.string.last_feeds.resStr())
+						fragmentNavigation.pushFragment(FeedListFragment().addObject(Database.allLastFeeds.turnAround(), "feeds"), R.string.last_feeds.resStr())
 					})
 				} else {
 					recyclerOne?.hideView()
@@ -173,7 +172,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 
 	private fun loadFavoriteFeeds() {
 		asyncSafe {
-			val favoriteFeeds = Database().allFavorites.take(5)
+			val favoriteFeeds = Database.allFavorites.take(5)
 			mainThreadSafe {
 				if (favoriteFeeds.notNullAndEmpty()) {
 					recyclerTwo?.showView()

@@ -51,7 +51,7 @@ class SyncJob : Job() {
 fun sync(context: Context): String? = tryOrNull {
 	System.out.println("Sync started")
 	if (appContext == null) appContext = context.applicationContext
-	Database().allFavorites.forEach {
+	Database.allFavorites.forEach {
 		FeedlyLoader().apply {
 			type = FeedlyLoader.FeedTypes.FEED
 			feedUrl = "feed/" + it.url()

@@ -14,8 +14,12 @@ import android.app.Application
 import android.content.Context
 import android.support.v7.app.AppCompatDelegate
 import com.evernote.android.job.JobManager
+import com.mcxiaoke.koi.async.asyncSafe
 import io.paperdb.Paper
-import jlelse.newscatchr.backend.helpers.*
+import jlelse.newscatchr.backend.helpers.Preferences
+import jlelse.newscatchr.backend.helpers.SyncJob
+import jlelse.newscatchr.backend.helpers.cancelSync
+import jlelse.newscatchr.backend.helpers.scheduleSync
 import jlelse.newscatchr.extensions.setLocale
 import jlelse.newscatchr.extensions.setNightMode
 
@@ -28,21 +32,19 @@ class NewsCatchr : Application() {
 		appContext = applicationContext
 		setLocale()
 		Paper.init(this)
-		JobManager.create(this).addJobCreator { tag ->
-			when (tag) {
-				SyncJob.TAG -> SyncJob()
-				else -> null
-			}
-		}
-		if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
-		// Handle vectors
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-		// Handle night mode settings
 		setNightMode()
-		// Init Host
-		hosts = Hosts(applicationContext)
+		asyncSafe {
+			JobManager.create(this@NewsCatchr).addJobCreator { tag ->
+				when (tag) {
+					SyncJob.TAG -> SyncJob()
+					else -> null
+				}
+			}
+			if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
+			Paper.book("hosts").destroy()
+		}
 	}
 }
 
 var appContext: Context? = null
-var hosts: Hosts? = null

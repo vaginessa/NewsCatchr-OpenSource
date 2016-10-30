@@ -11,23 +11,23 @@
 <full-backup-content>
 	<exclude
 		domain="file"
-		path="bookmarks.nc" />
+		path="bookmarks.nc"/>
 	<exclude
 		domain="file"
-		path="feeds.nc" />
+		path="feeds.nc"/>
 	<exclude
 		domain="file"
-		path="readurls.nc" />
+		path="readurls.nc"/>
 	<exclude
 		domain="file"
-		path="temp_bookmarks.nc" />
+		path="temp_bookmarks.nc"/>
 	<exclude
 		domain="file"
-		path="temp_feeds.nc" />
+		path="temp_feeds.nc"/>
 	<exclude
 		domain="sharedpref"
-		path="evernote_jobs.xml" />
+		path="evernote_jobs.xml"/>
 	<exclude
 		domain="database"
-		path="evernote_jobs.db" />
+		path="evernote_jobs.db"/>
 </full-backup-content>
