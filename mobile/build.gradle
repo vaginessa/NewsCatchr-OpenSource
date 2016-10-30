@@ -71,7 +71,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$rootProject.ext.SUPPORT_LIBS"
     compile "com.android.support:preference-v7:$rootProject.ext.SUPPORT_LIBS"
     compile "com.android.support:preference-v14:$rootProject.ext.SUPPORT_LIBS"
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta2'
     // Wear
     wearApp project(':wear')
     compile "com.google.android.gms:play-services-wearable:$rootProject.ext.PLAY_SERVICES"
