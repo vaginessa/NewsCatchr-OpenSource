@@ -21,7 +21,7 @@ class AmpApi {
 	private val cachedUrls = mutableMapOf<String, String>()
 
 	fun getAmpUrl(url: String?): String? {
-		if (cachedUrls.containsKey(url)) return cachedUrls[url]
+		if (cachedUrls.contains(url)) return cachedUrls[url]
 		if (url.notNullOrBlank()) {
 			Bridge.post("https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet?fields=ampUrls%2FcdnAmpUrl&key=$GoogleApiKey")
 					.body("{\"urls\":[\"$url\"]}")

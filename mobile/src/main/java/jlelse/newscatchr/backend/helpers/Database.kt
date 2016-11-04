@@ -30,10 +30,8 @@ object Database {
 	var allFavorites: Array<Feed>
 		get() = Paper.book(FAVORITES).read<Array<Feed>>(FAVORITES, arrayOf<Feed>())
 		set(value) {
-			try {
+			tryOrNull {
 				Paper.book(FAVORITES).write(FAVORITES, value.onlySaved())
-			} catch (e: Exception) {
-				e.printStackTrace()
 			}
 		}
 
@@ -62,10 +60,8 @@ object Database {
 	var allBookmarks: Array<Article>
 		get() = Paper.book(BOOKMARKS).read<Array<Article>>(BOOKMARKS, arrayOf<Article>())
 		set(value) {
-			try {
+			tryOrNull {
 				Paper.book(BOOKMARKS).write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles())
-			} catch (e: Exception) {
-				e.printStackTrace()
 			}
 		}
 
@@ -78,48 +74,36 @@ object Database {
 	}
 
 	fun addBookmark(article: Article?) {
-		if (article != null) {
-			try {
-				if (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
-					asyncUnsafe {
-						article.pocketId = PocketHandler().addToPocket(article)
-						article.fromPocket = true
-						addBookmarks(article)
-					}
-				} else {
+		tryOrNull(article != null) {
+			if (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
+				asyncUnsafe {
+					article!!.pocketId = PocketHandler().addToPocket(article)
+					article.fromPocket = true
 					addBookmarks(article)
 				}
-			} catch (e: Exception) {
-				e.printStackTrace()
+			} else {
+				addBookmarks(article)
 			}
 		}
 	}
 
 	fun deleteBookmark(url: String?) {
-		if (url.notNullOrBlank()) {
-			try {
-				allBookmarks.toMutableList().filter { it.url == url }.forEach {
-					val pocket = Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
-					if (pocket && it.fromPocket) {
-						asyncUnsafe {
-							PocketHandler().archiveOnPocket(it)
-						}
-					}
+		tryOrNull(url.notNullOrBlank()) {
+			allBookmarks.toMutableList().filter { it.url == url }.forEach {
+				val pocket = Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
+				if (pocket && it.fromPocket) asyncUnsafe {
+					PocketHandler().archiveOnPocket(it)
 				}
-				allBookmarks = allBookmarks.toMutableList().filterNot { it.url == url }.toTypedArray()
-			} catch(e: Exception) {
-				e.printStackTrace()
 			}
+			allBookmarks = allBookmarks.toMutableList().filterNot { it.url == url }.toTypedArray()
 		}
 	}
 
 	var allReadUrls: Array<String>
 		get() = Paper.book(READ_URLS).read<Array<String>>(READ_URLS, arrayOf<String>())
 		set(value) {
-			try {
+			tryOrNull {
 				Paper.book(READ_URLS).write(READ_URLS, value.removeBlankStrings().takeLast(100).toTypedArray())
-			} catch (e: Exception) {
-				e.printStackTrace()
 			}
 		}
 
@@ -130,10 +114,8 @@ object Database {
 	var allLastFeeds: Array<Feed>
 		get() = Paper.book(LAST_FEEDS).read<Array<Feed>>(LAST_FEEDS, arrayOf<Feed>())
 		set(value) {
-			try {
+			tryOrNull {
 				Paper.book(LAST_FEEDS).write(LAST_FEEDS, value.removeEmptyFeeds().takeLast(30).toTypedArray())
-			} catch (e: Exception) {
-				e.printStackTrace()
 			}
 		}
 
