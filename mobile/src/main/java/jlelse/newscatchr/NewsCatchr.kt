@@ -22,6 +22,7 @@ import jlelse.newscatchr.backend.helpers.cancelSync
 import jlelse.newscatchr.backend.helpers.scheduleSync
 import jlelse.newscatchr.extensions.setLocale
 import jlelse.newscatchr.extensions.setNightMode
+import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
 /**
  * Application class
@@ -48,3 +49,4 @@ class NewsCatchr : Application() {
 }
 
 var appContext: Context? = null
+var customTabsHelperFragment: CustomTabsHelperFragment? = null
