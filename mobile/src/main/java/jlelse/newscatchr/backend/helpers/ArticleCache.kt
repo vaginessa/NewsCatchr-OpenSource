@@ -20,17 +20,23 @@ import jlelse.newscatchr.extensions.tryOrNull
 
 class ArticleCache {
 
-	private val BOOK by lazy { Paper.book("article_cache") }
+	private val sessionCache = mutableMapOf<String, Article>()
+	private val book by lazy { Paper.book("article_cache") }
 
-	fun isCached(id: String): Boolean = BOOK?.exist(id.formatForCache()) ?: false
+	fun isCached(id: String): Boolean = book?.exist(id.formatForCache()) ?: false
 
 	fun getById(id: String): Article? = tryOrNull {
-		Gson().fromJson<Article>(BOOK?.read<String>(id.formatForCache()) ?: "").process(true)
+		if (sessionCache.contains(id)) sessionCache[id]
+		else if (isCached(id)) Gson().fromJson<Article>(book?.read<String>(id.formatForCache()) ?: "").process(true)
+		else null
 	}
 
 	fun save(article: Article) {
 		article.process()
-		if (article.originalId.notNullOrBlank() && article.originalId.notNullOrBlank() && !isCached(article.originalId!!)) BOOK?.write(article.originalId!!.formatForCache(), article.toJson())
+		if (article.originalId.notNullOrBlank() && article.originalId.notNullOrBlank()) {
+			sessionCache.put(article.originalId!!, article)
+			book?.write(article.originalId!!.formatForCache(), article.toJson())
+		}
 	}
 
 }
