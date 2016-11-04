@@ -18,7 +18,10 @@ import jlelse.newscatchr.extensions.notNullOrBlank
 
 class AmpApi {
 
+	private val cachedUrls = mutableMapOf<String, String>()
+
 	fun getAmpUrl(url: String?): String? {
+		if (cachedUrls.containsKey(url)) return cachedUrls[url]
 		if (url.notNullOrBlank()) {
 			Bridge.post("https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet?fields=ampUrls%2FcdnAmpUrl&key=$GoogleApiKey")
 					.body("{\"urls\":[\"$url\"]}")
@@ -27,11 +30,16 @@ class AmpApi {
 					.asClass(Response::class.java)
 					?.ampUrls?.firstOrNull()?.cdnAmpUrl
 					?.let {
-						if (it.notNullOrBlank()) return it
+						if (it.notNullOrBlank()) return cacheAndReturn(url, it)
 					}
-			return "https://googleweblight.com/?lite_url=$url"
+			return cacheAndReturn(url, "https://googleweblight.com/?lite_url=$url")
 		}
 		return null
+	}
+
+	private fun cacheAndReturn(url: String?, response: String?): String? {
+		if (url.notNullOrBlank() && response.notNullOrBlank()) cachedUrls.put(url!!, response!!)
+		return response
 	}
 
 	@Keep

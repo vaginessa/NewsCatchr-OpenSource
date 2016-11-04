@@ -37,12 +37,14 @@ import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.askForSharingService
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
+import jlelse.newscatchr.customTabsHelperFragment
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.fragments.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.views.Toolbar
 import jlelse.readit.R
+import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
 class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	private lateinit var bottomBar: BottomBar
@@ -72,6 +74,8 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		asyncSafe {
 			// Init Tracking
 			Tracking.init(this@MainActivity)
+			// Init Custom Tabs
+			customTabsHelperFragment = CustomTabsHelperFragment.attachTo(this@MainActivity)
 			// Init Google Api Client for Android Wear
 			googleApiClient = GoogleApiClient.Builder(this@MainActivity)
 					.addApiIfAvailable(Wearable.API)
