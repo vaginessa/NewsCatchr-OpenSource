@@ -146,7 +146,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 
 	private fun loadLastFeeds() {
 		asyncSafe {
-			val lastFeeds = Database.allLastFeeds.takeLast(5).toTypedArray().turnAround()
+			val lastFeeds = Database.allLastFeeds.toTypedArray().takeLast(5).turnAround()
 			mainThreadSafe {
 				if (lastFeeds.notNullAndEmpty()) {
 					recyclerOne?.showView()
@@ -160,7 +160,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 						fastAdapterOne?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
 					}
 					moreAdapter.add(MoreRecyclerItem().withCallback {
-						fragmentNavigation.pushFragment(FeedListFragment().addObject(Database.allLastFeeds.turnAround(), "feeds"), R.string.last_feeds.resStr())
+						fragmentNavigation.pushFragment(FeedListFragment().addObject(Database.allLastFeeds.toList().turnAround(), "feeds"), R.string.last_feeds.resStr())
 					})
 				} else {
 					recyclerOne?.hideView()

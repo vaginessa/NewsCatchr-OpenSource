@@ -77,7 +77,11 @@ fun <T> Array<out T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
 fun <T> Collection<T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
+fun <T> Set<T>?.notNullAndEmpty() = this != null && isNotEmpty()
+
 fun Array<out String?>.removeBlankStrings() = mutableListOf<String>().apply { this@removeBlankStrings.filter { it.notNullOrBlank() }.forEach { add(it!!) } }.toTypedArray()
+
+fun Set<String?>.removeBlankStrings() = mutableSetOf<String>().apply { this@removeBlankStrings.filter { it.notNullOrBlank() }.forEach { add(it!!) } }.toSet()
 
 fun String.cleanHtml(): String? = if (notNullOrBlank()) Jsoup.clean(this, Whitelist.basic().addTags("h2", "h3", "h4", "h5", "h6")) else this
 
@@ -97,7 +101,7 @@ fun <T> tryOrNull(code: () -> T): T? = try {
 
 fun <T> tryOrNull(arg: Boolean?, code: () -> T): T? = if (arg ?: false) tryOrNull(code) else null
 
-inline fun <reified T> Array<T>.turnAround() = mutableListOf<T>().apply { this@turnAround.forEach { add(0, it) } }.toTypedArray()
+inline fun <reified T> List<T>.turnAround() = mutableListOf<T>().apply { this@turnAround.forEach { add(0, it) } }.toTypedArray()
 
 fun sharedPref(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
 
