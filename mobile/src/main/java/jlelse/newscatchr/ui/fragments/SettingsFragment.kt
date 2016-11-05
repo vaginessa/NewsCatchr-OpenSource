@@ -28,6 +28,7 @@ import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.async.mainThread
 import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.startActivity
+import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.PocketAuth
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.*
@@ -124,7 +125,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			}
 			clearHistoryPref -> {
 				asyncSafe {
-					Database.allLastFeeds = arrayOf()
+					Database.allLastFeeds = setOf<Feed>()
 					mainThreadSafe {
 						context.sendBroadcast(Intent("last_feed_updated"))
 						Snackbar.make(activity.findViewById(R.id.container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()

@@ -21,8 +21,8 @@ buildScan {
 
 ext {
     APP_ID = "jlelse.readit"
-    VERSION_NAME = "5.1.4"
-    VERSION_CODE = 51
+    VERSION_NAME = "5.2.0"
+    VERSION_CODE = 52
     TARGET_SDK = 25
     BUILD_TOOLS = "25.0.0"
     SUPPORT_LIBS = "25.0.0"
@@ -36,6 +36,5 @@ allprojects {
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url "http://maven.cloudrail.com" }
     }
 }

@@ -38,6 +38,12 @@ fun Array<out Feed?>.removeEmptyFeeds(): Array<Feed> {
 	}.toTypedArray()
 }
 
+fun Set<Feed?>.removeEmptyFeeds(): Set<Feed> {
+	return mutableSetOf<Feed>().apply {
+		this@removeEmptyFeeds.forEach { if (it.notNullOrEmpty()) add(it!!) }
+	}.toSet()
+}
+
 fun Array<Feed>.onlySaved(): Array<Feed> {
 	return toMutableList().filter(Feed::saved).toTypedArray()
 }

@@ -28,11 +28,9 @@ object Database {
 	private val LAST_FEEDS = "last_feeds"
 
 	var allFavorites: Array<Feed>
-		get() = Paper.book(FAVORITES).read<Array<Feed>>(FAVORITES, arrayOf<Feed>())
+		get() = tryOrNull { Paper.book(FAVORITES).read<Array<Feed>>(FAVORITES, arrayOf<Feed>()) } ?: arrayOf<Feed>()
 		set(value) {
-			tryOrNull {
-				Paper.book(FAVORITES).write(FAVORITES, value.onlySaved())
-			}
+			tryOrNull { Paper.book(FAVORITES).write(FAVORITES, value.onlySaved()) }
 		}
 
 	val allFavoritesUrls = mutableListOf<String>().apply { allFavorites.forEach { add(it.url()!!) } }.toTypedArray()
@@ -58,11 +56,9 @@ object Database {
 	}
 
 	var allBookmarks: Array<Article>
-		get() = Paper.book(BOOKMARKS).read<Array<Article>>(BOOKMARKS, arrayOf<Article>())
+		get() = tryOrNull { Paper.book(BOOKMARKS).read<Array<Article>>(BOOKMARKS, arrayOf<Article>()) } ?: arrayOf<Article>()
 		set(value) {
-			tryOrNull {
-				Paper.book(BOOKMARKS).write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles())
-			}
+			tryOrNull { Paper.book(BOOKMARKS).write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles()) }
 		}
 
 	val allBookmarkUrls = mutableListOf<String>().apply { allBookmarks.forEach { add(it.url!!) } }.toTypedArray()
@@ -99,28 +95,26 @@ object Database {
 		}
 	}
 
-	var allReadUrls: Array<String>
-		get() = Paper.book(READ_URLS).read<Array<String>>(READ_URLS, arrayOf<String>())
+	var allReadUrls: Set<String>
+		get() = tryOrNull { Paper.book(READ_URLS).read<Set<String>>(READ_URLS, setOf<String>()) } ?: setOf<String>()
 		set(value) {
-			tryOrNull {
-				Paper.book(READ_URLS).write(READ_URLS, value.removeBlankStrings().takeLast(100).toTypedArray())
-			}
+			tryOrNull { Paper.book(READ_URLS).write(READ_URLS, value.removeBlankStrings()) }
 		}
 
 	fun addReadUrl(url: String?) {
-		allReadUrls = allReadUrls.toMutableList().apply { if (url.notNullOrBlank() == true) add(url!!) }.toTypedArray()
+		allReadUrls = allReadUrls.toMutableSet().apply { add(url!!) }.toSet()
 	}
 
-	var allLastFeeds: Array<Feed>
-		get() = Paper.book(LAST_FEEDS).read<Array<Feed>>(LAST_FEEDS, arrayOf<Feed>())
+	var allLastFeeds: Set<Feed>
+		get() = tryOrNull { Paper.book(LAST_FEEDS).read<Set<Feed>>(LAST_FEEDS, setOf<Feed>()) } ?: setOf<Feed>()
 		set(value) {
-			tryOrNull {
-				Paper.book(LAST_FEEDS).write(LAST_FEEDS, value.removeEmptyFeeds().takeLast(30).toTypedArray())
-			}
+			tryOrNull { Paper.book(LAST_FEEDS).write(LAST_FEEDS, value.removeEmptyFeeds()) }
 		}
 
 	fun addLastFeed(feed: Feed?) {
-		allLastFeeds = allLastFeeds.toMutableList().apply { if (feed != null && tryOrNull { allLastFeeds.last().url() } != feed.url()) add(feed) }.toTypedArray()
+		allLastFeeds = allLastFeeds.filter { it.url() != feed?.url() }.toMutableSet().apply {
+			if (feed != null) add(feed)
+		}.toSet()
 	}
 
 	fun isSavedFavorite(url: String?) = url.notNullOrBlank() && allFavoritesUrls.contains(url)

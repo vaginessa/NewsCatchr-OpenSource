@@ -34,8 +34,8 @@ import java.io.File
 import java.io.InputStream
 
 class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -> Unit) {
-	private lateinit var cloudStorage: CloudStorage
-	private lateinit var progressDialog: ProgressDialog
+	private var cloudStorage: CloudStorage
+	private var progressDialog: ProgressDialog
 
 	private val favoritesFile = "feeds.nc"
 	private val bookmarksFile = "bookmarks.nc"
@@ -148,8 +148,8 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$readUrlsFile")
 		return if (downloadFile(readUrlsFile, file)) {
 			try {
-				Gson().fromJson<List<String>>(file.readText(), object : TypeToken<List<String>>() {}.type)?.let {
-					if (it.notNullAndEmpty()) Database.allReadUrls = it.toTypedArray()
+				Gson().fromJson<Set<String>>(file.readText(), object : TypeToken<Set<String>>() {}.type)?.let {
+					if (it.notNullAndEmpty()) Database.allReadUrls = it
 				}
 				true
 			} catch (e: Exception) {
