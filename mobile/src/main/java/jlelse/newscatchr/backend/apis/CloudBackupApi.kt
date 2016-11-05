@@ -23,6 +23,7 @@ import com.cloudrail.si.services.OneDrive
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mcxiaoke.koi.async.asyncSafe
+import com.mcxiaoke.koi.ext.readString
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
@@ -179,7 +180,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 	private fun downloadFile(name: String, destination: File): Boolean {
 		return try {
 			var success = false
-			cloudStorage.download("/$folder/$name")?.convertToString()?.let {
+			cloudStorage.download("/$folder/$name")?.readString()?.let {
 				if (it.notNullOrBlank()) {
 					destination.delete()
 					destination.createNewFile()
