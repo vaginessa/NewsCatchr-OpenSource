@@ -20,7 +20,7 @@ android {
         targetSdkVersion rootProject.ext.TARGET_SDK
         versionCode rootProject.ext.VERSION_CODE
         versionName rootProject.ext.VERSION_NAME
-        resConfigs "en", "de", "fr", "fa", "zh"
+        resConfigs "en", "de", "fr", "fa", "hr", "zh"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
@@ -46,7 +46,7 @@ android {
 dependencies {
     compile 'com.mikepenz:fastadapter:2.0.0@aar'
     compile 'com.mikepenz:fastadapter-extensions:2.0.0@aar'
-    compile 'com.afollestad.material-dialogs:core:0.9.0.2'
+    compile 'com.afollestad.material-dialogs:core:0.9.1.0'
     compile 'com.afollestad:bridge:3.3.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'io.paperdb:paperdb:2.0'

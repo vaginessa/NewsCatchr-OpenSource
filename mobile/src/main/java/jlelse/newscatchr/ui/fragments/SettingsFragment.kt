@@ -279,17 +279,17 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				}
 			}
 			languagePref -> {
-				val availableLocales = mutableListOf<Locale>().apply {
-					arrayOf("en", "de", "fa", "fr", "zh").forEach {
+				val availableLocales = mutableSetOf<Locale>().apply {
+					arrayOf("en", "de", "fa", "fr", "hr", "zh").forEach {
 						add(Locale(it))
 					}
-				}.toTypedArray()
+				}
 				MaterialDialog.Builder(context)
-						.items(mutableListOf<String>().apply {
+						.items(mutableSetOf<String>().apply {
 							availableLocales.forEach { add(it.displayName) }
 						})
 						.itemsCallback { dialog, view, i, charSequence ->
-							Preferences.language = availableLocales[i].language
+							Preferences.language = availableLocales.toTypedArray()[i].language
 							activity.setLocale()
 						}
 						.negativeText(android.R.string.cancel)

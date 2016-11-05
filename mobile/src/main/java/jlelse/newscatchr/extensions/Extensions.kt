@@ -25,21 +25,9 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
 import org.xml.sax.Attributes
-import org.xml.sax.InputSource
 import org.xml.sax.SAXException
 import org.xml.sax.helpers.DefaultHandler
-import java.io.InputStream
 import javax.xml.parsers.SAXParserFactory
-
-
-fun InputStream.convertToString(): String? {
-	var string: String? = null
-	bufferedReader().let {
-		string = it.readText()
-		tryOrNull { it.close() }
-	}
-	return string
-}
 
 fun String.convertOpmlToFeeds() = tryOrNull {
 	mutableListOf<Feed>().apply {
@@ -56,7 +44,7 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 					}
 				}
 			}
-			parse(InputSource(byteInputStream(charset("UTF-8"))))
+			parse(this@convertOpmlToFeeds)
 		}
 	}.toTypedArray()
 }
@@ -100,8 +88,6 @@ fun <T> tryOrNull(code: () -> T): T? = try {
 }
 
 fun <T> tryOrNull(arg: Boolean?, code: () -> T): T? = if (arg ?: false) tryOrNull(code) else null
-
-inline fun <reified T> List<T>.turnAround() = mutableListOf<T>().apply { this@turnAround.forEach { add(0, it) } }.toTypedArray()
 
 fun sharedPref(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
 

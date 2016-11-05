@@ -44,17 +44,11 @@ fun Set<Feed?>.removeEmptyFeeds(): Set<Feed> {
 	}.toSet()
 }
 
-fun Array<Feed>.onlySaved(): Array<Feed> {
-	return toMutableList().filter(Feed::saved).toTypedArray()
-}
+fun Array<Feed>.onlySaved(): Array<Feed> = toMutableList().filter(Feed::saved).toTypedArray()
 
-fun Feed?.notNullOrEmpty(): Boolean {
-	return this?.url().notNullOrBlank()
-}
+fun Feed?.notNullOrEmpty(): Boolean = this?.url().notNullOrBlank()
 
-fun Article?.notNullOrEmpty(): Boolean {
-	return this?.process()?.url.notNullOrBlank()
-}
+fun Article?.notNullOrEmpty(): Boolean = this?.process()?.url.notNullOrBlank()
 
 fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNavigation, query: String? = null) {
 	val progressDialog = ProgressDialog(context)

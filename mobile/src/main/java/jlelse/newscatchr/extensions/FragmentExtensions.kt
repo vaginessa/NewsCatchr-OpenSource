@@ -18,27 +18,17 @@ import com.google.gson.reflect.TypeToken
 
 inline fun <reified T> Gson.fromJson(json: String): T = this.fromJson<T>(json, object : TypeToken<T>() {}.type)
 
-fun Bundle.addObject(objectToAdd: Any?, key: String) {
-	putString(key, Gson().toJson(objectToAdd))
-}
+fun Bundle.addObject(objectToAdd: Any?, key: String) = putString(key, Gson().toJson(objectToAdd))
 
 inline fun <reified T> Bundle.getObject(key: String): T? = tryOrNull { Gson().fromJson<T>(getString(key)) }
 
-fun Fragment.addTitle(title: String?): Fragment {
-	return addObject(title, "ncTitle")
-}
+fun Fragment.addTitle(title: String?): Fragment = addObject(title, "ncTitle")
 
-fun Fragment.getAddedTitle(): String? {
-	return getAddedString("ncTitle")
-}
+fun Fragment.getAddedTitle(): String? = getAddedString("ncTitle")
 
-fun Fragment.addString(stringToAdd: String?, key: String): Fragment {
-	return addObject(stringToAdd, key)
-}
+fun Fragment.addString(stringToAdd: String?, key: String): Fragment = addObject(stringToAdd, key)
 
-fun Fragment.getAddedString(key: String): String? {
-	return getAddedObject<String>(key)
-}
+fun Fragment.getAddedString(key: String): String? = getAddedObject<String>(key)
 
 fun Fragment.addObject(objectToAdd: Any?, key: String): Fragment {
 	val args = arguments ?: Bundle()
@@ -47,22 +37,13 @@ fun Fragment.addObject(objectToAdd: Any?, key: String): Fragment {
 	try {
 		arguments = args
 	} catch (e: Exception) {
-		if (e is IllegalStateException) {
-			tryOrNull {
-				arguments.putAll(args)
-			}
-		} else {
-			e.printStackTrace()
+		tryOrNull(e is IllegalStateException) {
+			arguments.putAll(args)
 		}
 	}
 	return this
 }
 
-inline fun <reified T> Fragment.getAddedObject(key: String): T? {
-	return if (arguments != null && arguments.containsKey(key)) arguments.getObject(key)
-	else null
-}
+inline fun <reified T> Fragment.getAddedObject(key: String): T? = if (arguments != null && arguments.containsKey(key)) arguments.getObject(key) else null
 
-fun Fragment.sendBroadcast(intent: Intent) {
-	context.sendBroadcast(intent)
-}
+fun Fragment.sendBroadcast(intent: Intent) = context.sendBroadcast(intent)

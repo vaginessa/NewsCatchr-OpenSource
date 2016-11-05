@@ -22,6 +22,7 @@ import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.async.mainThread
 import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
+import com.mcxiaoke.koi.ext.readString
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
@@ -144,7 +145,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) {
 			asyncSafe {
 				var opml: String? = null
-				if (data != null && data.data != null) opml = activity.contentResolver.openInputStream(data.data).convertToString()
+				if (data != null && data.data != null) opml = activity.contentResolver.openInputStream(data.data).readString()
 				importOpml(opml)
 			}
 		}
