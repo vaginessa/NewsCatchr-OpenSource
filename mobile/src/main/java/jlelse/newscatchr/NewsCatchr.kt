@@ -50,3 +50,4 @@ class NewsCatchr : Application() {
 
 var appContext: Context? = null
 var customTabsHelperFragment: CustomTabsHelperFragment? = null
+var lastTab = 0

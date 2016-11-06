@@ -8,20 +8,25 @@
   ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<tabs>
-	<tab
-		barColorWhenSelected="@color/bottom_bar_background"
-		icon="@drawable/ic_explore"
-		id="@+id/bb_news"
-		title="@string/news"/>
-	<tab
-		barColorWhenSelected="@color/bottom_bar_background"
-		icon="@drawable/ic_bookmark"
-		id="@+id/bb_bookmarks"
-		title="@string/bookmarks"/>
-	<tab
-		barColorWhenSelected="@color/bottom_bar_background"
-		icon="@drawable/ic_settings"
-		id="@+id/bb_settings"
-		title="@string/settings"/>
-</tabs>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+	  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+	<item
+		android:id="@+id/bb_news"
+		android:icon="@drawable/ic_explore"
+		android:title="@string/news"
+		app:showAsAction="ifRoom"/>
+
+	<item
+		android:id="@+id/bb_bookmarks"
+		android:icon="@drawable/ic_bookmark"
+		android:title="@string/bookmarks"
+		app:showAsAction="ifRoom"/>
+
+	<item
+		android:id="@+id/bb_settings"
+		android:icon="@drawable/ic_settings"
+		android:title="@string/settings"
+		app:showAsAction="ifRoom"/>
+
+</menu>
