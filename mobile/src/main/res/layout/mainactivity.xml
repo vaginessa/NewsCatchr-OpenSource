@@ -8,12 +8,13 @@
   ~ You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-												 xmlns:app="http://schemas.android.com/apk/res-auto"
-												 android:id="@+id/coordinator_layout"
-												 android:layout_width="match_parent"
-												 android:layout_height="match_parent"
-												 android:fitsSystemWindows="true">
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:id="@+id/coordinator_layout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:fitsSystemWindows="true">
 
 	<android.support.design.widget.AppBarLayout
 		android:id="@+id/appbar"
@@ -72,13 +73,14 @@
 		android:layout_height="match_parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-	<com.roughike.bottombar.BottomBar
-		android:id="@+id/bottom_bar"
+	<android.support.design.widget.BottomNavigationView
+		android:id="@+id/navigation_view"
 		android:layout_width="match_parent"
-		android:layout_height="60dp"
+		android:layout_height="wrap_content"
 		android:layout_gravity="bottom"
-		app:bb_behavior="shy"
-		app:bb_tabXmlResource="@xml/bottombar"/>
+		android:background="@color/bb_background"
+		android:elevation="4dp"
+		app:menu="@menu/navigationview"/>
 
 	<android.support.design.widget.FloatingActionButton
 		android:id="@+id/fab"

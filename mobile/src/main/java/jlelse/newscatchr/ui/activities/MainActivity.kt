@@ -15,6 +15,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
+import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
@@ -31,7 +32,6 @@ import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.ext.find
 import com.mcxiaoke.koi.ext.newIntent
 import com.mcxiaoke.koi.ext.onClick
-import com.roughike.bottombar.BottomBar
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.askForSharingService
@@ -39,6 +39,7 @@ import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.customTabsHelperFragment
 import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.lastTab
 import jlelse.newscatchr.ui.fragments.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
@@ -47,7 +48,7 @@ import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
 class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
-	private lateinit var bottomBar: BottomBar
+	private lateinit var bottomNavigationView: BottomNavigationView
 	private lateinit var fragNavController: FragNavController
 	private val toolbar: Toolbar? by lazy { find<Toolbar>(R.id.toolbar) }
 	private val appbar: AppBarLayout? by lazy { find<AppBarLayout>(R.id.appbar) }
@@ -117,17 +118,21 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				BookmarksFragment().addTitle(R.string.bookmarks.resStr()),
 				SettingsFragment().addTitle(R.string.settings.resStr())
 		))
-		bottomBar = find<BottomBar>(R.id.bottom_bar).apply {
-			setOnTabReselectListener { fragNavController.clearStack() }
-			setOnTabSelectListener { id ->
-				fragNavController.switchTab(when (id) {
+		bottomNavigationView = find<BottomNavigationView>(R.id.navigation_view).apply {
+			setOnNavigationItemSelectedListener { item ->
+				val itemNumber = when (item.itemId) {
 					R.id.bb_news -> 0
 					R.id.bb_bookmarks -> 1
 					R.id.bb_settings -> 2
 					else -> 0
-				})
+				}
+				if (itemNumber == lastTab) fragNavController.clearStack()
+				else fragNavController.switchTab(itemNumber)
+				lastTab = itemNumber
+				true
 			}
 		}
+		fragNavController.switchTab(lastTab)
 
 		checkFragmentDependingThings()
 
