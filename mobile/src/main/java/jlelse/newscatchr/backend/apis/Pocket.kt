@@ -16,9 +16,8 @@ import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
 import com.mcxiaoke.koi.async.asyncUnsafe
 import jlelse.newscatchr.backend.helpers.Preferences
-import jlelse.newscatchr.extensions.safeExtractJsonObject
-import jlelse.newscatchr.extensions.safeExtractString
-import jlelse.newscatchr.extensions.safeGetJsonObject
+import jlelse.newscatchr.extensions.jsonObject
+import jlelse.newscatchr.extensions.string
 import jlelse.newscatchr.extensions.tryOrNull
 import org.json.JSONObject
 
@@ -70,12 +69,12 @@ class Pocket() {
 					})
 					.response()
 					?.asJsonObject()
-					?.safeExtractJsonObject("list")
+					?.jsonObject("list")
 					?.let {
 						for (i in 0..(it.names()?.length() ?: 1) - 1) {
 							(it.get(it.names().getString(i))?.toString() ?: "").let {
 								add(GetResponseItemNew(it).apply {
-									author = it.safeGetJsonObject()?.safeExtractJsonObject("authors")?.names()?.getString(0)
+									author = it.jsonObject()?.jsonObject("authors")?.names()?.getString(0)
 								})
 							}
 						}
@@ -143,13 +142,13 @@ class GetResponseItemNew(val json: String?) {
 	var author: String? = null
 
 	init {
-		json?.safeGetJsonObject()?.let {
-			item_id = it.safeExtractString("item_id")
-			given_url = it.safeExtractString("given_url")
-			resolved_title = it.safeExtractString("resolved_title")
-			excerpt = it.safeExtractString("excerpt")
-			images = GetResponseItemImagesNew(it.safeExtractJsonObject("images"))
-			author = it.safeExtractString("author")
+		json?.jsonObject()?.let {
+			item_id = it.string("item_id")
+			given_url = it.string("given_url")
+			resolved_title = it.string("resolved_title")
+			excerpt = it.string("excerpt")
+			images = GetResponseItemImagesNew(it.jsonObject("images"))
+			author = it.string("author")
 		}
 	}
 }
@@ -159,7 +158,7 @@ class GetResponseItemImagesNew(jsonObject: JSONObject?) {
 	var one: GetResponseItemImageNew? = null
 
 	init {
-		one = GetResponseItemImageNew(jsonObject?.safeExtractJsonObject("1"))
+		one = GetResponseItemImageNew(jsonObject?.jsonObject("1"))
 	}
 }
 
@@ -168,7 +167,7 @@ class GetResponseItemImageNew(jsonObject: JSONObject?) {
 	var src: String? = null
 
 	init {
-		src = jsonObject?.safeExtractString("src")
+		src = jsonObject?.string("src")
 	}
 }
 
