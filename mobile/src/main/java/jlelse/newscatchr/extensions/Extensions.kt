@@ -21,6 +21,7 @@ import android.text.Spanned
 import com.google.gson.Gson
 import jlelse.newscatchr.appContext
 import jlelse.newscatchr.backend.Feed
+import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
@@ -51,11 +52,23 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 
 fun Any.toJson(): String = Gson().toJson(this)
 
-fun JSONObject.safeExtractString(name: String): String? = tryOrNull { getString(name) }
+fun JSONArray.jsonArray(index: Int): JSONArray? = tryOrNull { getJSONArray(index) }
 
-fun JSONObject.safeExtractJsonObject(name: String) = tryOrNull { getJSONObject(name) }
+fun JSONArray.forEach(code: (array: JSONArray, index: Int) -> Unit) = {
+	for (i in 0..(length() - 1)) {
+		code(this, i)
+	}
+}
 
-fun String.safeGetJsonObject(): JSONObject? = tryOrNull { JSONObject(this) }
+fun JSONArray.string(index: Int): String? = tryOrNull { getString(index) }
+
+fun JSONObject.string(name: String): String? = tryOrNull { getString(name) }
+
+fun JSONObject.jsonObject(name: String) = tryOrNull { getJSONObject(name) }
+
+fun String.jsonArray(): JSONArray? = tryOrNull { JSONArray(this) }
+
+fun String.jsonObject(): JSONObject? = tryOrNull { JSONObject(this) }
 
 fun String.buildExcerpt(words: Int) = split(" ").toMutableList().filter { it.notNullOrBlank() && it != "\n" }.take(words).joinToString(separator = " ", postfix = "...").trim()
 
