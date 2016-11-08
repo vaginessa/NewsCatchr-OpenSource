@@ -57,7 +57,7 @@ fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNa
 		context.asyncSafe {
 			var foundFeeds: Array<Feed>? = null
 			var foundRelated: Array<String>? = null
-			Feedly().feedSearch(finalQuery.toString(), 100, null, null) { feeds, related ->
+			Feedly().feedSearch(finalQuery, 100, null, null) { feeds, related ->
 				foundFeeds = feeds
 				foundRelated = related
 			}
