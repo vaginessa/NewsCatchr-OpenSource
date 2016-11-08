@@ -133,6 +133,12 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 			}
 		}
 		fragNavController.switchTab(lastTab)
+		findViewById(when (lastTab) {
+			0 -> R.id.bb_news
+			1 -> R.id.bb_bookmarks
+			2 -> R.id.bb_settings
+			else -> R.id.bb_news
+		}).performClick()
 
 		checkFragmentDependingThings()
 
