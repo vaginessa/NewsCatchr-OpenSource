@@ -142,14 +142,13 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("Bridge", "A simple but powerful HTTP networking library for Android. It features a Fluent chainable API, powered by Java/Android's URLConnection classes for maximum compatibility and speed.", "https://github.com/afollestad/bridge"),
 						Library("Glide", "An image loading and caching library for Android focused on smooth scrolling", "https://github.com/bumptech/glide"),
 						Library("Paper", "Fast and simple data storage library for Android", "https://github.com/pilgr/Paper"),
-						Library("BottomBar", "A custom view component that mimics the new Material Design Bottom Navigation pattern.", "https://github.com/roughike/BottomBar"),
-						Library("FragNav", "An Android library for managing multiple stacks of fragments", "https://github.com/ncapdevi/FragNav/"),
 						Library("google-gson", "A Java serialization/deserialization library that can convert Java Objects into JSON and back.", "https://github.com/google/gson"),
 						Library("CloudRail", "Integrate Multiple Services With Just One API", "https://github.com/CloudRail/cloudrail-si-android-sdk"),
 						Library("Android In-App Billing v3 Library", "A lightweight implementation of Android In-app Billing Version 3", "https://github.com/anjlab/android-inapp-billing-v3"),
 						Library("FlexboxLayout", "FlexboxLayout is a library project which brings the similar capabilities of CSS Flexible Box Layout Module to Android.", "https://github.com/google/flexbox-layout"),
 						Library("Android-Job", "Android library to handle jobs in the background.", "https://github.com/evernote/android-job"),
-						Library("android-issue-reporter", "A powerful and simple library to open issues on GitHub directly from your app.", "https://github.com/HeinrichReimer/android-issue-reporter")
+						Library("android-issue-reporter", "A powerful and simple library to open issues on GitHub directly from your app.", "https://github.com/HeinrichReimer/android-issue-reporter"),
+						Library("CustomTabsHelper", "Custom tabs, made easy.", "https://github.com/DreaminginCodeZH/CustomTabsHelper")
 				).forEach {
 					html += "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}<br><br>"
 				}
