@@ -18,7 +18,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
 import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThread
+import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
@@ -29,7 +29,6 @@ import jlelse.newscatchr.backend.helpers.UrlOpenener
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FAB
-import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.ZoomTextView
 import jlelse.newscatchr.ui.views.addTagView
@@ -42,28 +41,13 @@ class ArticleFragment() : BaseFragment(), FAB {
 	private var tagsBox: FlexboxLayout? = null
 	private var contentView: ZoomTextView? = null
 	private var refreshOne: SwipeRefreshLayout? = null
-	private var bookmark = false
 
 	private var article: Article? = null
-
-	private fun replaceArticle(newArticle: Article?) {
-		if (newArticle?.notNullOrEmpty() == true) {
-			article = newArticle?.process(true)
-			mainThread {
-				updateArticleContent()
-				showWearNotification()
-			}
-		}
-		mainThread {
-			refreshOne?.hideIndicator()
-		}
-	}
+	private var bookmark = false
+	private var zoomInit = false
 
 	override val fabDrawable = R.drawable.ic_share
-
-	override val fabClick = {
-		shareArticle()
-	}
+	override val fabClick = { shareArticle() }
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
@@ -75,109 +59,121 @@ class ArticleFragment() : BaseFragment(), FAB {
 		detailsView = fragmentView?.find<TextView>(R.id.details)
 		tagsBox = fragmentView?.find<FlexboxLayout>(R.id.tagsBox)
 		contentView = fragmentView?.find<ZoomTextView>(R.id.content)
-		refreshOne = fragmentView?.find<SwipeRefreshLayout>(R.id.refreshOne)
-
-		refreshOne?.setOnRefreshListener {
-			try {
-				asyncSafe {
-					replaceArticle(Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull())
+		refreshOne = fragmentView?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
+			setOnRefreshListener {
+				try {
+					asyncSafe { showArticle(Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull()) }
+				} catch (e: Exception) {
+					e.printStackTrace()
+					refreshOne?.hideIndicator()
 				}
-			} catch (e: Exception) {
-				e.printStackTrace()
-				refreshOne?.hideIndicator()
 			}
 		}
 
 		article = getAddedObject("article") ?: savedInstanceState?.getObject("article")
 		bookmark = Database.isSavedBookmark(article?.url)
 
-		showArticle()
-		showWearNotification()
+		initZoom()
+		showArticle(article)
 		Database.addReadUrl(article?.url)
 		Tracking.track(type = Tracking.TYPE.ARTICLE, url = article?.url)
 
 		return fragmentView
 	}
 
-	private fun showArticle() {
-		updateArticleContent()
-		LinkTextView().apply(contentView, activity)
-		// Setup zoom feature
-		contentView?.setOnTouchListener { view, motionEvent ->
-			view.performClick()
-			if (motionEvent.pointerCount >= 2) {
-				when (motionEvent.action) {
-					MotionEvent.ACTION_DOWN -> {
-						view.parent.parent.requestDisallowInterceptTouchEvent(true)
-						contentView?.scaleDetector?.onTouchEvent(motionEvent)
-					}
-					MotionEvent.ACTION_MOVE -> {
-						view.parent.parent.requestDisallowInterceptTouchEvent(true)
-						contentView?.scaleDetector?.onTouchEvent(motionEvent)
-					}
-					MotionEvent.ACTION_UP -> {
-						view.parent.parent.requestDisallowInterceptTouchEvent(false)
-					}
+	private fun showArticle(article: Article?) {
+		refreshOne?.showIndicator()
+		asyncSafe {
+			article?.process(true)
+			mainThreadSafe {
+				if (article.notNullOrEmpty()) {
+					this@ArticleFragment.article = article
+					image(article?.visualUrl)
+					title(article?.title)
+					details(article?.author, article?.originTitle, article?.published)
+					content(article?.content)
+					keywords(article?.keywords)
+					showWearNotification()
 				}
-			} else {
-				view.parent.parent.requestDisallowInterceptTouchEvent(false)
-				view.onTouchEvent(motionEvent)
+				refreshOne?.hideIndicator()
 			}
-			true
 		}
 	}
 
-	private fun updateArticleContent() {
-		if (article?.title.notNullOrBlank()) {
-			titleView?.showView()
-			titleView?.text = article?.title
-		} else {
-			titleView?.hideView()
-		}
+	private fun image(visualUrl: String? = "") {
+		if (visualUrl.notNullOrBlank()) visualView?.apply {
+			showView()
+			loadImage(visualUrl)
+			tryOrNull(activity != null) { (activity as MainActivity).loadToolbarBackground(visualUrl) }
+		} else visualView?.hideView()
+	}
+
+	private fun title(title: String? = "") {
+		if (title.notNullOrBlank()) titleView?.apply {
+			showView()
+			text = title
+		} else titleView?.hideView()
+	}
+
+	private fun details(author: String? = null, originTitle: String? = null, published: Long? = 0) {
 		var details: String? = ""
-		if (article?.author.notNullOrBlank()) {
-			details += article?.author
-		}
-		if (article?.originTitle.notNullOrBlank()) {
+		if (author.notNullOrBlank()) details += author
+		if (originTitle.notNullOrBlank()) {
 			if (details.notNullOrBlank()) details += " - "
-			details += article?.originTitle
+			details += originTitle
 		}
-		if ((article?.published?.toInt() ?: 0) != 0) {
+		if ((published?.toInt() ?: 0) != 0) {
 			if (details.notNullOrBlank()) details += "\n"
-			details += DateUtils.getRelativeTimeSpanString(article!!.published)
+			details += DateUtils.getRelativeTimeSpanString(published!!)
 		}
-		if (details.notNullOrBlank()) {
-			detailsView?.showView()
-			detailsView?.text = details
-		} else {
-			detailsView?.hideView()
-		}
-		if (article?.keywords.notNullAndEmpty()) {
-			tagsBox?.removeAllViews()
-			article?.keywords?.forEach {
-				tagsBox?.addTagView(this, it)
+		if (details.notNullOrBlank()) detailsView?.apply {
+			showView()
+			text = details
+		} else detailsView?.hideView()
+	}
+
+	private fun content(content: String? = null) {
+		if (content.notNullOrBlank()) contentView?.apply {
+			showView()
+			text = content?.toHtml()
+		} else contentView?.hideView()
+	}
+
+	private fun keywords(keywords: Array<String>? = null) {
+		if (keywords.notNullAndEmpty()) tagsBox?.apply {
+			removeAllViews()
+			keywords?.forEach { addTagView(this@ArticleFragment, it) }
+		} else tagsBox?.removeAllViews()
+	}
+
+	private fun initZoom() {
+		if (!zoomInit) {
+			contentView?.setOnTouchListener { view, motionEvent ->
+				view.performClick()
+				if (motionEvent.pointerCount >= 2) {
+					when (motionEvent.action) {
+						MotionEvent.ACTION_DOWN -> {
+							view.parent.parent.requestDisallowInterceptTouchEvent(true)
+							contentView?.scaleDetector?.onTouchEvent(motionEvent)
+						}
+						MotionEvent.ACTION_MOVE -> {
+							view.parent.parent.requestDisallowInterceptTouchEvent(true)
+							contentView?.scaleDetector?.onTouchEvent(motionEvent)
+						}
+						MotionEvent.ACTION_UP -> view.parent.parent.requestDisallowInterceptTouchEvent(false)
+					}
+				} else {
+					view.parent.parent.requestDisallowInterceptTouchEvent(false)
+					view.onTouchEvent(motionEvent)
+				}
+				true
 			}
-		} else {
-			tagsBox?.removeAllViews()
-		}
-		if (article?.visualUrl.notNullOrBlank()) {
-			visualView?.showView()
-			visualView?.loadImage(article?.visualUrl)
-			(activity as MainActivity).loadToolbarBackground(article?.visualUrl)
-		} else {
-			visualView?.hideView()
-		}
-		if (article?.content.notNullOrBlank()) {
-			contentView?.showView()
-			contentView?.text = article?.content?.toHtml()
-		} else {
-			contentView?.hideView()
+			zoomInit = true
 		}
 	}
 
-	private fun showWearNotification() {
-		(activity as MainActivity).buildWearNotification(article?.title ?: "", (article?.content ?: "").toHtml().toString())
-	}
+
+	private fun showWearNotification() = tryOrNull(activity != null) { (activity as MainActivity).buildWearNotification(article?.title ?: "", (article?.content ?: "").toHtml().toString()) }
 
 	private fun shareArticle() = article?.share(activity)
 
@@ -207,8 +203,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 			refreshOne?.showIndicator()
 			asyncSafe {
 				val result = ReadabilityApi().reparse(article)
-				if (result.second) replaceArticle(result.first)
-				refreshOne?.hideIndicator()
+				if (result.second) showArticle(result.first)
 			}
 			true
 		}
