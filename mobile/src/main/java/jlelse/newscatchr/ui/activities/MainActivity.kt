@@ -18,6 +18,7 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
+import android.support.v4.view.ViewCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -29,9 +30,7 @@ import com.bumptech.glide.Glide
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.wearable.Wearable
 import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.ext.find
-import com.mcxiaoke.koi.ext.newIntent
-import com.mcxiaoke.koi.ext.onClick
+import com.mcxiaoke.koi.ext.*
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.askForSharingService
@@ -133,6 +132,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				firstLaunch = false
 				true
 			}
+			ViewCompat.setElevation(this, 4.dpToPx().toFloat())
 		}
 		fragNavController.switchTab(lastTab)
 		findViewById(when (lastTab) {
