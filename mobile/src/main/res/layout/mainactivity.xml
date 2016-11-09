@@ -79,7 +79,6 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="bottom"
 		android:background="@color/bb_background"
-		android:elevation="4dp"
 		app:menu="@menu/navigationview"/>
 
 	<android.support.design.widget.FloatingActionButton
