@@ -27,10 +27,10 @@ class FragNavController(val mNavListener: FragNavController.NavListener?, savedI
 	private var mTagCount: Int = 0
 	private var mCurrentFrag: Fragment? = null
 
-	private val EXTRA_TAG_COUNT = "${FragNavController::class.java.name}:EXTRA_TAG_COUNT"
-	private val EXTRA_SELECTED_TAB_INDEX = "${FragNavController::class.java.name}:EXTRA_SELECTED_TAB_INDEX"
-	private val EXTRA_CURRENT_FRAGMENT = "${FragNavController::class.java.name}:EXTRA_CURRENT_FRAGMENT"
-	private val EXTRA_FRAGMENT_STACK = "${FragNavController::class.java.name}:EXTRA_FRAGMENT_STACK"
+	private val EXTRA_TAG_COUNT = "FRAG_EXTRA_TAG_COUNT"
+	private val EXTRA_SELECTED_TAB_INDEX = "FRAG_EXTRA_SELECTED_TAB_INDEX"
+	private val EXTRA_CURRENT_FRAGMENT = "FRAG_EXTRA_CURRENT_FRAGMENT"
+	private val EXTRA_FRAGMENT_STACK = "FRAG_EXTRA_FRAGMENT_STACK"
 
 	init {
 		mFragmentStacks = mutableListOf<Stack<Fragment>>()
@@ -39,8 +39,7 @@ class FragNavController(val mNavListener: FragNavController.NavListener?, savedI
 	}
 
 	fun switchTab(index: Int) {
-		if (index >= mFragmentStacks.size) throw IndexOutOfBoundsException("Can't switch to a tab that hasn't been initialized, Index : $index, current stack size : ${mFragmentStacks.size}.")
-		else if (mSelectedTabIndex != index) {
+		if (index < mFragmentStacks.size && mSelectedTabIndex != index) {
 			mSelectedTabIndex = index
 			val ft = mFragmentManager.beginTransaction()
 			detachCurrentFragment(ft)
@@ -114,19 +113,15 @@ class FragNavController(val mNavListener: FragNavController.NavListener?, savedI
 	}
 
 	fun onSaveInstanceState(outState: Bundle?) {
-		outState?.putInt(EXTRA_TAG_COUNT, mTagCount)
-		outState?.putInt(EXTRA_SELECTED_TAB_INDEX, mSelectedTabIndex)
-		outState?.putString(EXTRA_CURRENT_FRAGMENT, mCurrentFrag?.tag)
-		tryOrNull {
-			val stackArrays = JSONArray()
-			mFragmentStacks.forEach {
-				val stackArray = JSONArray()
-				it.forEach {
-					stackArray.put(it.tag)
-				}
-				stackArrays.put(stackArray)
+		outState?.apply {
+			putInt(EXTRA_TAG_COUNT, mTagCount)
+			putInt(EXTRA_SELECTED_TAB_INDEX, mSelectedTabIndex)
+			putString(EXTRA_CURRENT_FRAGMENT, mCurrentFrag?.tag)
+			tryOrNull {
+				putString(EXTRA_FRAGMENT_STACK, JSONArray().apply {
+					mFragmentStacks.forEach { put(JSONArray().apply { it.forEach { put(it.tag) } }) }
+				}.toString())
 			}
-			outState?.putString(EXTRA_FRAGMENT_STACK, stackArrays.toString())
 		}
 	}
 
@@ -172,15 +167,8 @@ class FragNavController(val mNavListener: FragNavController.NavListener?, savedI
 
 	}
 
-	val size: Int
-		get() = mFragmentStacks.size
-
 	val currentFragment: Fragment?
-		get() = if (mCurrentFrag != null) mCurrentFrag
-		else {
-			val fragmentStack = mFragmentStacks[mSelectedTabIndex]
-			if (!fragmentStack.isEmpty()) mFragmentManager.findFragmentByTag(mFragmentStacks[mSelectedTabIndex].peek().tag) else null
-		}
+		get() = mCurrentFrag ?: if (!mFragmentStacks[mSelectedTabIndex].isEmpty()) mFragmentManager.findFragmentByTag(mFragmentStacks[mSelectedTabIndex].peek().tag) else null
 
 	val currentStack: Stack<Fragment>
 		get() = mFragmentStacks[mSelectedTabIndex]

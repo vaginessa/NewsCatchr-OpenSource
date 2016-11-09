@@ -118,6 +118,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				BookmarksFragment().addTitle(R.string.bookmarks.resStr()),
 				SettingsFragment().addTitle(R.string.settings.resStr())
 		))
+		var firstLaunch = true
 		bottomNavigationView = find<BottomNavigationView>(R.id.navigation_view).apply {
 			setOnNavigationItemSelectedListener { item ->
 				val itemNumber = when (item.itemId) {
@@ -126,9 +127,10 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 					R.id.bb_settings -> 2
 					else -> 0
 				}
-				if (itemNumber == lastTab) fragNavController.clearStack()
+				if (itemNumber == lastTab && !firstLaunch) fragNavController.clearStack()
 				else fragNavController.switchTab(itemNumber)
 				lastTab = itemNumber
+				firstLaunch = false
 				true
 			}
 		}
