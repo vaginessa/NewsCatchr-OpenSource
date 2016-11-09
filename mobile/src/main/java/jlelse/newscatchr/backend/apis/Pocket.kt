@@ -17,7 +17,6 @@ import com.afollestad.bridge.annotations.ContentType
 import com.mcxiaoke.koi.async.asyncUnsafe
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.jsonObject
-import jlelse.newscatchr.extensions.string
 import jlelse.newscatchr.extensions.tryOrNull
 import org.json.JSONObject
 
@@ -69,12 +68,12 @@ class Pocket() {
 					})
 					.response()
 					?.asJsonObject()
-					?.jsonObject("list")
+					?.optJSONObject("list")
 					?.let {
 						for (i in 0..(it.names()?.length() ?: 1) - 1) {
 							(it.get(it.names().getString(i))?.toString() ?: "").let {
 								add(GetResponseItemNew(it).apply {
-									author = it.jsonObject()?.jsonObject("authors")?.names()?.getString(0)
+									author = it.jsonObject()?.optJSONObject("authors")?.names()?.getString(0)
 								})
 							}
 						}
@@ -143,12 +142,12 @@ class GetResponseItemNew(val json: String?) {
 
 	init {
 		json?.jsonObject()?.let {
-			item_id = it.string("item_id")
-			given_url = it.string("given_url")
-			resolved_title = it.string("resolved_title")
-			excerpt = it.string("excerpt")
-			images = GetResponseItemImagesNew(it.jsonObject("images"))
-			author = it.string("author")
+			item_id = it.optString("item_id")
+			given_url = it.optString("given_url")
+			resolved_title = it.optString("resolved_title")
+			excerpt = it.optString("excerpt")
+			images = GetResponseItemImagesNew(it.optJSONObject("images"))
+			author = it.optString("author")
 		}
 	}
 }
@@ -158,7 +157,7 @@ class GetResponseItemImagesNew(jsonObject: JSONObject?) {
 	var one: GetResponseItemImageNew? = null
 
 	init {
-		one = GetResponseItemImageNew(jsonObject?.jsonObject("1"))
+		one = GetResponseItemImageNew(jsonObject?.optJSONObject("1"))
 	}
 }
 
@@ -167,7 +166,7 @@ class GetResponseItemImageNew(jsonObject: JSONObject?) {
 	var src: String? = null
 
 	init {
-		src = jsonObject?.string("src")
+		src = jsonObject?.optString("src")
 	}
 }
 
