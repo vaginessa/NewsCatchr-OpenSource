@@ -11,26 +11,36 @@
 package jlelse.newscatchr.backend.apis
 
 import com.afollestad.bridge.Bridge
-import jlelse.newscatchr.extensions.forEach
 import jlelse.newscatchr.extensions.jsonArray
 import jlelse.newscatchr.extensions.notNullOrBlank
-import jlelse.newscatchr.extensions.string
 
 class TranslateApi {
 
 	fun translate(targetLanguage: String?, query: String?): String? {
 		if (targetLanguage.notNullOrBlank() && query.notNullOrBlank()) {
-			var realresponse = ""
-			Bridge.get("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=%s&dt=t&q=%s", targetLanguage, query).asString()
-					?.replace(",,", ",") // Fix broken JSON
-					?.jsonArray()?.jsonArray(0) // Get Array with all the translations
-					?.forEach { array, index ->
-						if (index > 0) realresponse += "<br>" // Add line break
-						realresponse += array.jsonArray(index)?.string(0) // Add string
-					}
-			return realresponse
+			return mutableListOf<String>().apply {
+				query!!.split(". ").forEach {
+					add(translateShort(targetLanguage!!, it))
+				}
+			}.joinToString(separator = ". ")
 		}
 		return null
 	}
+
+	private fun translateShort(targetLanguage: String, query: String): String {
+		var realresponse = ""
+		Bridge.get("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=%s&dt=t&q=%s", targetLanguage, query).asString()
+				?.replace(",,", ",") // Fix broken JSON
+				?.jsonArray()?.optJSONArray(0) // Get Array with all the translations
+				?.apply {
+					for (i in 0..length() - 1) {
+						if (i > 0) realresponse += "<br>" // Add line break
+						realresponse += optJSONArray(i)?.optString(0) // Add string
+					}
+				}
+		return realresponse
+	}
+
+	fun languages() = arrayOf("af", "am", "ar", "az", "be", "bg", "bn", "bs", "ca", "ceb", "co", "cs", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "fy", "ga", "gd", "gl", "gu", "ha", "haw", "hi", "hmn", "hr", "ht", "hu", "hy", "id", "ig", "is", "it", "iw", "ja", "jw", "ka", "kk", "km", "kn", "ko", "ku", "ky", "la", "lb", "lo", "lt", "lv", "mg", "mi", "mk", "ml", "mn", "mr", "ms", "mt", "my", "ne", "nl", "no", "ny", "pa", "pl", "ps", "pt", "ro", "ru", "sd", "si", "sk", "sl", "sm", "sn", "so", "sq", "sr", "st", "su", "sv", "sw", "ta", "te", "tg", "th", "tl", "tr", "uk", "ur", "uz", "vi", "xh", "yi", "yo", "zh", "zh-TW", "zu")
 
 }

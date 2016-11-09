@@ -16,6 +16,7 @@ import android.text.format.DateUtils
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.flexbox.FlexboxLayout
 import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.async.mainThreadSafe
@@ -23,6 +24,7 @@ import com.mcxiaoke.koi.ext.find
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.apis.ReadabilityApi
+import jlelse.newscatchr.backend.apis.TranslateApi
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.helpers.UrlOpenener
@@ -33,6 +35,7 @@ import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.ZoomTextView
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
+import java.util.*
 
 class ArticleFragment() : BaseFragment(), FAB {
 	private var titleView: TextView? = null
@@ -205,6 +208,27 @@ class ArticleFragment() : BaseFragment(), FAB {
 				val result = ReadabilityApi().reparse(article)
 				if (result.second) showArticle(result.first)
 			}
+			true
+		}
+		R.id.translate -> {
+			val translateApi = TranslateApi()
+			MaterialDialog.Builder(context)
+					.items(mutableListOf<String>().apply {
+						translateApi.languages().forEach { add(Locale(it).displayName) }
+					})
+					.itemsCallback { dialog, view, i, charSequence ->
+						val language = translateApi.languages()[i]
+						refreshOne?.showIndicator()
+						asyncSafe {
+							article?.apply {
+								title = tryOrNull { TranslateApi().translate(language, title) } ?: title
+								content = tryOrNull { TranslateApi().translate(language, content?.toHtml().toString()) } ?: content
+							}
+							showArticle(article)
+						}
+					}
+					.negativeText(android.R.string.cancel)
+					.show()
 			true
 		}
 		else -> {

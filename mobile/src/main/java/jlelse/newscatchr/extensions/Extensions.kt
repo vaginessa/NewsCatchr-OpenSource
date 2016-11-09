@@ -52,20 +52,6 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 
 fun Any.toJson(): String = Gson().toJson(this)
 
-fun JSONArray.jsonArray(index: Int): JSONArray? = tryOrNull { getJSONArray(index) }
-
-fun JSONArray.forEach(code: (array: JSONArray, index: Int) -> Unit) = {
-	for (i in 0..(length() - 1)) {
-		code(this, i)
-	}
-}
-
-fun JSONArray.string(index: Int): String? = tryOrNull { getString(index) }
-
-fun JSONObject.string(name: String): String? = tryOrNull { getString(name) }
-
-fun JSONObject.jsonObject(name: String) = tryOrNull { getJSONObject(name) }
-
 fun String.jsonArray(): JSONArray? = tryOrNull { JSONArray(this) }
 
 fun String.jsonObject(): JSONObject? = tryOrNull { JSONObject(this) }
