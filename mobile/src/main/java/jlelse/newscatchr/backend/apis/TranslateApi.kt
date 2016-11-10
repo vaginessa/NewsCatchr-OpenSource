@@ -11,8 +11,9 @@
 package jlelse.newscatchr.backend.apis
 
 import com.afollestad.bridge.Bridge
-import jlelse.newscatchr.extensions.jsonArray
+import jlelse.newscatchr.extensions.jsonObject
 import jlelse.newscatchr.extensions.notNullOrBlank
+import jlelse.newscatchr.extensions.tryOrNull
 
 class TranslateApi {
 
@@ -20,25 +21,23 @@ class TranslateApi {
 		if (targetLanguage.notNullOrBlank() && query.notNullOrBlank()) {
 			return mutableListOf<String>().apply {
 				query!!.split(". ").forEach {
-					add(translateShort(targetLanguage!!, it))
+					add(tryOrNull { translateShort(targetLanguage!!, it)["translation"] } ?: it)
 				}
 			}.joinToString(separator = ". ")
 		}
 		return null
 	}
 
-	private fun translateShort(targetLanguage: String, query: String): String {
-		var realresponse = ""
-		Bridge.get("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=%s&dt=t&q=%s", targetLanguage, query).asString()
-				?.replace(",,", ",") // Fix broken JSON
-				?.jsonArray()?.optJSONArray(0) // Get Array with all the translations
-				?.apply {
-					for (i in 0..length() - 1) {
-						if (i > 0) realresponse += "<br>" // Add line break
-						realresponse += optJSONArray(i)?.optString(0) // Add string
+	private fun translateShort(targetLanguage: String, query: String): Map<String, String?> {
+		val response = mutableMapOf<String, String?>("translation" to "")
+		Bridge.get("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&dt=t&ie=UTF-8&oe=UTF-8&dj=1&tl=%s&q=%s", targetLanguage, query).asString()
+				?.jsonObject()
+				?.let {
+					it.optJSONArray("sentences").let {
+						for (i in 0..it.length()) response["translation"] = response["translation"] + (it.optJSONObject(i)?.optString("trans") ?: "")
 					}
 				}
-		return realresponse
+		return response
 	}
 
 	fun languages() = arrayOf("af", "am", "ar", "az", "be", "bg", "bn", "bs", "ca", "ceb", "co", "cs", "cy", "da", "de", "el", "en", "eo", "es", "et", "eu", "fa", "fi", "fr", "fy", "ga", "gd", "gl", "gu", "ha", "haw", "hi", "hmn", "hr", "ht", "hu", "hy", "id", "ig", "is", "it", "iw", "ja", "jw", "ka", "kk", "km", "kn", "ko", "ku", "ky", "la", "lb", "lo", "lt", "lv", "mg", "mi", "mk", "ml", "mn", "mr", "ms", "mt", "my", "ne", "nl", "no", "ny", "pa", "pl", "ps", "pt", "ro", "ru", "sd", "si", "sk", "sl", "sm", "sn", "so", "sq", "sr", "st", "su", "sv", "sw", "ta", "te", "tg", "th", "tl", "tr", "uk", "ur", "uz", "vi", "xh", "yi", "yo", "zh", "zh-TW", "zu")
