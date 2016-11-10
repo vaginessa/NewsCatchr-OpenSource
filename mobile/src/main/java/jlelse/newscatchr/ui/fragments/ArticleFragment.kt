@@ -114,11 +114,11 @@ class ArticleFragment() : BaseFragment(), FAB {
 	private fun title(title: String? = "") {
 		if (title.notNullOrBlank()) titleView?.apply {
 			showView()
-			text = title
+			text = title?.toHtml()
 		} else titleView?.hideView()
 	}
 
-	private fun details(author: String? = null, originTitle: String? = null, published: Long? = 0) {
+	private fun details(author: String? = "", originTitle: String? = "", published: Long? = 0) {
 		var details: String? = ""
 		if (author.notNullOrBlank()) details += author
 		if (originTitle.notNullOrBlank()) {
@@ -135,7 +135,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 		} else detailsView?.hideView()
 	}
 
-	private fun content(content: String? = null) {
+	private fun content(content: String? = "") {
 		if (content.notNullOrBlank()) contentView?.apply {
 			showView()
 			text = content?.toHtml()
@@ -205,8 +205,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 		R.id.readability -> {
 			refreshOne?.showIndicator()
 			asyncSafe {
-				val result = ReadabilityApi().reparse(article)
-				if (result.second) showArticle(result.first)
+				ReadabilityApi().reparse(article).let { if (it.second) showArticle(it.first) }
 			}
 			true
 		}
