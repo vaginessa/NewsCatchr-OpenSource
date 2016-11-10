@@ -10,49 +10,57 @@
 
 package jlelse.newscatchr.backend.apis
 
+import android.net.Uri
 import android.support.annotation.Keep
 import com.afollestad.bridge.Bridge
 import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.notNullOrBlank
-import jlelse.newscatchr.extensions.notNullOrEmpty
 import jlelse.newscatchr.extensions.tryOrNull
 
 class ReadabilityApi {
 
 	fun reparse(article: Article?): Pair<Article?, Boolean> {
-		val wordpressResult = WordpressApi().reparse(article)
-		return if (wordpressResult.second) wordpressResult
-		else tryOrNull(article.notNullOrEmpty()) {
-			Bridge.get("https://readability.com/api/content/v1/parser?token=$ReadabilityApiKey&url=${article?.url}")
-					.asClass(Response::class.java)
-					?.let {
-						val good = it.title.notNullOrBlank() && it.content.notNullOrBlank()
-						Pair(article?.apply {
-							if (good) {
-								title = it.title
-								content = it.content
-								if (it.lead_image_url.notNullOrBlank()) {
-									enclosure = null
-									visualUrl = it.lead_image_url
-								}
-								process(true)
-							}
-						}, good)
-					}
-		} ?: Pair(article, false)
+		val wordpress = wordpress(article?.url)?.filter { it.component2().notNullOrBlank() }
+		val readability = readability(article?.url)?.filter { it.component2().notNullOrBlank() }
+		val good = (wordpress?.get("title") ?: readability?.get("title")).notNullOrBlank() && (wordpress?.get("content") ?: readability?.get("content")).notNullOrBlank()
+		return Pair(article?.apply {
+			if (good) {
+				title = wordpress?.get("title") ?: readability?.get("title") ?: title
+				content = wordpress?.get("content") ?: readability?.get("content") ?: content
+				if ((wordpress?.get("title") ?: readability?.get("title")).notNullOrBlank()) {
+					enclosure = null
+					visualUrl = wordpress?.get("image") ?: readability?.get("image") ?: visualUrl
+				}
+				process(true)
+			}
+		}, good)
 	}
 
-	@Keep
-	@ContentType("application/json")
-	private class Response {
-		@Body
-		var content: String? = ""
-		@Body
-		var title: String? = ""
-		@Body
-		var lead_image_url: String? = ""
+	fun readability(url: String?): Map<String, String?>? = tryOrNull(url.notNullOrBlank()) {
+		Bridge.get("https://readability.com/api/content/v1/parser?token=$ReadabilityApiKey&url=$url")
+				.asClass(ReadabilityR::class.java)
+				?.let { mapOf("title" to it.title, "content" to it.content, "image" to it.lead_image_url) }
+	}
+
+	fun wordpress(url: String?): Map<String, String?>? = tryOrNull(url.notNullOrBlank()) {
+		Bridge.get("https://public-api.wordpress.com/rest/v1.1/sites/${Uri.parse(url).host.replace("www.", "")}/posts/slug:${Uri.parse(url).lastPathSegment}?fields=title,content,featured_image")
+				.asClass(WordpressR::class.java)
+				?.let { mapOf("title" to it.title, "content" to it.content, "image" to it.featured_image) }
+	}
+
+	@Keep @ContentType("application/json") private open class Response {
+		@Body var title: String? = ""
+		@Body var content: String? = ""
+	}
+
+	@Keep @ContentType("application/json") private class ReadabilityR : Response() {
+		@Body var lead_image_url: String? = ""
+	}
+
+	@Keep @ContentType("application/json") private class WordpressR : Response() {
+		@Body var featured_image: String? = null
 	}
 
 }
