@@ -4,19 +4,14 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.5'
+        classpath 'com.android.tools.build:gradle:2.3.0-alpha1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.5-2'
         classpath 'com.google.gms:google-services:3.0.0'
     }
 }
 
 plugins {
-    id 'com.gradle.build-scan' version '1.0'
-}
-
-buildScan {
-    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-    licenseAgree = 'yes'
+    id 'com.github.ben-manes.versions' version '0.13.0'
 }
 
 ext {
@@ -25,9 +20,9 @@ ext {
     VERSION_CODE = 52
     TARGET_SDK = 25
     BUILD_TOOLS = "25.0.0"
-    SUPPORT_LIBS = "25.0.0"
+    SUPPORT_LIBS = "25.0.1"
     PLAY_SERVICES = "9.8.0"
-    KOTLIN = "1.0.5"
+    KOTLIN = "1.0.5-2"
 }
 
 allprojects {
