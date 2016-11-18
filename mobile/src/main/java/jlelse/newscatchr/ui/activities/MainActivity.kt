@@ -54,9 +54,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	private val fab: FloatingActionButton? by lazy { find<FloatingActionButton>(R.id.fab) }
 	private val subtitle: TextView? by lazy { find<TextView>(R.id.subtitle) }
 	private val toolbarBackground: ImageView? by lazy {
-		find<ImageView>(R.id.toolbar_background).apply {
-			setColorFilter(Color.parseColor("#33000000"))
-		}
+		find<ImageView>(R.id.toolbar_background).apply { setColorFilter(Color.parseColor("#33000000")) }
 	}
 	private var googleApiClient: GoogleApiClient? = null
 	private var billingProcessor: BillingProcessor? = null
@@ -132,7 +130,6 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				firstLaunch = false
 				true
 			}
-			ViewCompat.setElevation(this, 4.dpToPx().toFloat())
 		}
 		fragNavController.switchTab(lastTab)
 		findViewById(when (lastTab) {

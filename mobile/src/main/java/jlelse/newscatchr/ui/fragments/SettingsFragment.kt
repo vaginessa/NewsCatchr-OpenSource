@@ -170,7 +170,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("Pocket API", "", "https://getpocket.com/developer/"),
 						Library("Google URL Shortener", "", "https://developers.google.com/url-shortener/"),
 						Library("Google AMP Cache", "", "https://developers.google.com/amp/cache/"),
-						Library("Readability Developer APIs", "", "https://www.readability.com/developers/api")
+						Library("Mercury Web Parser", "", "https://mercury.postlight.com/web-parser/")
 				).forEach {
 					html += "<b><a href=\"${it.link}\">${it.name}</a></b><br><br>"
 				}
