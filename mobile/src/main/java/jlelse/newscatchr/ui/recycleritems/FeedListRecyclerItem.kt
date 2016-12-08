@@ -19,7 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.mcxiaoke.koi.ext.find
 import com.mcxiaoke.koi.ext.onClick
-import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.backend.Feed

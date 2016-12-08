@@ -27,7 +27,10 @@ import com.mcxiaoke.koi.ext.readString
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.notNullAndEmpty
+import jlelse.newscatchr.extensions.notNullOrBlank
+import jlelse.newscatchr.extensions.resStr
+import jlelse.newscatchr.extensions.toJson
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R

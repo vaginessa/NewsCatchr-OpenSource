@@ -17,7 +17,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.mcxiaoke.koi.ext.find
-import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.getAddedObject
 import jlelse.newscatchr.extensions.notNullAndEmpty

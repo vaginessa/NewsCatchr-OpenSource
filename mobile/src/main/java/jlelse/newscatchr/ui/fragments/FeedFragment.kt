@@ -23,7 +23,7 @@ import com.mcxiaoke.koi.async.asyncUnsafe
 import com.mcxiaoke.koi.async.mainThread
 import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
-import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed

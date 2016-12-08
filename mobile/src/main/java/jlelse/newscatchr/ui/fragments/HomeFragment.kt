@@ -26,8 +26,8 @@ import com.google.android.flexbox.FlexboxLayout
 import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
-import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.HeaderAdapter
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.helpers.Database

@@ -17,7 +17,7 @@ import android.view.*
 import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
-import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.loaders.FeedlyLoader
