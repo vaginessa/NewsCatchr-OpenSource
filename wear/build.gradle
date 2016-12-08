@@ -19,7 +19,7 @@ android {
         targetSdkVersion rootProject.ext.TARGET_SDK
         versionCode rootProject.ext.VERSION_CODE
         versionName rootProject.ext.VERSION_NAME
-        resConfigs "en", "de"
+        resConfigs "en"
     }
     buildTypes {
         release {

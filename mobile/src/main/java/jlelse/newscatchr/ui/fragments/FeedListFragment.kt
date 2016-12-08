@@ -19,7 +19,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.flexbox.FlexboxLayout
 import com.mcxiaoke.koi.ext.find
-import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.extensions.getAddedObject
 import jlelse.newscatchr.extensions.hideView
