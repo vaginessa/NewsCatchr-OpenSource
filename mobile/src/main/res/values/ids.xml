@@ -10,10 +10,19 @@
 
 <resources>
 
+	<!-- RecyclerView ids -->
 	<item name="feedlist_item_id" type="id"/>
 	<item name="articlelist_item_id" type="id"/>
 	<item name="library_item_id" type="id"/>
 	<item name="header_item_id" type="id"/>
 	<item name="more_item_id" type="id"/>
+
+	<!-- Layout ids -->
+	<item name="homefragment_refresh" type="id"/>
+	<item name="homefragment_scrollview" type="id"/>
+	<item name="homefragment_recyclerone" type="id"/>
+	<item name="homefragment_recyclertwo" type="id"/>
+	<item name="homefragment_recyclerthree" type="id"/>
+	<item name="homefragment_tagsbox" type="id"/>
 
 </resources>

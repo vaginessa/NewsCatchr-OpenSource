@@ -21,8 +21,9 @@ ext {
     TARGET_SDK = 25
     BUILD_TOOLS = "25.0.0"
     SUPPORT_LIBS = "25.0.1"
-    PLAY_SERVICES = "9.8.0"
+    PLAY_SERVICES = "10.0.1"
     KOTLIN = "1.0.5-2"
+    ANKO = "0.9"
 }
 
 allprojects {

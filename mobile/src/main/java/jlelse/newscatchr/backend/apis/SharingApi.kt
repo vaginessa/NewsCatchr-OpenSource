@@ -26,7 +26,7 @@ import jlelse.readit.R
 
 class SharingApi(val context: Activity, network: SocialNetwork) {
 	private var social: Social? = null
-	private lateinit var progressDialog: ProgressDialog
+	private var progressDialog: ProgressDialog
 
 	init {
 		CloudRail.setAppKey(CloudRailApiKey)
