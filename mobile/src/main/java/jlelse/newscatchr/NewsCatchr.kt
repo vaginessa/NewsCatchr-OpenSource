@@ -14,7 +14,6 @@ import android.app.Application
 import android.content.Context
 import android.support.v7.app.AppCompatDelegate
 import com.evernote.android.job.JobManager
-import com.mcxiaoke.koi.async.asyncSafe
 import io.paperdb.Paper
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.SyncJob
@@ -23,6 +22,7 @@ import jlelse.newscatchr.backend.helpers.scheduleSync
 import jlelse.newscatchr.extensions.setLocale
 import jlelse.newscatchr.extensions.setNightMode
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
+import org.jetbrains.anko.doAsync
 
 /**
  * Application class
@@ -35,7 +35,7 @@ class NewsCatchr : Application() {
 		Paper.init(this)
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 		setNightMode()
-		asyncSafe {
+		doAsync {
 			JobManager.create(this@NewsCatchr).addJobCreator { tag ->
 				when (tag) {
 					SyncJob.TAG -> SyncJob()

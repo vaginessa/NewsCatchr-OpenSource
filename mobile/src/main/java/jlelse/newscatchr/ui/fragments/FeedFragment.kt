@@ -18,10 +18,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.asyncUnsafe
-import com.mcxiaoke.koi.async.mainThread
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener
@@ -36,6 +32,8 @@ import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class FeedFragment() : BaseFragment() {
 	private var recyclerOne: RecyclerView? = null
@@ -81,12 +79,12 @@ class FeedFragment() : BaseFragment() {
 
 	private fun loadArticles(cache: Boolean) {
 		refreshOne?.showIndicator()
-		asyncSafe {
+		doAsync {
 			if (articles == null || !cache) {
 				articles = feedlyLoader?.items(cache)?.toMutableList()
 				addString(feedlyLoader?.continuation, "continuation")
 			}
-			mainThreadSafe {
+			uiThread {
 				if (articles.notNullAndEmpty()) {
 					recyclerOne?.clearOnScrollListeners()
 					fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
@@ -98,11 +96,11 @@ class FeedFragment() : BaseFragment() {
 					fastAdapter?.withSavedInstanceState(savedInstanceState)
 					recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener() {
 						override fun onLoadMore(currentPage: Int) {
-							asyncSafe {
+							doAsync {
 								val newArticles = feedlyLoader?.moreItems()
 								addString(feedlyLoader?.continuation, "continuation")
 								if (newArticles != null) articles?.addAll(newArticles)
-								mainThreadSafe {
+								uiThread {
 									newArticles?.forEach {
 										fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment))
 									}
@@ -175,13 +173,13 @@ class FeedFragment() : BaseFragment() {
 						.title(android.R.string.search_go)
 						.input(null, null, { materialDialog, query ->
 							progressDialog.show()
-							asyncUnsafe {
+							doAsync {
 								val foundArticles = FeedlyLoader().apply {
 									type = FeedlyLoader.FeedTypes.SEARCH
 									feedUrl = "feed/" + feed?.url()
 									this.query = query.toString()
 								}.items(false)
-								mainThread {
+								uiThread {
 									progressDialog.dismiss()
 									if (foundArticles.notNullAndEmpty()) {
 										fragmentNavigation.pushFragment(ArticleSearchResultFragment().addObject(foundArticles?.toList(), "articles"), "Results for " + query.toString())

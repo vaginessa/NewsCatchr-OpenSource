@@ -18,8 +18,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.flexbox.FlexboxLayout
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
@@ -31,19 +29,24 @@ import jlelse.newscatchr.backend.helpers.UrlOpenener
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FAB
+import jlelse.newscatchr.ui.layout.ArticleFragmentUI
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.ZoomTextView
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.util.*
 
 class ArticleFragment() : BaseFragment(), FAB {
-	private var titleView: TextView? = null
-	private var visualView: ImageView? = null
-	private var detailsView: TextView? = null
-	private var tagsBox: FlexboxLayout? = null
-	private var contentView: ZoomTextView? = null
-	private var refreshOne: SwipeRefreshLayout? = null
+	private var fragmentView: View? = null
+	private val titleView: TextView? by lazy { fragmentView?.find<TextView>(R.id.articlefragment_title) }
+	private val visualView: ImageView? by lazy { fragmentView?.find<ImageView>(R.id.articlefragment_visual) }
+	private val detailsView: TextView? by lazy { fragmentView?.find<TextView>(R.id.articlefragment_details) }
+	private val tagsBox: FlexboxLayout? by lazy { fragmentView?.find<FlexboxLayout>(R.id.articlefragment_tagsbox) }
+	private val contentView: ZoomTextView? by lazy { fragmentView?.find<ZoomTextView>(R.id.articlefragment_content) }
+	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.articlefragment_refresh) }
 
 	private var article: Article? = null
 	private var bookmark = false
@@ -55,40 +58,31 @@ class ArticleFragment() : BaseFragment(), FAB {
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
 		setHasOptionsMenu(true)
-		val fragmentView = inflater?.inflate(R.layout.articlefragment, container, false)
-
-		titleView = fragmentView?.find<TextView>(R.id.title)
-		visualView = fragmentView?.find<ImageView>(R.id.visual)
-		detailsView = fragmentView?.find<TextView>(R.id.details)
-		tagsBox = fragmentView?.find<FlexboxLayout>(R.id.tagsBox)
-		contentView = fragmentView?.find<ZoomTextView>(R.id.content)
-		refreshOne = fragmentView?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
+		fragmentView = ArticleFragmentUI().createView(AnkoContext.create(context, this))
+		refreshOne?.apply {
 			setOnRefreshListener {
 				try {
-					asyncSafe { showArticle(Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull()) }
+					doAsync { showArticle(Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull()) }
 				} catch (e: Exception) {
 					e.printStackTrace()
 					refreshOne?.hideIndicator()
 				}
 			}
 		}
-
 		article = getAddedObject("article") ?: savedInstanceState?.getObject("article")
 		bookmark = Database.isSavedBookmark(article?.url)
-
 		initZoom()
 		showArticle(article)
 		Database.addReadUrl(article?.url)
 		Tracking.track(type = Tracking.TYPE.ARTICLE, url = article?.url)
-
 		return fragmentView
 	}
 
 	private fun showArticle(article: Article?) {
 		refreshOne?.showIndicator()
-		asyncSafe {
+		doAsync {
 			article?.process(true)
-			mainThreadSafe {
+			uiThread {
 				if (article.notNullOrEmpty()) {
 					this@ArticleFragment.article = article
 					image(article?.visualUrl)
@@ -204,7 +198,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 		}
 		R.id.readability -> {
 			refreshOne?.showIndicator()
-			asyncSafe {
+			doAsync {
 				ReadabilityApi().reparse(article).let { if (it.second) showArticle(it.first) }
 			}
 			true
@@ -218,7 +212,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 					.itemsCallback { dialog, view, i, charSequence ->
 						val language = translateApi.languages()[i]
 						refreshOne?.showIndicator()
-						asyncSafe {
+						doAsync {
 							article?.apply {
 								title = tryOrNull { TranslateApi().translate(language, title) } ?: title
 								content = tryOrNull { TranslateApi().translate(language, content?.toHtml().toString()) } ?: content

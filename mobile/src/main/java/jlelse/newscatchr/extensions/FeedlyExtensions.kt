@@ -14,8 +14,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.AutoCompleteTextView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
@@ -25,6 +23,8 @@ import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.fragments.FeedListFragment
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 fun Array<out Article?>.removeEmptyArticles(): Array<Article> {
 	return mutableListOf<Article>().apply {
@@ -54,14 +54,14 @@ fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNa
 	val progressDialog = ProgressDialog(context)
 	val load = { finalQuery: String ->
 		progressDialog.show()
-		context.asyncSafe {
+		context.doAsync {
 			var foundFeeds: Array<Feed>? = null
 			var foundRelated: Array<String>? = null
 			Feedly().feedSearch(finalQuery, 100, null, null) { feeds, related ->
 				foundFeeds = feeds
 				foundRelated = related
 			}
-			mainThreadSafe {
+			uiThread {
 				progressDialog.dismiss()
 				if (foundFeeds.notNullAndEmpty()) {
 					fragmentNavigation.pushFragment(FeedListFragment().addObject(foundFeeds, "feeds").addObject(foundRelated, "tags"), "${R.string.search_results_for.resStr()} $finalQuery")

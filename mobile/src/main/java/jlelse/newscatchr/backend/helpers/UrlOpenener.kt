@@ -4,25 +4,25 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.support.customtabs.CustomTabsIntent
-import com.mcxiaoke.koi.async.asyncUnsafe
-import com.mcxiaoke.koi.async.mainThread
 import jlelse.newscatchr.backend.apis.AmpApi
 import jlelse.newscatchr.customTabsHelperFragment
 import jlelse.newscatchr.extensions.resClr
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 
 class UrlOpenener {
 
-	fun mayOpenUrl(url: String) = asyncUnsafe {
+	fun mayOpenUrl(url: String) = doAsync {
 		val finalUrl = if (Preferences.amp) AmpApi().getAmpUrl(url) ?: url else url
 		if (Preferences.customTabs) customTabsHelperFragment?.mayLaunchUrl(Uri.parse(finalUrl), null, null)
 	}
 
-	fun openUrl(url: String, activity: Activity) = asyncUnsafe {
+	fun openUrl(url: String, activity: Activity) = doAsync {
 		val finalUrl = if (Preferences.amp) AmpApi().getAmpUrl(url) ?: url else url
-		mainThread {
+		uiThread {
 			val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
 			if (Preferences.customTabs) {
 				try {

@@ -14,14 +14,14 @@ import android.app.Activity
 import android.support.annotation.Keep
 import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThreadSafe
 import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.UrlShortenerApi
 import jlelse.newscatchr.backend.apis.askForSharingService
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.*
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 @Keep
 @ContentType("application/json")
@@ -83,9 +83,9 @@ class Article(
 
 	fun share(context: Activity) {
 		askForSharingService(context, { network ->
-			asyncSafe {
+			doAsync {
 				val newUrl = if (Preferences.urlShortener) UrlShortenerApi().getShortUrl(url) ?: url else url
-				mainThreadSafe {
+				uiThread {
 					SharingApi(context, network).share("\"$title\"", when (network) {
 						SharingApi.SocialNetwork.Twitter -> "${title?.take(136 - (newUrl?.length ?: 0))}... $newUrl"
 						SharingApi.SocialNetwork.Native, SharingApi.SocialNetwork.Facebook -> "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}"

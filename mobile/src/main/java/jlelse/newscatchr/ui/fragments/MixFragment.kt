@@ -14,8 +14,6 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
@@ -27,6 +25,8 @@ import jlelse.newscatchr.extensions.nothingFound
 import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class MixFragment() : BaseFragment() {
 	private var recyclerOne: RecyclerView? = null
@@ -63,9 +63,9 @@ class MixFragment() : BaseFragment() {
 
 	private fun loadArticles(cache: Boolean) {
 		refreshOne?.showIndicator()
-		asyncSafe {
+		doAsync {
 			if (articles == null || !cache) articles = feedlyLoader?.items(cache)
-			mainThreadSafe {
+			uiThread {
 				if (articles.notNullAndEmpty()) {
 					fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
 					recyclerOne?.adapter = fastAdapter

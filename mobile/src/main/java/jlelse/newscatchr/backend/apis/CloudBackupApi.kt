@@ -22,7 +22,6 @@ import com.cloudrail.si.services.GoogleDrive
 import com.cloudrail.si.services.OneDrive
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.ext.readString
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
@@ -34,6 +33,7 @@ import jlelse.newscatchr.extensions.toJson
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
 import java.io.File
 import java.io.InputStream
 
@@ -57,7 +57,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 	}
 
 	fun backup(): CloudBackupApi {
-		context.asyncSafe {
+		context.doAsync {
 			val success = try {
 				backupBookmarks() && backupFavorites() && backupReadUrls()
 			} catch (e: Exception) {
@@ -101,7 +101,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 	}
 
 	fun restore(): CloudBackupApi {
-		context.asyncSafe {
+		context.doAsync {
 			val success = try {
 				restoreBookmarks() && restoreFavorites() && restoreReadUrls()
 			} catch (e: Exception) {

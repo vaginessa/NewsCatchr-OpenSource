@@ -23,6 +23,16 @@
 	<item name="homefragment_recyclerone" type="id"/>
 	<item name="homefragment_recyclertwo" type="id"/>
 	<item name="homefragment_recyclerthree" type="id"/>
+	<item name="homefragment_tagstitle" type="id"/>
 	<item name="homefragment_tagsbox" type="id"/>
+	<item name="articlefragment_refresh" type="id"/>
+	<item name="articlefragment_scrollview" type="id"/>
+	<item name="articlefragment_tagsbox" type="id"/>
+	<item name="articlefragment_title" type="id"/>
+	<item name="articlefragment_visual" type="id"/>
+	<item name="articlefragment_details" type="id"/>
+	<item name="articlefragment_content" type="id"/>
+	<item name="mainactivity_appbar" type="id"/>
+	<item name="mainactivity_collapsingtoolbar" type="id"/>
 
 </resources>

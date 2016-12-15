@@ -24,9 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThread
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.startActivity
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.PocketAuth
@@ -39,6 +36,9 @@ import jlelse.newscatchr.ui.objects.Library
 import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.support.v4.onUiThread
+import org.jetbrains.anko.uiThread
 import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
@@ -124,9 +124,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				}
 			}
 			clearHistoryPref -> {
-				asyncSafe {
+				doAsync {
 					Database.allLastFeeds = setOf<Feed>()
-					mainThreadSafe {
+					uiThread {
 						context.sendBroadcast(Intent("last_feed_updated"))
 						Snackbar.make(activity.findViewById(R.id.container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()
 					}
@@ -231,7 +231,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.show()
 			}
 			syncNowPref -> {
-				asyncSafe { sync(context) }
+				doAsync { sync(context) }
 			}
 			pocketLoginPref -> {
 				val loggedIn = Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
@@ -249,8 +249,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						}
 
 						override fun authenticated(accessToken: String, userName: String) {
-							mainThread {
-								asyncSafe {
+							onUiThread {
+								doAsync {
 									val database = Database
 									database.allBookmarks.apply {
 										forEach {
@@ -262,7 +262,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 											database.addBookmark(it)
 										}
 									}
-									mainThread {
+									uiThread {
 										refreshPocket()
 										progressDialog?.dismiss()
 									}

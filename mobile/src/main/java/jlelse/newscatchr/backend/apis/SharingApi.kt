@@ -19,10 +19,10 @@ import com.cloudrail.si.CloudRail
 import com.cloudrail.si.interfaces.Social
 import com.cloudrail.si.services.Facebook
 import com.cloudrail.si.services.Twitter
-import com.mcxiaoke.koi.async.asyncSafe
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
 
 class SharingApi(val context: Activity, network: SocialNetwork) {
 	private var social: Social? = null
@@ -41,7 +41,7 @@ class SharingApi(val context: Activity, network: SocialNetwork) {
 	fun share(title: String, text: String): SharingApi {
 		var errorMsg = ""
 		if (social != null) {
-			context.asyncSafe {
+			context.doAsync {
 				val success = try {
 					social?.postUpdate(text)
 					true

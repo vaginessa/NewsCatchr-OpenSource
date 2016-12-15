@@ -10,12 +10,12 @@
 
 package jlelse.newscatchr.backend.helpers
 
-import com.mcxiaoke.koi.async.asyncUnsafe
 import io.paperdb.Paper
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Pocket
 import jlelse.newscatchr.extensions.*
+import org.jetbrains.anko.doAsync
 
 /**
  * Database
@@ -72,7 +72,7 @@ object Database {
 	fun addBookmark(article: Article?) {
 		tryOrNull(article != null) {
 			if (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
-				asyncUnsafe {
+				doAsync {
 					article!!.pocketId = PocketHandler().addToPocket(article)
 					article.fromPocket = true
 					addBookmarks(article)
@@ -87,7 +87,7 @@ object Database {
 		tryOrNull(url.notNullOrBlank()) {
 			allBookmarks.toMutableList().filter { it.url == url }.forEach {
 				val pocket = Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
-				if (pocket && it.fromPocket) asyncUnsafe {
+				if (pocket && it.fromPocket) doAsync {
 					PocketHandler().archiveOnPocket(it)
 				}
 			}

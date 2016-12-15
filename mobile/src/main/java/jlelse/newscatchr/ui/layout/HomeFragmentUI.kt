@@ -10,11 +10,14 @@
 
 package jlelse.newscatchr.ui.layout
 
+import android.graphics.Typeface
 import android.support.v7.widget.LinearLayoutManager
+import android.util.TypedValue
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
 import com.mcxiaoke.koi.ext.dpToPx
 import jlelse.newscatchr.extensions.flexboxLayout
+import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.swipeRefreshLayout
 import jlelse.newscatchr.ui.fragments.HomeFragment
 import jlelse.readit.R
@@ -22,8 +25,7 @@ import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.support.v4.nestedScrollView
 
-class HomeFragmentLayout : AnkoComponent<HomeFragment> {
-
+class HomeFragmentUI : AnkoComponent<HomeFragment> {
 	override fun createView(ui: AnkoContext<HomeFragment>): View = with(ui) {
 		swipeRefreshLayout {
 			id = R.id.homefragment_refresh
@@ -35,28 +37,36 @@ class HomeFragmentLayout : AnkoComponent<HomeFragment> {
 						lparams(width = matchParent, height = wrapContent)
 						id = R.id.homefragment_recyclerone
 						isNestedScrollingEnabled = false
-						layoutManager = LinearLayoutManager(ui.owner.context)
+						layoutManager = LinearLayoutManager(context)
 					}
 					recyclerView {
 						lparams(width = matchParent, height = wrapContent)
 						id = R.id.homefragment_recyclertwo
 						isNestedScrollingEnabled = false
-						layoutManager = LinearLayoutManager(ui.owner.context)
+						layoutManager = LinearLayoutManager(context)
 					}
 					recyclerView {
 						lparams(width = matchParent, height = wrapContent)
 						id = R.id.homefragment_recyclerthree
 						isNestedScrollingEnabled = false
-						layoutManager = LinearLayoutManager(ui.owner.context)
+						layoutManager = LinearLayoutManager(context)
 					}
-					include<View>(R.layout.recyclerheaderitem)
+					textView {
+						lparams(width = wrapContent, height = wrapContent) {
+							margin = 16.dpToPx()
+						}
+						id = R.id.homefragment_tagstitle
+						textColor = R.color.colorAccent.resClr(context)!!
+						setTypeface(typeface, Typeface.BOLD)
+						setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.toFloat())
+					}
 					flexboxLayout {
 						lparams(width = matchParent, height = wrapContent) {
 							bottomMargin = 16.dpToPx()
-							setPadding(12.dpToPx(), 0, 12.dpToPx(), 0)
-							visibility = View.GONE
 						}
 						id = R.id.homefragment_tagsbox
+						setPadding(12.dpToPx(), 0, 12.dpToPx(), 0)
+						visibility = View.GONE
 						flexWrap = FlexboxLayout.FLEX_WRAP_WRAP
 						justifyContent = FlexboxLayout.JUSTIFY_CONTENT_FLEX_START
 					}
@@ -64,5 +74,4 @@ class HomeFragmentLayout : AnkoComponent<HomeFragment> {
 			}
 		}
 	}
-
 }

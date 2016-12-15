@@ -28,10 +28,10 @@ import com.anjlab.android.iab.v3.TransactionDetails
 import com.bumptech.glide.Glide
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.wearable.Wearable
-import com.mcxiaoke.koi.async.asyncSafe
 import com.mcxiaoke.koi.ext.find
 import com.mcxiaoke.koi.ext.newIntent
 import com.mcxiaoke.koi.ext.onClick
+import com.ncapdevi.fragnav.FragNavController
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.askForSharingService
@@ -46,6 +46,7 @@ import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.views.Toolbar
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
+import org.jetbrains.anko.doAsync
 
 class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	private lateinit var bottomNavigationView: BottomNavigationView
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 		setContentView(R.layout.mainactivity)
 
-		asyncSafe {
+		doAsync {
 			// Init Tracking
 			Tracking.init(this@MainActivity)
 			// Init Custom Tabs
@@ -108,14 +109,16 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 		setSupportActionBar(toolbar)
 
-		fragNavController = FragNavController(object : FragNavController.NavListener {
-			override fun onFragmentTransaction(fragment: Fragment?) = checkFragmentDependingThings()
-			override fun onTabTransaction(fragment: Fragment?, index: Int) = checkFragmentDependingThings()
-		}, savedInstanceState, supportFragmentManager, R.id.container, listOf(
+		fragNavController = FragNavController(savedInstanceState, supportFragmentManager, R.id.container, listOf(
 				HomeFragment().addTitle(R.string.news.resStr()),
 				BookmarksFragment().addTitle(R.string.bookmarks.resStr()),
 				SettingsFragment().addTitle(R.string.settings.resStr())
-		))
+		), 0)
+		fragNavController.setTransactionListener(object : FragNavController.TransactionListener {
+			override fun onFragmentTransaction(fragment: Fragment?) = checkFragmentDependingThings()
+			override fun onTabTransaction(fragment: Fragment?, index: Int) = checkFragmentDependingThings()
+		})
+
 		var firstLaunch = true
 		bottomNavigationView = find<BottomNavigationView>(R.id.navigation_view).apply {
 			setOnNavigationItemSelectedListener { item ->
@@ -171,7 +174,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				}
 			}
 			// Pocket
-			val currentFrag = fragNavController.currentFragment
+			val currentFrag = fragNavController.currentFrag
 			if (currentFrag is SettingsFragment && intent.scheme == "pocketapp45699") {
 				currentFrag.progressDialog?.show()
 				currentFrag.pocketAuth?.authenticate()
@@ -179,7 +182,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		}
 	}
 
-	fun buildWearNotification(title: String, content: String) = asyncSafe {
+	fun buildWearNotification(title: String, content: String) = doAsync {
 		if (googleApiClient?.isConnected ?: false) Wearable.NodeApi.getConnectedNodes(googleApiClient).await().nodes.forEach {
 			Wearable.MessageApi.sendMessage(googleApiClient, it.id, "/newscatchr", (title + "x_x_x" + content).toByteArray()).await()
 		}
@@ -212,14 +215,14 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	fun loadToolbarBackground(url: String?) = toolbarBackground?.loadImage(url)
 
 	private fun checkFragmentDependingThings() {
-		val currentFragment = fragNavController.currentFragment
+		val currentFragment = fragNavController.currentFrag
 		// Check Back Arrow
-		if (fragNavController.currentStack.size > 1) {
-			supportActionBar?.setDisplayHomeAsUpEnabled(true)
-			appbar?.setExpanded(if (currentFragment is FragmentManipulation) currentFragment.expanded ?: true else true)
-		} else {
+		if (fragNavController.isRootFragment) {
 			supportActionBar?.setDisplayHomeAsUpEnabled(false)
 			appbar?.setExpanded(if (currentFragment is FragmentManipulation) currentFragment.expanded ?: false else false)
+		} else {
+			supportActionBar?.setDisplayHomeAsUpEnabled(true)
+			appbar?.setExpanded(if (currentFragment is FragmentManipulation) currentFragment.expanded ?: true else true)
 		}
 		// Check Title
 		refreshFragmentDependingTitle(currentFragment)
@@ -234,7 +237,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				it.show()
 			}
 		} else {
-			fab?.let { it.makeInvisible() }
+			fab?.makeInvisible()
 		}
 	}
 
@@ -244,7 +247,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	}
 
 	override fun pushFragment(fragment: Fragment, title: String?) {
-		fragment.addTitle(title ?: fragNavController.currentFragment?.getAddedTitle())
+		fragment.addTitle(title ?: fragNavController.currentFrag?.getAddedTitle())
 		fragNavController.push(fragment)
 	}
 

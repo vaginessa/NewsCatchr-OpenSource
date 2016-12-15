@@ -18,9 +18,6 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThread
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
 import com.mcxiaoke.koi.ext.readString
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
@@ -37,6 +34,9 @@ import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.support.v4.onUiThread
+import org.jetbrains.anko.uiThread
 import java.util.*
 
 class FavoritesFragment : BaseFragment(), ItemTouchCallback {
@@ -65,7 +65,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 	}
 
 	private fun load() {
-		mainThread {
+		onUiThread {
 			refreshOne?.isRefreshing = true
 			feeds = Database.allFavorites.toMutableList()
 			if (feeds.notNullAndEmpty()) {
@@ -122,15 +122,15 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 	}
 
 	private fun importOpml(opml: String?) {
-		mainThread {
-			asyncSafe {
+		onUiThread {
+			doAsync {
 				var imported = 0
 				if (opml.notNullOrBlank()) {
 					val feeds = opml?.convertOpmlToFeeds()
 					Database.addFavorites(feeds)
 					imported = feeds?.size ?: 0
 				}
-				mainThreadSafe {
+				uiThread {
 					sendBroadcast(Intent("favorites_updated"))
 					MaterialDialog.Builder(context)
 							.title(R.string.import_opml)
@@ -146,7 +146,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
 		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) {
-			asyncSafe {
+			doAsync {
 				var opml: String? = null
 				if (data != null && data.data != null) opml = activity.contentResolver.openInputStream(data.data).readString()
 				importOpml(opml)

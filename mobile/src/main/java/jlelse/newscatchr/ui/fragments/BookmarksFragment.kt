@@ -14,8 +14,6 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mcxiaoke.koi.ext.find
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.helpers.Database
@@ -26,6 +24,8 @@ import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class BookmarksFragment : BaseFragment() {
 	private var recyclerOne: RecyclerView? = null
@@ -52,7 +52,7 @@ class BookmarksFragment : BaseFragment() {
 
 	fun loadArticles(cache: Boolean) {
 		refreshOne?.showIndicator()
-		asyncSafe {
+		doAsync {
 			if (!cache && (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank())) {
 				try {
 					val pocketItems = PocketLoader().items()
@@ -62,7 +62,7 @@ class BookmarksFragment : BaseFragment() {
 				}
 			}
 			val articles = Database.allBookmarks
-			mainThreadSafe {
+			uiThread {
 				if (articles.notNullAndEmpty()) {
 					fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
 					recyclerOne?.adapter = fastAdapter

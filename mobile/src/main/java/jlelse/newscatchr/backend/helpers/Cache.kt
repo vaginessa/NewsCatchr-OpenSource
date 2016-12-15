@@ -12,9 +12,9 @@ package jlelse.newscatchr.backend.helpers
 
 import android.content.Context
 import com.bumptech.glide.Glide
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThreadSafe
 import io.paperdb.Paper
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 fun Any?.saveToCache(key: String?) {
 	if (this != null) Paper.book("cache").write(key?.formatForCache(), this)
@@ -31,11 +31,11 @@ fun String.formatForCache(): String {
 }
 
 fun Context.clearCache(finished: () -> Unit) {
-	asyncSafe {
+	doAsync {
 		Paper.book("cache").destroy()
 		Paper.book("article_cache").destroy()
 		Glide.get(this@clearCache).clearDiskCache()
-		mainThreadSafe {
+		uiThread {
 			finished()
 		}
 	}

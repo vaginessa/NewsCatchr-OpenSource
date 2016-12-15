@@ -22,8 +22,6 @@ import android.view.*
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.flexbox.FlexboxLayout
-import com.mcxiaoke.koi.async.asyncSafe
-import com.mcxiaoke.koi.async.mainThreadSafe
 import com.mikepenz.fastadapter.adapters.HeaderAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
@@ -33,7 +31,7 @@ import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
-import jlelse.newscatchr.ui.layout.HomeFragmentLayout
+import jlelse.newscatchr.ui.layout.HomeFragmentUI
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.HeaderRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.MoreAdapter
@@ -42,7 +40,9 @@ import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
+import org.jetbrains.anko.uiThread
 import java.util.*
 
 class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
@@ -51,13 +51,14 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	private var fastAdapterThree: FastItemAdapter<FeedListRecyclerItem>? = null
 	private var recFeeds: Array<Feed>? = null
 	private var recRelated: Array<String>? = null
-	private val recyclerOne: RecyclerView? by lazy { view?.find<RecyclerView>(R.id.homefragment_recyclerone) }
-	private val recyclerTwo: RecyclerView? by lazy { view?.find<RecyclerView>(R.id.homefragment_recyclertwo) }
-	private val recyclerThree: RecyclerView? by lazy { view?.find<RecyclerView>(R.id.homefragment_recyclerthree) }
-	private var tagsTitle: TextView? = null
-	private val tagsBox: FlexboxLayout? by lazy { view?.find<FlexboxLayout>(R.id.homefragment_tagsbox) }
-	private val refresh: SwipeRefreshLayout? by lazy { view?.find<SwipeRefreshLayout>(R.id.homefragment_refresh) }
-	private val scrollView: NestedScrollView? by lazy { view?.find<NestedScrollView>(R.id.homefragment_scrollview) }
+	private var fragmentView: View? = null
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerone) }
+	private val recyclerTwo: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclertwo) }
+	private val recyclerThree: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerthree) }
+	private val tagsTitle: TextView? by lazy { fragmentView?.find<TextView>(R.id.homefragment_tagstitle) }
+	private val tagsBox: FlexboxLayout? by lazy { fragmentView?.find<FlexboxLayout>(R.id.homefragment_tagsbox) }
+	private val refresh: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.homefragment_refresh) }
+	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.homefragment_scrollview) }
 	private var lastFeedReceiver: LastFeedUpdateReceiver? = null
 	private var lastFeedReceiverRegistered = false
 	private var favoritesReceiver: LastFeedUpdateReceiver? = null
@@ -76,14 +77,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
-		val layoutView = HomeFragmentLayout().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
-		return layoutView
-	}
-
-	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-		super.onViewCreated(view, savedInstanceState)
-		tagsTitle = view?.find<TextView>(R.id.headerTitle)?.apply {
+		fragmentView = HomeFragmentUI().createView(AnkoContext.create(context, this))
+		tagsTitle?.apply {
 			hideView()
 			text = R.string.rec_topics.resStr()
 		}
@@ -105,6 +101,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			activity.registerReceiver(favoritesReceiver, IntentFilter("favorites_updated"))
 			favoritesReceiverRegistered = true
 		}
+		return fragmentView
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -136,9 +133,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	}
 
 	private fun loadLastFeeds() {
-		asyncSafe {
+		doAsync {
 			val lastFeeds = Database.allLastFeeds.toTypedArray().takeLast(5).reversed()
-			mainThreadSafe {
+			uiThread {
 				if (lastFeeds.notNullAndEmpty()) {
 					recyclerOne?.showView()
 					fastAdapterOne = FastItemAdapter<FeedListRecyclerItem>()
@@ -162,9 +159,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	}
 
 	private fun loadFavoriteFeeds() {
-		asyncSafe {
+		doAsync {
 			val favoriteFeeds = Database.allFavorites.take(5)
-			mainThreadSafe {
+			uiThread {
 				if (favoriteFeeds.notNullAndEmpty()) {
 					recyclerTwo?.showView()
 					fastAdapterTwo = FastItemAdapter<FeedListRecyclerItem>()
@@ -189,12 +186,12 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 
 	private fun loadRecommendedFeeds(cache: Boolean) {
 		refresh?.showIndicator()
-		asyncSafe {
+		doAsync {
 			if (recFeeds == null || !cache) Feedly().recommendedFeeds(Preferences.recommendationsLanguage, cache) { feeds, related ->
 				recFeeds = feeds
 				recRelated = related
 			}
-			mainThreadSafe {
+			uiThread {
 				if (recFeeds.notNullAndEmpty()) {
 					recyclerThree?.showView()
 					fastAdapterThree = FastItemAdapter<FeedListRecyclerItem>()

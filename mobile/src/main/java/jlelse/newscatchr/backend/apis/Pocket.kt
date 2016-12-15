@@ -14,10 +14,10 @@ import android.support.annotation.Keep
 import com.afollestad.bridge.Bridge
 import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
-import com.mcxiaoke.koi.async.asyncUnsafe
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.jsonObject
 import jlelse.newscatchr.extensions.tryOrNull
+import org.jetbrains.anko.doAsync
 import org.json.JSONObject
 
 /**
@@ -179,7 +179,7 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 	private var userName: String? = null
 
 	fun startAuth() {
-		asyncUnsafe {
+		doAsync {
 			try {
 				Bridge.post("https://getpocket.com/v3/oauth/request")
 						.header("Host", "getpocket.com")
@@ -212,7 +212,7 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 	fun authenticate() {
 		if (pocketCode.isNullOrBlank()) pocketCallback.failed()
 		else {
-			asyncUnsafe {
+			doAsync {
 				try {
 					Bridge.post("https://getpocket.com/v3/oauth/authorize")
 							.header("Host", "getpocket.com")
