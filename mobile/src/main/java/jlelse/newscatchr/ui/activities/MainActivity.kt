@@ -43,21 +43,21 @@ import jlelse.newscatchr.lastTab
 import jlelse.newscatchr.ui.fragments.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
+import jlelse.newscatchr.ui.layout.MainActivityUI
 import jlelse.newscatchr.ui.views.Toolbar
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.doAsync
 
 class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
-	private lateinit var bottomNavigationView: BottomNavigationView
 	private lateinit var fragNavController: FragNavController
-	private val toolbar: Toolbar? by lazy { find<Toolbar>(R.id.toolbar) }
-	private val appbar: AppBarLayout? by lazy { find<AppBarLayout>(R.id.appbar) }
-	private val fab: FloatingActionButton? by lazy { find<FloatingActionButton>(R.id.fab) }
-	private val subtitle: TextView? by lazy { find<TextView>(R.id.subtitle) }
-	private val toolbarBackground: ImageView? by lazy {
-		find<ImageView>(R.id.toolbar_background).apply { setColorFilter(Color.parseColor("#33000000")) }
-	}
+	private val toolbar: Toolbar? by lazy { find<Toolbar>(R.id.mainactivity_toolbar) }
+	private val appbar: AppBarLayout? by lazy { find<AppBarLayout>(R.id.mainactivity_appbar) }
+	private val fab: FloatingActionButton? by lazy { find<FloatingActionButton>(R.id.mainactivity_fab) }
+	private val subtitle: TextView? by lazy { find<TextView>(R.id.mainactivity_toolbarsubtitle) }
+	private val toolbarBackground: ImageView? by lazy { find<ImageView>(R.id.mainactivity_toolbarbackground) }
+	private val bottomNavigationView: BottomNavigationView? by lazy { find<BottomNavigationView>(R.id.mainactivity_navigationview) }
 	private var googleApiClient: GoogleApiClient? = null
 	private var billingProcessor: BillingProcessor? = null
 
@@ -68,9 +68,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-
-		setContentView(R.layout.mainactivity)
-
+		setContentView(MainActivityUI().createView(AnkoContext.create(this, this)))
 		doAsync {
 			// Init Tracking
 			Tracking.init(this@MainActivity)
@@ -109,7 +107,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 		setSupportActionBar(toolbar)
 
-		fragNavController = FragNavController(savedInstanceState, supportFragmentManager, R.id.container, listOf(
+		fragNavController = FragNavController(savedInstanceState, supportFragmentManager, R.id.mainactivity_container, listOf(
 				HomeFragment().addTitle(R.string.news.resStr()),
 				BookmarksFragment().addTitle(R.string.bookmarks.resStr()),
 				SettingsFragment().addTitle(R.string.settings.resStr())
@@ -120,7 +118,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		})
 
 		var firstLaunch = true
-		bottomNavigationView = find<BottomNavigationView>(R.id.navigation_view).apply {
+		bottomNavigationView?.apply {
 			setOnNavigationItemSelectedListener { item ->
 				val itemNumber = when (item.itemId) {
 					R.id.bb_news -> 0

@@ -90,13 +90,13 @@ fun <T> tryOrNull(arg: Boolean?, code: () -> T): T? = if (arg ?: false) tryOrNul
 
 fun sharedPref(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
 
+fun Int.resDim() = tryOrNull { appContext?.resources?.getDimension(this) }
+
 fun Int.resStr() = tryOrNull { appContext?.resources?.getString(this) }
 
 fun Int.resStrArr(): Array<out String>? = tryOrNull { appContext?.resources?.getStringArray(this) }
 
 fun Int.resIntArr() = tryOrNull { appContext?.resources?.getIntArray(this) }
-
-// fun Int.resDrw() = resDrw(null)
 
 fun Int.resDrw(context: Context?, color: Int?) = tryOrNull {
 	AppCompatResources.getDrawable(context ?: appContext!!, this)?.apply {

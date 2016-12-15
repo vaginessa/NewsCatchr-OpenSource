@@ -34,5 +34,11 @@
 	<item name="articlefragment_content" type="id"/>
 	<item name="mainactivity_appbar" type="id"/>
 	<item name="mainactivity_collapsingtoolbar" type="id"/>
+	<item name="mainactivity_toolbarbackground" type="id"/>
+	<item name="mainactivity_toolbarsubtitle" type="id"/>
+	<item name="mainactivity_toolbar" type="id"/>
+	<item name="mainactivity_container" type="id"/>
+	<item name="mainactivity_navigationview" type="id"/>
+	<item name="mainactivity_fab" type="id"/>
 
 </resources>

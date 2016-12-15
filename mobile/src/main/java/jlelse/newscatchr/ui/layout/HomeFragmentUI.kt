@@ -65,7 +65,8 @@ class HomeFragmentUI : AnkoComponent<HomeFragment> {
 							bottomMargin = 16.dpToPx()
 						}
 						id = R.id.homefragment_tagsbox
-						setPadding(12.dpToPx(), 0, 12.dpToPx(), 0)
+						leftPadding = 12.dpToPx()
+						rightPadding = 12.dpToPx()
 						visibility = View.GONE
 						flexWrap = FlexboxLayout.FLEX_WRAP_WRAP
 						justifyContent = FlexboxLayout.JUSTIFY_CONTENT_FLEX_START
