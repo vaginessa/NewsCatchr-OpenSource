@@ -135,7 +135,7 @@ class FeedFragment() : BaseFragment() {
 				} else {
 					Database.deleteFavorite(feed?.url())
 				}
-				item?.icon = (if (favorite) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, Color.WHITE)
+				item.icon = (if (favorite) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, Color.WHITE)
 				editMenuItem?.isVisible = favorite
 				true
 			}
@@ -146,7 +146,7 @@ class FeedFragment() : BaseFragment() {
 						.itemsCallbackSingleChoice(when (getAddedString("ranked")) {
 							"oldest" -> 1
 							else -> 0
-						}) { dialog, itemView, which, text ->
+						}) { _, _, which, _ ->
 							feedlyLoader?.apply {
 								continuation = ""
 								ranked = when (which) {
@@ -171,7 +171,7 @@ class FeedFragment() : BaseFragment() {
 				val progressDialog = ProgressDialog(context)
 				MaterialDialog.Builder(context)
 						.title(android.R.string.search_go)
-						.input(null, null, { materialDialog, query ->
+						.input(null, null, { _, query ->
 							progressDialog.show()
 							doAsync {
 								val foundArticles = FeedlyLoader().apply {
@@ -201,7 +201,7 @@ class FeedFragment() : BaseFragment() {
 			R.id.edit_title -> {
 				MaterialDialog.Builder(context)
 						.title(R.string.edit_feed_title)
-						.input(null, feed?.title, { materialDialog, input ->
+						.input(null, feed?.title, { _, input ->
 							if (input.toString().notNullOrBlank()) {
 								Database.updateFavoriteTitle(feed?.url(), input.toString())
 								feed?.title = input.toString()
@@ -218,7 +218,7 @@ class FeedFragment() : BaseFragment() {
 			}
 			R.id.create_shortcut -> {
 				if (activity is MainActivity) (activity as MainActivity).createHomeScreenShortcut(getAddedTitle() ?: R.string.app_name.resStr()!!, feed?.url() ?: "")
-				Snackbar.make(activity.findViewById(R.id.container), R.string.shortcut_created, Snackbar.LENGTH_SHORT).show()
+				Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.shortcut_created, Snackbar.LENGTH_SHORT).show()
 				true
 			}
 			else -> {

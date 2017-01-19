@@ -121,7 +121,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 					.items(mutableListOf<String>().apply {
 						availableLocales.forEach { add(it.displayName) }
 					})
-					.itemsCallback { dialog, view, i, charSequence ->
+					.itemsCallback { _, _, i, _ ->
 						Preferences.recommendationsLanguage = availableLocales[i].language
 						loadRecommendedFeeds(false)
 					}

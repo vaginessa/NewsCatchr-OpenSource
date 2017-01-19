@@ -52,7 +52,7 @@ class SharingApi(val context: Activity, network: SocialNetwork) {
 				}
 				context.runOnUiThread {
 					progressDialog.dismiss()
-					Snackbar.make(context.findViewById(R.id.container), if (success) R.string.suc_share.resStr() + "" else (R.string.share_failed.resStr() + ": $errorMsg"), Snackbar.LENGTH_SHORT).show()
+					Snackbar.make(context.findViewById(R.id.mainactivity_container), if (success) R.string.suc_share.resStr() + "" else (R.string.share_failed.resStr() + ": $errorMsg"), Snackbar.LENGTH_SHORT).show()
 				}
 			}
 		} else {
@@ -76,7 +76,7 @@ class SharingApi(val context: Activity, network: SocialNetwork) {
 fun askForSharingService(context: Context, network: (SharingApi.SocialNetwork) -> Unit) {
 	MaterialDialog.Builder(context)
 			.items(R.string.twitter.resStr(), R.string.facebook.resStr(), R.string.more.resStr())
-			.itemsCallback { materialDialog, view, which, charSequence ->
+			.itemsCallback { _, _, which, _ ->
 				when (which) {
 					0 -> network(SharingApi.SocialNetwork.Twitter)
 					1 -> network(SharingApi.SocialNetwork.Facebook)

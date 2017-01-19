@@ -39,7 +39,7 @@ import java.io.InputStream
 
 class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -> Unit) {
 	private var cloudStorage: CloudStorage
-	private var progressDialog: ProgressDialog
+	private var progressDialog: ProgressDialog = ProgressDialog(context).apply { show() }
 
 	private val favoritesFile = "feeds.nc"
 	private val bookmarksFile = "bookmarks.nc"
@@ -48,7 +48,6 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 
 	init {
 		CloudRail.setAppKey(CloudRailApiKey)
-		progressDialog = ProgressDialog(context).apply { show() }
 		cloudStorage = when (storage) {
 			Storage.OneDrive -> OneDrive(context, OneDriveClientID, OneDriveClientSecret)
 			Storage.GoogleDrive -> GoogleDrive(context, GoogleDriveClientID, GoogleDriveClientSecret)
@@ -66,7 +65,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 			}
 			context.runOnUiThread {
 				progressDialog.dismiss()
-				Snackbar.make(context.findViewById(R.id.container), if (success) R.string.suc_backup else R.string.backup_failed, Snackbar.LENGTH_SHORT).show()
+				Snackbar.make(context.findViewById(R.id.mainactivity_container), if (success) R.string.suc_backup else R.string.backup_failed, Snackbar.LENGTH_SHORT).show()
 				finished()
 			}
 		}
@@ -111,7 +110,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 			context.runOnUiThread {
 				context.sendBroadcast(Intent("favorites_updated"))
 				progressDialog.dismiss()
-				Snackbar.make(context.findViewById(R.id.container), if (success) R.string.suc_restore else R.string.restore_failed, Snackbar.LENGTH_SHORT).show()
+				Snackbar.make(context.findViewById(R.id.mainactivity_container), if (success) R.string.suc_restore else R.string.restore_failed, Snackbar.LENGTH_SHORT).show()
 				finished()
 			}
 		}
@@ -207,7 +206,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 fun backupRestore(context: MainActivity, callback: () -> Unit) {
 	MaterialDialog.Builder(context)
 			.items(R.string.backup.resStr(), R.string.restore.resStr())
-			.itemsCallback { materialDialog, view, which, charSequence ->
+			.itemsCallback { _, _, which, _ ->
 				askForCloudBackupService(context, { storage ->
 					CloudBackupApi(context, storage, { callback() }).let {
 						when (which) {
@@ -224,7 +223,7 @@ fun backupRestore(context: MainActivity, callback: () -> Unit) {
 private fun askForCloudBackupService(context: Context, storage: (CloudBackupApi.Storage) -> Unit) {
 	MaterialDialog.Builder(context)
 			.items(R.string.dropbox.resStr(), R.string.google_drive.resStr(), R.string.onedrive.resStr())
-			.itemsCallback { materialDialog, view, which, charSequence ->
+			.itemsCallback { _, _, which, _ ->
 				when (which) {
 					0 -> storage(CloudBackupApi.Storage.DropBox)
 					1 -> storage(CloudBackupApi.Storage.GoogleDrive)

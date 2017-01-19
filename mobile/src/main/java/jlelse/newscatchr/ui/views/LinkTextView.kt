@@ -16,7 +16,7 @@ class LinkTextView {
 		textView?.movementMethod = LinkMovementMethod.getInstance()
 		val text = textView?.text
 		if (text is Spannable) {
-			textView?.text = SpannableStringBuilder(text).apply {
+			textView.text = SpannableStringBuilder(text).apply {
 				clearSpans()
 				text.getSpans(0, text.length, URLSpan::class.java).forEach {
 					setSpan(CustomTextClick(it.url, activity), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

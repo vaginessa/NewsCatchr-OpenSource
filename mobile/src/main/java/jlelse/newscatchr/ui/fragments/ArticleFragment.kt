@@ -185,7 +185,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 			bookmark = !bookmark
 			if (bookmark) Database.addBookmark(article)
 			else Database.deleteBookmark(article?.url)
-			item?.icon = (if (bookmark) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, Color.WHITE)
+			item.icon = (if (bookmark) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, Color.WHITE)
 			true
 		}
 		R.id.share -> {
@@ -209,7 +209,7 @@ class ArticleFragment() : BaseFragment(), FAB {
 					.items(mutableListOf<String>().apply {
 						translateApi.languages().forEach { add(Locale(it).displayName) }
 					})
-					.itemsCallback { dialog, view, i, charSequence ->
+					.itemsCallback { _, _, i, _ ->
 						val language = translateApi.languages()[i]
 						refreshOne?.showIndicator()
 						doAsync {

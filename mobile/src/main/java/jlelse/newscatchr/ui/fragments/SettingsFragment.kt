@@ -120,7 +120,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		when (preference) {
 			clearCachePref -> {
 				context.clearCache {
-					Snackbar.make(activity.findViewById(R.id.container), R.string.cleared_cache, Snackbar.LENGTH_SHORT).show()
+					Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.cleared_cache, Snackbar.LENGTH_SHORT).show()
 				}
 			}
 			clearHistoryPref -> {
@@ -128,7 +128,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 					Database.allLastFeeds = setOf<Feed>()
 					uiThread {
 						context.sendBroadcast(Intent("last_feed_updated"))
-						Snackbar.make(activity.findViewById(R.id.container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()
+						Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()
 					}
 				}
 			}
@@ -203,9 +203,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				MaterialDialog.Builder(context)
 						.title(R.string.night_mode)
 						.items(R.array.night_mode_pref_titles)
-						.itemsCallbackSingleChoice(oldValue) { dialog, itemView, which, text ->
+						.itemsCallbackSingleChoice(oldValue) { _, _, which, _ ->
 							val oldPrefValue = Preferences.nightMode
-							Preferences.nightMode = which.toInt()
+							Preferences.nightMode = which
 							preference?.summary = R.array.night_mode_pref_titles.resStrArr()!![Preferences.nightMode]
 							if (which != oldPrefValue) {
 								setNightMode()
@@ -222,8 +222,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				MaterialDialog.Builder(context)
 						.title(R.string.sync_interval)
 						.items(R.array.sync_interval_titles)
-						.itemsCallbackSingleChoice(resources.getIntArray(R.array.sync_interval_values).indexOf(Preferences.syncInterval)) { dialog, itemView, which, text ->
-							Preferences.syncInterval = resources.getIntArray(R.array.sync_interval_values)[which.toInt()]
+						.itemsCallbackSingleChoice(resources.getIntArray(R.array.sync_interval_values).indexOf(Preferences.syncInterval)) { _, _, which, _ ->
+							Preferences.syncInterval = resources.getIntArray(R.array.sync_interval_values)[which]
 							if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
 							refreshSyncIntervalDesc()
 							true
@@ -287,7 +287,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.items(mutableSetOf<String>().apply {
 							availableLocales.forEach { add(it.displayName) }
 						})
-						.itemsCallback { dialog, view, i, charSequence ->
+						.itemsCallback { _, _, i, _ ->
 							Preferences.language = availableLocales.toTypedArray()[i].language
 							activity.setLocale()
 						}

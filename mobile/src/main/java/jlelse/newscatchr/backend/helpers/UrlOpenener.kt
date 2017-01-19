@@ -32,7 +32,7 @@ class UrlOpenener {
 							.addDefaultShareMenuItem()
 							.enableUrlBarHiding()
 							.build()
-					CustomTabsHelperFragment.open(activity, customTabsIntent, Uri.parse(finalUrl)) { activity, uri ->
+					CustomTabsHelperFragment.open(activity, customTabsIntent, Uri.parse(finalUrl)) { activity, _ ->
 						activity.startActivity(alternateIntent)
 					}
 				} catch (e: Exception) {

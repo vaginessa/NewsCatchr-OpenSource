@@ -11,10 +11,7 @@
 package jlelse.newscatchr.extensions
 
 import android.content.Context
-import android.view.LayoutInflater
-import android.widget.AutoCompleteTextView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mcxiaoke.koi.ext.find
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.AutoCompleteAdapter
@@ -22,6 +19,7 @@ import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.fragments.FeedListFragment
 import jlelse.newscatchr.ui.views.ProgressDialog
+import jlelse.newscatchr.ui.views.SearchDialogView
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -70,13 +68,12 @@ fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNa
 		}
 	}
 	if (query.isNullOrBlank()) {
-		val requestView = LayoutInflater.from(context).inflate(R.layout.searchdialog, null)
-		val textView = requestView.find<AutoCompleteTextView>(R.id.autocompletetextview)
+		val textView = SearchDialogView(context)
 		textView.setAdapter(AutoCompleteAdapter(context))
 		MaterialDialog.Builder(context)
 				.title(android.R.string.search_go)
-				.customView(requestView, true)
-				.onPositive { materialDialog, dialogAction ->
+				.customView(textView, true)
+				.onPositive { _, _ ->
 					load(textView.text.toString())
 				}
 				.negativeText(android.R.string.cancel)
