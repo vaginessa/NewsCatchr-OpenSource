@@ -8,6 +8,8 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.ui.fragments
 
 import android.graphics.Color
@@ -16,6 +18,7 @@ import android.text.format.DateUtils
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.flexbox.FlexboxLayout
 import com.mcxiaoke.koi.ext.find
@@ -35,11 +38,9 @@ import jlelse.newscatchr.ui.views.ZoomTextView
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import java.util.*
 
-class ArticleFragment() : BaseFragment(), FAB {
+class ArticleFragment : BaseFragment(), FAB {
 	private var fragmentView: View? = null
 	private val titleView: TextView? by lazy { fragmentView?.find<TextView>(R.id.articlefragment_title) }
 	private val visualView: ImageView? by lazy { fragmentView?.find<ImageView>(R.id.articlefragment_visual) }
@@ -58,11 +59,11 @@ class ArticleFragment() : BaseFragment(), FAB {
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
 		setHasOptionsMenu(true)
-		fragmentView = ArticleFragmentUI().createView(AnkoContext.create(context, this))
+		fragmentView = fragmentView ?: ArticleFragmentUI().createView(AnkoContext.create(context, this))
 		refreshOne?.apply {
 			setOnRefreshListener {
 				try {
-					doAsync { showArticle(Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull()) }
+					async { showArticle(await { Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull() }) }
 				} catch (e: Exception) {
 					e.printStackTrace()
 					refreshOne?.hideIndicator()
@@ -78,23 +79,19 @@ class ArticleFragment() : BaseFragment(), FAB {
 		return fragmentView
 	}
 
-	private fun showArticle(article: Article?) {
+	private fun showArticle(article: Article?) = async {
 		refreshOne?.showIndicator()
-		doAsync {
-			article?.process(true)
-			uiThread {
-				if (article.notNullOrEmpty()) {
-					this@ArticleFragment.article = article
-					image(article?.visualUrl)
-					title(article?.title)
-					details(article?.author, article?.originTitle, article?.published)
-					content(article?.content)
-					keywords(article?.keywords)
-					showWearNotification()
-				}
-				refreshOne?.hideIndicator()
-			}
+		await { article?.process(true) }
+		if (article.notNullOrEmpty()) {
+			this@ArticleFragment.article = article
+			image(article?.visualUrl)
+			title(article?.title)
+			details(article?.author, article?.originTitle, article?.published)
+			content(article?.content)
+			keywords(article?.keywords)
+			showWearNotification()
 		}
+		refreshOne?.hideIndicator()
 	}
 
 	private fun image(visualUrl: String? = "") {
@@ -197,9 +194,10 @@ class ArticleFragment() : BaseFragment(), FAB {
 			true
 		}
 		R.id.readability -> {
-			refreshOne?.showIndicator()
-			doAsync {
-				ReadabilityApi().reparse(article).let { if (it.second) showArticle(it.first) }
+			async {
+				refreshOne?.showIndicator()
+				val temp = await { ReadabilityApi().reparse(article) }
+				if (temp.second) showArticle(temp.first)
 			}
 			true
 		}
@@ -210,12 +208,14 @@ class ArticleFragment() : BaseFragment(), FAB {
 						translateApi.languages().forEach { add(Locale(it).displayName) }
 					})
 					.itemsCallback { _, _, i, _ ->
-						val language = translateApi.languages()[i]
-						refreshOne?.showIndicator()
-						doAsync {
-							article?.apply {
-								title = tryOrNull { TranslateApi().translate(language, title) } ?: title
-								content = tryOrNull { TranslateApi().translate(language, content?.toHtml().toString()) } ?: content
+						async {
+							val language = translateApi.languages()[i]
+							refreshOne?.showIndicator()
+							await {
+								article?.apply {
+									title = tryOrNull { TranslateApi().translate(language, title) } ?: title
+									content = tryOrNull { TranslateApi().translate(language, content?.toHtml().toString()) } ?: content
+								}
 							}
 							showArticle(article)
 						}

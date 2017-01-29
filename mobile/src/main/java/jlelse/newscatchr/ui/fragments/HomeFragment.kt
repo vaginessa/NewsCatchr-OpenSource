@@ -8,6 +8,8 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.ui.fragments
 
 import android.content.BroadcastReceiver
@@ -20,6 +22,7 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.RecyclerView
 import android.view.*
 import android.widget.TextView
+import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.flexbox.FlexboxLayout
 import com.mikepenz.fastadapter.adapters.HeaderAdapter
@@ -40,10 +43,7 @@ import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
-import org.jetbrains.anko.support.v4.onUiThread
-import org.jetbrains.anko.uiThread
 import java.util.*
 
 class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
@@ -165,86 +165,76 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		loadRecommendedFeeds(true)
 	}
 
-	private fun loadLastFeeds() {
-		doAsync {
-			val lastFeeds = Database.allLastFeeds.toTypedArray().takeLast(5).reversed()
-			onUiThread {
-				if (lastFeeds.notNullAndEmpty()) {
-					recyclerOne?.showView()
-					fastAdapterOne.setNewList(mutableListOf<FeedListRecyclerItem>())
-					lastFeeds.forEachIndexed { i, feed ->
-						fastAdapterOne.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
-					}
-					moreAdapterOne.setNewList(mutableListOf<MoreRecyclerItem>())
-					moreAdapterOne.add(MoreRecyclerItem().withCallback {
-						fragmentNavigation.pushFragment(FeedListFragment().addObject(Database.allLastFeeds.reversed().toTypedArray(), "feeds"), R.string.last_feeds.resStr())
-					})
-				} else {
-					recyclerOne?.hideView()
-				}
-				restoreScrollState()
+	private fun loadLastFeeds() = async {
+		val lastFeeds = await { Database.allLastFeeds.toTypedArray().takeLast(5).reversed() }
+		if (lastFeeds.notNullAndEmpty()) {
+			recyclerOne?.showView()
+			fastAdapterOne.setNewList(mutableListOf<FeedListRecyclerItem>())
+			lastFeeds.forEachIndexed { i, feed ->
+				fastAdapterOne.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
 			}
+			moreAdapterOne.setNewList(mutableListOf<MoreRecyclerItem>())
+			moreAdapterOne.add(MoreRecyclerItem().withCallback {
+				fragmentNavigation.pushFragment(FeedListFragment().addObject(Database.allLastFeeds.reversed().toTypedArray(), "feeds"), R.string.last_feeds.resStr())
+			})
+		} else {
+			recyclerOne?.hideView()
 		}
+		restoreScrollState()
 	}
 
-	private fun loadFavoriteFeeds() {
-		doAsync {
-			val favoriteFeeds = Database.allFavorites.take(5)
-			uiThread {
-				if (favoriteFeeds.notNullAndEmpty()) {
-					recyclerOne?.showView()
-					fastAdapterTwo.setNewList(mutableListOf<FeedListRecyclerItem>())
-					favoriteFeeds.forEachIndexed { i, feed ->
-						fastAdapterTwo.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
-					}
-					moreAdapterTwo.setNewList(mutableListOf<MoreRecyclerItem>())
-					moreAdapterTwo.add(MoreRecyclerItem().withCallback {
-						fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
-					})
-				} else {
-					recyclerTwo?.hideView()
-				}
-				restoreScrollState()
+	private fun loadFavoriteFeeds() = async {
+		val favoriteFeeds = await { Database.allFavorites.take(5) }
+		if (favoriteFeeds.notNullAndEmpty()) {
+			recyclerOne?.showView()
+			fastAdapterTwo.setNewList(mutableListOf<FeedListRecyclerItem>())
+			favoriteFeeds.forEachIndexed { i, feed ->
+				fastAdapterTwo.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
 			}
+			moreAdapterTwo.setNewList(mutableListOf<MoreRecyclerItem>())
+			moreAdapterTwo.add(MoreRecyclerItem().withCallback {
+				fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
+			})
+		} else {
+			recyclerTwo?.hideView()
 		}
+		restoreScrollState()
 	}
 
-	private fun loadRecommendedFeeds(cache: Boolean) {
+	private fun loadRecommendedFeeds(cache: Boolean) = async {
 		refresh?.showIndicator()
-		doAsync {
+		await {
 			if (recFeeds == null || !cache) Feedly().recommendedFeeds(Preferences.recommendationsLanguage, cache) { feeds, related ->
 				recFeeds = feeds
 				recRelated = related
 			}
-			uiThread {
-				if (recFeeds.notNullAndEmpty()) {
-					recyclerOne?.showView()
-					fastAdapterThree.setNewList(mutableListOf<FeedListRecyclerItem>())
-					recFeeds?.take(15)?.forEachIndexed { i, feed ->
-						fastAdapterThree.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
-					}
-					moreAdapterThree.setNewList(mutableListOf<MoreRecyclerItem>())
-					moreAdapterThree.add(MoreRecyclerItem().withCallback {
-						fragmentNavigation.pushFragment(FeedListFragment().addObject(recFeeds, "feeds").addObject(recRelated, "tags"), R.string.recommendations.resStr())
-					})
-				} else {
-					recyclerThree?.hideView()
-				}
-				if (recRelated.notNullAndEmpty()) {
-					tagsTitle?.showView()
-					tagsBox?.showView()
-					tagsBox?.removeAllViews()
-					recRelated?.forEach {
-						tagsBox?.addTagView(this@HomeFragment, it)
-					}
-				} else {
-					tagsTitle?.hideView()
-					tagsBox?.hideView()
-				}
-				refresh?.hideIndicator()
-				restoreScrollState()
-			}
 		}
+		if (recFeeds.notNullAndEmpty()) {
+			recyclerOne?.showView()
+			fastAdapterThree.setNewList(mutableListOf<FeedListRecyclerItem>())
+			recFeeds?.take(15)?.forEachIndexed { i, feed ->
+				fastAdapterThree.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
+			}
+			moreAdapterThree.setNewList(mutableListOf<MoreRecyclerItem>())
+			moreAdapterThree.add(MoreRecyclerItem().withCallback {
+				fragmentNavigation.pushFragment(FeedListFragment().addObject(recFeeds, "feeds").addObject(recRelated, "tags"), R.string.recommendations.resStr())
+			})
+		} else {
+			recyclerThree?.hideView()
+		}
+		if (recRelated.notNullAndEmpty()) {
+			tagsTitle?.showView()
+			tagsBox?.showView()
+			tagsBox?.removeAllViews()
+			recRelated?.forEach {
+				tagsBox?.addTagView(this@HomeFragment, it)
+			}
+		} else {
+			tagsTitle?.hideView()
+			tagsBox?.hideView()
+		}
+		refresh?.hideIndicator()
+		restoreScrollState()
 	}
 
 	private fun restoreScrollState() {
