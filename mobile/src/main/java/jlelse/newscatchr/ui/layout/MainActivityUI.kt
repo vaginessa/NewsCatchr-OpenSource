@@ -36,7 +36,6 @@ class MainActivityUI : AnkoComponent<MainActivity> {
 				setContentScrimResource(R.color.colorPrimary)
 				expandedTitleMarginBottom = 64.dpToPx()
 				expandedTitleMarginStart = 16.dpToPx()
-				setExpandedTitleTextAppearance(android.R.attr.textAppearanceLarge)
 			}
 			find<ImageView>(R.id.mainactivity_toolbarbackground).apply {
 				fitsSystemWindows = true

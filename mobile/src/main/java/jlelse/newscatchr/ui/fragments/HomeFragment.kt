@@ -171,9 +171,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			onUiThread {
 				if (lastFeeds.notNullAndEmpty()) {
 					recyclerOne?.showView()
-					fastAdapterOne?.setNewList(mutableListOf<FeedListRecyclerItem>())
+					fastAdapterOne.setNewList(mutableListOf<FeedListRecyclerItem>())
 					lastFeeds.forEachIndexed { i, feed ->
-						fastAdapterOne?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
+						fastAdapterOne.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
 					}
 					moreAdapterOne.setNewList(mutableListOf<MoreRecyclerItem>())
 					moreAdapterOne.add(MoreRecyclerItem().withCallback {
@@ -193,9 +193,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			uiThread {
 				if (favoriteFeeds.notNullAndEmpty()) {
 					recyclerOne?.showView()
-					fastAdapterTwo?.setNewList(mutableListOf<FeedListRecyclerItem>())
+					fastAdapterTwo.setNewList(mutableListOf<FeedListRecyclerItem>())
 					favoriteFeeds.forEachIndexed { i, feed ->
-						fastAdapterTwo?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
+						fastAdapterTwo.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
 					}
 					moreAdapterTwo.setNewList(mutableListOf<MoreRecyclerItem>())
 					moreAdapterTwo.add(MoreRecyclerItem().withCallback {
@@ -219,9 +219,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			uiThread {
 				if (recFeeds.notNullAndEmpty()) {
 					recyclerOne?.showView()
-					fastAdapterThree?.setNewList(mutableListOf<FeedListRecyclerItem>())
+					fastAdapterThree.setNewList(mutableListOf<FeedListRecyclerItem>())
 					recFeeds?.take(15)?.forEachIndexed { i, feed ->
-						fastAdapterThree?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
+						fastAdapterThree.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
 					}
 					moreAdapterThree.setNewList(mutableListOf<MoreRecyclerItem>())
 					moreAdapterThree.add(MoreRecyclerItem().withCallback {
