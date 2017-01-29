@@ -33,12 +33,14 @@ object Database {
 			tryOrNull { Paper.book(FAVORITES).write(FAVORITES, value.onlySaved()) }
 		}
 
-	val allFavoritesUrls = mutableListOf<String>().apply { allFavorites.forEach { add(it.url()!!) } }.toTypedArray()
+	val allFavoritesUrls = allFavorites.map(Feed::url)
 
 	fun addFavorite(feed: Feed?) = addFavorites(arrayOf(feed))
 
 	fun addFavorites(feeds: Array<out Feed?>?) {
-		allFavorites = allFavorites.toMutableList().apply { feeds?.removeEmptyFeeds()?.forEach { if (!isSavedFavorite(it.url())) add(it) } }.toTypedArray()
+		feeds?.removeEmptyFeeds()?.filter { !isSavedFavorite(it.url()) }.let {
+			allFavorites += it!!
+		}
 	}
 
 	fun deleteFavorite(url: String?) {
@@ -61,7 +63,7 @@ object Database {
 			tryOrNull { Paper.book(BOOKMARKS).write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles()) }
 		}
 
-	val allBookmarkUrls = mutableListOf<String>().apply { allBookmarks.forEach { add(it.url!!) } }.toTypedArray()
+	val allBookmarkUrls = allBookmarks.map { it.url }
 
 	private fun addBookmarks(vararg articles: Article?) {
 		allBookmarks = allBookmarks.toMutableList().apply {
@@ -102,7 +104,7 @@ object Database {
 		}
 
 	fun addReadUrl(url: String?) {
-		allReadUrls = allReadUrls.toMutableSet().apply { add(url!!) }.toSet()
+		if (url.notNullOrBlank()) allReadUrls += url!!
 	}
 
 	var allLastFeeds: Set<Feed>

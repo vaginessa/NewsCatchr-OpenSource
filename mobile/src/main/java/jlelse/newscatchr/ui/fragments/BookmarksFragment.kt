@@ -8,75 +8,74 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.ui.fragments
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.RecyclerView
 import android.view.*
-import com.mcxiaoke.koi.ext.find
+import co.metalab.asyncawait.async
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.loaders.PocketLoader
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.notNullOrBlank
+import jlelse.newscatchr.extensions.restorePosition
+import jlelse.newscatchr.extensions.tryOrNull
+import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.find
 
 class BookmarksFragment : BaseFragment() {
-	private var recyclerOne: RecyclerView? = null
-	private var refreshOne: SwipeRefreshLayout? = null
-	private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
+	private var fragmentView: View? = null
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.refreshrecyclerview_scrollview) }
+	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var savedInstanceState: Bundle? = null
+
+	override val saveStateScrollViews: Array<NestedScrollView?>?
+		get() = arrayOf(scrollView)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
 		this.savedInstanceState = savedInstanceState
-		val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
+		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
-		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-			layoutManager = LinearLayoutManager(context)
-		}
-		refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
-			setOnRefreshListener {
-				loadArticles(false)
-			}
+		refreshOne?.setOnRefreshListener {
+			loadArticles(false)
 		}
 		loadArticles(true)
-		return view
+		return fragmentView
 	}
 
-	fun loadArticles(cache: Boolean) {
+	fun loadArticles(cache: Boolean) = async {
 		refreshOne?.showIndicator()
-		doAsync {
-			if (!cache && (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank())) {
-				try {
-					val pocketItems = PocketLoader().items()
-					Database.allBookmarks = pocketItems
-				} catch (e: Exception) {
-					e.printStackTrace()
-				}
+		val articles = await {
+			if (!cache && Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
+				tryOrNull { Database.allBookmarks = PocketLoader().items() }
 			}
-			val articles = Database.allBookmarks
-			uiThread {
-				if (articles.notNullAndEmpty()) {
-					fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
-					recyclerOne?.adapter = fastAdapter
-					fastAdapter?.setNewList(mutableListOf<ArticleListRecyclerItem>())
-					articles.forEach {
-						fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@BookmarksFragment))
-					}
-					fastAdapter?.withSavedInstanceState(savedInstanceState)
-				} else {
-					fastAdapter?.clear()
-				}
-				refreshOne?.hideIndicator()
-			}
+			Database.allBookmarks
 		}
+		if (articles.notNullAndEmpty()) {
+			recyclerOne?.adapter = null
+			recyclerOne?.adapter = fastAdapter
+			fastAdapter.withSavedInstanceState(savedInstanceState)
+			fastAdapter.setNewList(mutableListOf<ArticleListRecyclerItem>())
+			articles.forEach {
+				fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@BookmarksFragment))
+			}
+			scrollView?.restorePosition(this@BookmarksFragment)
+		} else {
+			fastAdapter.clear()
+		}
+		refreshOne?.hideIndicator()
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -98,6 +97,6 @@ class BookmarksFragment : BaseFragment() {
 
 	override fun onSaveInstanceState(outState: Bundle?) {
 		super.onSaveInstanceState(outState)
-		fastAdapter?.saveInstanceState(outState)
+		fastAdapter.saveInstanceState(outState)
 	}
 }
