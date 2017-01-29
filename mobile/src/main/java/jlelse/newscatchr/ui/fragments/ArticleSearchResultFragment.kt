@@ -11,48 +11,53 @@
 package jlelse.newscatchr.ui.fragments
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.mcxiaoke.koi.ext.find
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.getAddedObject
 import jlelse.newscatchr.extensions.notNullAndEmpty
+import jlelse.newscatchr.extensions.restorePosition
+import jlelse.newscatchr.ui.layout.BasicRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
 import jlelse.readit.R
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.find
 import java.util.*
 
-class ArticleSearchResultFragment() : BaseFragment() {
-	private var recyclerOne: RecyclerView? = null
-	private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
+class ArticleSearchResultFragment : BaseFragment() {
+	private var fragmentView: View? = null
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.basicrecyclerview_recycler) }
+	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.basicrecyclerview_scrollview) }
 	private var articles: List<Article>? = null
+
+	override val saveStateScrollViews: Array<NestedScrollView?>?
+		get() = arrayOf(scrollView)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
-		val view = inflater?.inflate(R.layout.basicrecycler, container, false)
+		fragmentView = fragmentView ?: BasicRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
-		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-			isNestedScrollingEnabled = false
-			layoutManager = LinearLayoutManager(context)
-		}
 		articles = getAddedObject<List<Article>>("articles")
 		if (articles.notNullAndEmpty()) {
-			fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+			recyclerOne?.adapter = null
 			recyclerOne?.adapter = fastAdapter
-			fastAdapter?.setNewList(ArrayList<ArticleListRecyclerItem>())
+			fastAdapter.withSavedInstanceState(savedInstanceState)
+			fastAdapter.setNewList(ArrayList<ArticleListRecyclerItem>())
 			articles?.forEach {
-				fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@ArticleSearchResultFragment))
+				fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@ArticleSearchResultFragment))
 			}
-			fastAdapter?.withSavedInstanceState(savedInstanceState)
+			scrollView?.restorePosition(this)
 		}
-		return view
+		return fragmentView
 	}
 
 	override fun onSaveInstanceState(outState: Bundle?) {
 		super.onSaveInstanceState(outState)
-		fastAdapter?.saveInstanceState(outState)
+		fastAdapter.saveInstanceState(outState)
 	}
 }

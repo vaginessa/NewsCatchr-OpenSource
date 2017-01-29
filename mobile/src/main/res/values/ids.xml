@@ -32,5 +32,8 @@
 	<item name="articlefragment_visual" type="id"/>
 	<item name="articlefragment_details" type="id"/>
 	<item name="articlefragment_content" type="id"/>
+	<item name="basicrecyclerview_recycler" type="id"/>
+	<item name="basicrecyclerview_tags" type="id"/>
+	<item name="basicrecyclerview_scrollview" type="id"/>
 
 </resources>
