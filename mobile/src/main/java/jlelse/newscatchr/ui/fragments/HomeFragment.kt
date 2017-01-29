@@ -42,19 +42,26 @@ import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
+import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
 import java.util.*
 
 class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
-	private var fastAdapterOne: FastItemAdapter<FeedListRecyclerItem>? = null
-	private var fastAdapterTwo: FastItemAdapter<FeedListRecyclerItem>? = null
-	private var fastAdapterThree: FastItemAdapter<FeedListRecyclerItem>? = null
 	private var recFeeds: Array<Feed>? = null
 	private var recRelated: Array<String>? = null
 	private var fragmentView: View? = null
 	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerone) }
 	private val recyclerTwo: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclertwo) }
 	private val recyclerThree: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerthree) }
+	private val fastAdapterOne = FastItemAdapter<FeedListRecyclerItem>()
+	private val headerAdapterOne = HeaderAdapter<HeaderRecyclerItem>()
+	private val moreAdapterOne = MoreAdapter<MoreRecyclerItem>()
+	private val fastAdapterTwo = FastItemAdapter<FeedListRecyclerItem>()
+	private val headerAdapterTwo = HeaderAdapter<HeaderRecyclerItem>()
+	private val moreAdapterTwo = MoreAdapter<MoreRecyclerItem>()
+	private val fastAdapterThree = FastItemAdapter<FeedListRecyclerItem>()
+	private val headerAdapterThree = HeaderAdapter<HeaderRecyclerItem>()
+	private val moreAdapterThree = MoreAdapter<MoreRecyclerItem>()
 	private val tagsTitle: TextView? by lazy { fragmentView?.find<TextView>(R.id.homefragment_tagstitle) }
 	private val tagsBox: FlexboxLayout? by lazy { fragmentView?.find<FlexboxLayout>(R.id.homefragment_tagsbox) }
 	private val refresh: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.homefragment_refresh) }
@@ -75,22 +82,17 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	override val saveStateScrollViews: Array<NestedScrollView?>?
 		get() = arrayOf(scrollView)
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		super.onCreateView(inflater, container, savedInstanceState)
-		setHasOptionsMenu(true)
-		fragmentView = HomeFragmentUI().createView(AnkoContext.create(context, this))
-		tagsTitle?.apply {
-			hideView()
-			text = R.string.rec_topics.resStr()
-		}
-		refresh?.apply {
-			setOnRefreshListener {
-				loadRecommendedFeeds(false)
-			}
-		}
-		loadRecommendedFeeds(true)
-		loadLastFeeds()
-		loadFavoriteFeeds()
+	override fun onCreate(savedInstanceState: Bundle?) {
+		super.onCreate(savedInstanceState)
+		moreAdapterOne.wrap(fastAdapterOne)
+		headerAdapterOne.wrap(moreAdapterOne)
+		if (headerAdapterOne.itemCount == 0) headerAdapterOne.add(HeaderRecyclerItem().withTitle(R.string.last_feeds.resStr()!!))
+		moreAdapterTwo.wrap(fastAdapterTwo)
+		headerAdapterTwo.wrap(moreAdapterTwo)
+		if (headerAdapterTwo.itemCount == 0) headerAdapterTwo.add(HeaderRecyclerItem().withTitle(R.string.favorites.resStr()!!))
+		moreAdapterThree.wrap(fastAdapterThree)
+		headerAdapterThree.wrap(moreAdapterThree)
+		if (headerAdapterThree.itemCount == 0) headerAdapterThree.add(HeaderRecyclerItem().withTitle(R.string.recommendations.resStr()!!))
 		if (!lastFeedReceiverRegistered) {
 			lastFeedReceiver = LastFeedUpdateReceiver(this)
 			activity.registerReceiver(lastFeedReceiver, IntentFilter("last_feed_updated"))
@@ -101,6 +103,13 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			activity.registerReceiver(favoritesReceiver, IntentFilter("favorites_updated"))
 			favoritesReceiverRegistered = true
 		}
+	}
+
+	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		super.onCreateView(inflater, container, savedInstanceState)
+		setHasOptionsMenu(true)
+		fragmentView = fragmentView ?: HomeFragmentUI().createView(AnkoContext.create(context, this))
+		init()
 		return fragmentView
 	}
 
@@ -132,22 +141,42 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		else -> super.onOptionsItemSelected(item)
 	}
 
+	private fun init() {
+		tagsTitle?.apply {
+			hideView()
+			text = R.string.rec_topics.resStr()
+		}
+		refresh?.apply {
+			setOnRefreshListener {
+				loadRecommendedFeeds(false)
+			}
+		}
+		recyclerOne?.showView()
+		recyclerOne?.adapter = null
+		recyclerOne?.adapter = headerAdapterOne
+		loadLastFeeds()
+		recyclerTwo?.showView()
+		recyclerTwo?.adapter = null
+		recyclerTwo?.adapter = headerAdapterTwo
+		loadFavoriteFeeds()
+		recyclerThree?.showView()
+		recyclerThree?.adapter = null
+		recyclerThree?.adapter = headerAdapterThree
+		loadRecommendedFeeds(true)
+	}
+
 	private fun loadLastFeeds() {
 		doAsync {
 			val lastFeeds = Database.allLastFeeds.toTypedArray().takeLast(5).reversed()
-			uiThread {
+			onUiThread {
 				if (lastFeeds.notNullAndEmpty()) {
 					recyclerOne?.showView()
-					fastAdapterOne = FastItemAdapter<FeedListRecyclerItem>()
-					val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
-					val moreAdapter = MoreAdapter<MoreRecyclerItem>()
-					recyclerOne?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterOne))
 					fastAdapterOne?.setNewList(mutableListOf<FeedListRecyclerItem>())
-					headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.last_feeds.resStr()!!))
 					lastFeeds.forEachIndexed { i, feed ->
 						fastAdapterOne?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
 					}
-					moreAdapter.add(MoreRecyclerItem().withCallback {
+					moreAdapterOne.setNewList(mutableListOf<MoreRecyclerItem>())
+					moreAdapterOne.add(MoreRecyclerItem().withCallback {
 						fragmentNavigation.pushFragment(FeedListFragment().addObject(Database.allLastFeeds.reversed().toTypedArray(), "feeds"), R.string.last_feeds.resStr())
 					})
 				} else {
@@ -163,17 +192,13 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			val favoriteFeeds = Database.allFavorites.take(5)
 			uiThread {
 				if (favoriteFeeds.notNullAndEmpty()) {
-					recyclerTwo?.showView()
-					fastAdapterTwo = FastItemAdapter<FeedListRecyclerItem>()
-					val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
-					val moreAdapter = MoreAdapter<MoreRecyclerItem>()
-					recyclerTwo?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterTwo))
+					recyclerOne?.showView()
 					fastAdapterTwo?.setNewList(mutableListOf<FeedListRecyclerItem>())
-					headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.favorites.resStr()!!))
 					favoriteFeeds.forEachIndexed { i, feed ->
 						fastAdapterTwo?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
 					}
-					moreAdapter.add(MoreRecyclerItem().withCallback {
+					moreAdapterTwo.setNewList(mutableListOf<MoreRecyclerItem>())
+					moreAdapterTwo.add(MoreRecyclerItem().withCallback {
 						fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
 					})
 				} else {
@@ -193,17 +218,13 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			}
 			uiThread {
 				if (recFeeds.notNullAndEmpty()) {
-					recyclerThree?.showView()
-					fastAdapterThree = FastItemAdapter<FeedListRecyclerItem>()
-					val headerAdapter = HeaderAdapter<HeaderRecyclerItem>()
-					val moreAdapter = MoreAdapter<MoreRecyclerItem>()
-					recyclerThree?.adapter = headerAdapter.wrap(moreAdapter.wrap(fastAdapterThree))
+					recyclerOne?.showView()
 					fastAdapterThree?.setNewList(mutableListOf<FeedListRecyclerItem>())
-					headerAdapter.add(HeaderRecyclerItem().withTitle(R.string.recommendations.resStr()!!))
 					recFeeds?.take(15)?.forEachIndexed { i, feed ->
 						fastAdapterThree?.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
 					}
-					moreAdapter.add(MoreRecyclerItem().withCallback {
+					moreAdapterThree.setNewList(mutableListOf<MoreRecyclerItem>())
+					moreAdapterThree.add(MoreRecyclerItem().withCallback {
 						fragmentNavigation.pushFragment(FeedListFragment().addObject(recFeeds, "feeds").addObject(recRelated, "tags"), R.string.recommendations.resStr())
 					})
 				} else {

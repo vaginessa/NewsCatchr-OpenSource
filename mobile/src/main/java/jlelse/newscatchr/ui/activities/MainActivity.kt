@@ -246,10 +246,10 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 	override fun pushFragment(fragment: Fragment, title: String?) {
 		fragment.addTitle(title ?: fragNavController.currentFrag?.getAddedTitle())
-		fragNavController.push(fragment)
+		fragNavController.pushFragment(fragment)
 	}
 
-	override fun popFragment() = fragNavController.pop()
+	override fun popFragment() = fragNavController.popFragment()
 
 	private fun checkProStatus() {
 		Preferences.supportUser = billingProcessor?.isSubscribed(PRO_SKU) == true
@@ -293,7 +293,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		else -> super.onOptionsItemSelected(item)
 	}
 
-	override fun onBackPressed() = if (fragNavController.currentStack.size > 1) fragNavController.pop() else super.onBackPressed()
+	override fun onBackPressed() = if (fragNavController.currentStack.size > 1) fragNavController.popFragment() else super.onBackPressed()
 
 	override fun onSaveInstanceState(outState: Bundle) {
 		fragNavController.onSaveInstanceState(outState)
