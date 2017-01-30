@@ -50,7 +50,7 @@ class Feedly {
 	}
 
 	fun entries(ids: Array<out String>): Array<Article>? = tryOrNull {
-		if (ids.size > 0) {
+		if (ids.isNotEmpty()) {
 			Bridge.post("$BASE_URL/entries/.mget").body(JSONArray().apply { ids.forEach { put(it) } }).asClassArray(Article::class.java)
 		} else {
 			null

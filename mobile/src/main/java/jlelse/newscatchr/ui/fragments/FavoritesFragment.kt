@@ -127,7 +127,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 				var imported = 0
 				if (opml.notNullOrBlank()) {
 					val feeds = opml?.convertOpmlToFeeds()
-					Database.addFavorites(feeds)
+					feeds?.forEach { Database.addFavorite(it) }
 					imported = feeds?.size ?: 0
 				}
 				uiThread {

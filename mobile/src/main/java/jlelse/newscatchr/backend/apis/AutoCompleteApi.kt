@@ -18,23 +18,19 @@ import android.widget.Filterable
 import com.afollestad.bridge.Bridge
 import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
-import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.readit.R
 
 class AutoCompleteApi {
 
-	fun getSuggestions(query: String?): Array<String>? {
+	fun getSuggestions(query: String?): List<String?>? {
 		if (query.notNullOrBlank()) {
-			Bridge.get("https://duckduckgo.com/ac/?q=%s", query)
+			return Bridge.get("https://duckduckgo.com/ac/?q=%s", query)
 					.connectTimeout(1000)
 					.readTimeout(1000)
 					.asClassArray(ResponseItem::class.java)
-					?.let {
-						if (it.notNullAndEmpty()) return mutableListOf<String>().apply {
-							it.forEach { add(it.phrase ?: "") }
-						}.toTypedArray()
-					}
+					?.map { it.phrase }
+					?.filter { it.notNullOrBlank() } ?: null
 		}
 		return null
 	}

@@ -23,7 +23,7 @@ import org.json.JSONObject
 /**
  * Everything has to be called from async thread
  */
-class Pocket() {
+class Pocket {
 
 	fun add(url: String): String? = tryOrNull {
 		Bridge.post("https://getpocket.com/v3/add")

@@ -8,6 +8,8 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.ui.activities
 
 import android.app.SearchManager
@@ -23,6 +25,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import co.metalab.asyncawait.async
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import com.bumptech.glide.Glide
@@ -180,7 +183,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		}
 	}
 
-	fun buildWearNotification(title: String, content: String) = doAsync {
+	fun buildWearNotification(title: String, content: String) = async {
 		if (googleApiClient?.isConnected ?: false) Wearable.NodeApi.getConnectedNodes(googleApiClient).await().nodes.forEach {
 			Wearable.MessageApi.sendMessage(googleApiClient, it.id, "/newscatchr", (title + "x_x_x" + content).toByteArray()).await()
 		}
