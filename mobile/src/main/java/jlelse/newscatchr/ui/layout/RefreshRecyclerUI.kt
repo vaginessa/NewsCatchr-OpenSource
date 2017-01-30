@@ -5,6 +5,7 @@ import android.view.View
 import com.google.android.flexbox.FlexboxLayout
 import com.mcxiaoke.koi.ext.dpToPx
 import jlelse.newscatchr.extensions.flexboxLayout
+import jlelse.newscatchr.extensions.statefulRecyclerView
 import jlelse.newscatchr.extensions.swipeRefreshLayout
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.readit.R
@@ -16,15 +17,9 @@ class RefreshRecyclerUI : AnkoComponent<BaseFragment> {
 	override fun createView(ui: AnkoContext<BaseFragment>): View = with(ui) {
 		swipeRefreshLayout {
 			id = R.id.refreshrecyclerview_refresh
-			nestedScrollView {
-				lparams(width = matchParent, height = wrapContent)
-				id = R.id.refreshrecyclerview_scrollview
-				recyclerView {
-					lparams(width = matchParent, height = wrapContent)
-					id = R.id.refreshrecyclerview_recycler
-					isNestedScrollingEnabled = false
-					layoutManager = LinearLayoutManager(context)
-				}
+			statefulRecyclerView {
+				id = R.id.refreshrecyclerview_recycler
+				layoutManager = LinearLayoutManager(context)
 			}
 		}
 	}

@@ -20,7 +20,7 @@ import com.google.android.flexbox.FlexboxLayout
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.extensions.*
-import jlelse.newscatchr.ui.layout.BasicRecyclerUI
+import jlelse.newscatchr.ui.layout.RecyclerTagsUI
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
@@ -41,7 +41,7 @@ class FeedListFragment : BaseFragment() {
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
-		fragmentView = fragmentView ?: BasicRecyclerUI().createView(AnkoContext.create(context, this))
+		fragmentView = fragmentView ?: RecyclerTagsUI().createView(AnkoContext.create(context, this))
 		feeds = getAddedObject<Array<Feed>>("feeds")
 		if (feeds.notNullAndEmpty()) {
 			recyclerOne?.adapter = null

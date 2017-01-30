@@ -56,7 +56,6 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 	}
 
 
-
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
 		super.bindView(viewHolder, payloads)
 		val context = viewHolder.itemView.context
@@ -64,9 +63,7 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 			viewHolder.title.showView()
 			viewHolder.title.text = article?.title
 			viewHolder.title.setTypeface(null, if (Database.isSavedReadUrl(article?.url)) Typeface.BOLD_ITALIC else Typeface.BOLD)
-		} else {
-			viewHolder.title.hideView()
-		}
+		} else viewHolder.title.hideView()
 		if ((article?.published?.toInt() ?: 0) != 0) {
 			viewHolder.details.showView()
 			val detailText = DateUtils.getRelativeTimeSpanString(article!!.published)

@@ -14,9 +14,7 @@ package jlelse.newscatchr.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
 import co.metalab.asyncawait.async
@@ -28,10 +26,14 @@ import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.convertOpmlToFeeds
+import jlelse.newscatchr.extensions.notNullAndEmpty
+import jlelse.newscatchr.extensions.notNullOrBlank
+import jlelse.newscatchr.extensions.sendBroadcast
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
+import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
@@ -41,22 +43,17 @@ import java.util.*
 
 class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 	private var fragmentView: View? = null
-	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
-	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.refreshrecyclerview_scrollview) }
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var feeds: MutableList<Feed>? = null
-
-	override val saveStateScrollViews: Array<NestedScrollView?>?
-		get() = arrayOf(scrollView)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
 		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
 		ItemTouchHelper(SimpleDragCallback(this)).attachToRecyclerView(recyclerOne)
-		recyclerOne?.adapter = fastAdapter
-		fastAdapter.withSavedInstanceState(savedInstanceState)
+		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
 		refreshOne?.setOnRefreshListener {
 			load()
 		}
@@ -71,7 +68,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 			feeds?.forEach {
 				fastAdapter.add(FeedListRecyclerItem().withFeed(it).withFragment(this@FavoritesFragment).withAdapter(fastAdapter))
 			}
-			if (first) scrollView?.restorePosition(this)
+			if (first) recyclerOne?.restorePosition()
 		} else {
 			fastAdapter.clear()
 		}
@@ -142,10 +139,5 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 			if (data != null && data.data != null) opml = await { activity.contentResolver.openInputStream(data.data).readString() }
 			importOpml(opml)
 		}
-	}
-
-	override fun onSaveInstanceState(outState: Bundle?) {
-		fastAdapter.saveInstanceState(outState)
-		super.onSaveInstanceState(outState)
 	}
 }

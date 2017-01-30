@@ -16,8 +16,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.RecyclerView
 import android.view.*
 import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
@@ -35,6 +33,7 @@ import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
 import jlelse.newscatchr.ui.views.ProgressDialog
+import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
@@ -44,19 +43,15 @@ import org.jetbrains.anko.support.v4.onUiThread
 
 class FeedFragment : BaseFragment() {
 	private var fragmentView: View? = null
-	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private val fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
 	private val footerAdapter = FooterAdapter<ProgressItem>()
-	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.refreshrecyclerview_scrollview) }
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var articles = mutableListOf<Article>()
 	private var feed: Feed? = null
 	private var favorite = false
 	private var feedlyLoader: FeedlyLoader? = null
 	private var editMenuItem: MenuItem? = null
-
-	override val saveStateScrollViews: Array<NestedScrollView?>?
-		get() = arrayOf(scrollView)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
@@ -65,8 +60,7 @@ class FeedFragment : BaseFragment() {
 		refreshOne?.setOnRefreshListener {
 			loadArticles()
 		}
-		recyclerOne?.adapter = footerAdapter.wrap(fastAdapter)
-		fastAdapter.withSavedInstanceState(savedInstanceState)
+		if (recyclerOne?.adapter == null) recyclerOne?.adapter = footerAdapter.wrap(fastAdapter)
 		feed = getAddedObject<Feed>("feed")
 		favorite = Database.isSavedFavorite(feed?.url())
 		feedlyLoader = FeedlyLoader().apply {
@@ -114,7 +108,7 @@ class FeedFragment : BaseFragment() {
 					}
 				}
 			})
-			if (cache) scrollView?.restorePosition(this@FeedFragment)
+			if (cache) recyclerOne?.restorePosition()
 		} else {
 			context.nothingFound()
 			fragmentNavigation.popFragment()
@@ -224,10 +218,5 @@ class FeedFragment : BaseFragment() {
 				super.onOptionsItemSelected(item)
 			}
 		}
-	}
-
-	override fun onSaveInstanceState(outState: Bundle?) {
-		fastAdapter.saveInstanceState(outState)
-		super.onSaveInstanceState(outState)
 	}
 }

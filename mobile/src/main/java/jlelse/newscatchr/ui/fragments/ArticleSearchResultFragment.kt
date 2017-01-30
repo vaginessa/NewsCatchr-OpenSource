@@ -11,8 +11,6 @@
 package jlelse.newscatchr.ui.fragments
 
 import android.os.Bundle
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,44 +18,32 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.getAddedObject
 import jlelse.newscatchr.extensions.notNullAndEmpty
-import jlelse.newscatchr.extensions.restorePosition
 import jlelse.newscatchr.ui.layout.BasicRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
+import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
-import java.util.*
 
 class ArticleSearchResultFragment : BaseFragment() {
 	private var fragmentView: View? = null
-	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.basicrecyclerview_recycler) }
+	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.basicrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
-	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.basicrecyclerview_scrollview) }
 	private var articles: List<Article>? = null
-
-	override val saveStateScrollViews: Array<NestedScrollView?>?
-		get() = arrayOf(scrollView)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
 		fragmentView = fragmentView ?: BasicRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
 		articles = getAddedObject<List<Article>>("articles")
+		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
 		if (articles.notNullAndEmpty()) {
-			recyclerOne?.adapter = null
-			recyclerOne?.adapter = fastAdapter
-			fastAdapter.withSavedInstanceState(savedInstanceState)
 			fastAdapter.clear()
 			articles?.forEach {
 				fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@ArticleSearchResultFragment))
 			}
-			scrollView?.restorePosition(this)
+			recyclerOne?.restorePosition()
 		}
 		return fragmentView
-	}
-
-	override fun onSaveInstanceState(outState: Bundle?) {
-		super.onSaveInstanceState(outState)
-		fastAdapter.saveInstanceState(outState)
 	}
 }
