@@ -8,18 +8,22 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.ui.fragments
 
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.widget.LinearLayoutManager
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.RecyclerView
 import android.view.*
+import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mcxiaoke.koi.ext.find
+import com.mikepenz.fastadapter.adapters.FooterAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
+import com.mikepenz.fastadapter_extensions.items.ProgressItem
 import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
@@ -28,37 +32,41 @@ import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.loaders.FeedlyLoader
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
+import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.find
+import org.jetbrains.anko.support.v4.onUiThread
 
-class FeedFragment() : BaseFragment() {
-	private var recyclerOne: RecyclerView? = null
-	private var refreshOne: SwipeRefreshLayout? = null
-	private var fastAdapter: FastItemAdapter<ArticleListRecyclerItem>? = null
-	private var articles: MutableList<Article>? = null
-	private var savedInstanceState: Bundle? = null
+class FeedFragment : BaseFragment() {
+	private var fragmentView: View? = null
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private val fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+	private val footerAdapter = FooterAdapter<ProgressItem>()
+	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.refreshrecyclerview_scrollview) }
+	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
+	private var articles = mutableListOf<Article>()
 	private var feed: Feed? = null
 	private var favorite = false
 	private var feedlyLoader: FeedlyLoader? = null
 	private var editMenuItem: MenuItem? = null
 
+	override val saveStateScrollViews: Array<NestedScrollView?>?
+		get() = arrayOf(scrollView)
+
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
-		this.savedInstanceState = savedInstanceState
-		val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
+		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
-		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-			layoutManager = LinearLayoutManager(context)
+		refreshOne?.setOnRefreshListener {
+			loadArticles()
 		}
-		refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
-			setOnRefreshListener {
-				loadArticles(false)
-			}
-		}
+		recyclerOne?.adapter = footerAdapter.wrap(fastAdapter)
+		fastAdapter.withSavedInstanceState(savedInstanceState)
 		feed = getAddedObject<Feed>("feed")
 		favorite = Database.isSavedFavorite(feed?.url())
 		feedlyLoader = FeedlyLoader().apply {
@@ -74,47 +82,44 @@ class FeedFragment() : BaseFragment() {
 		Tracking.track(type = Tracking.TYPE.FEED, url = feed?.url())
 		Database.addLastFeed(feed)
 		sendBroadcast(Intent("last_feed_updated"))
-		return view
+		return fragmentView
 	}
 
-	private fun loadArticles(cache: Boolean) {
+	private fun loadArticles(cache: Boolean = false) = async {
 		refreshOne?.showIndicator()
-		doAsync {
-			if (articles == null || !cache) {
-				articles = feedlyLoader?.items(cache)?.toMutableList()
-				addString(feedlyLoader?.continuation, "continuation")
+		if (articles.isEmpty() || !cache) await {
+			feedlyLoader?.items(cache)?.let {
+				articles.clear()
+				articles.addAll(it)
 			}
-			uiThread {
-				if (articles.notNullAndEmpty()) {
-					recyclerOne?.clearOnScrollListeners()
-					fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
-					recyclerOne?.adapter = fastAdapter
-					fastAdapter?.setNewList(mutableListOf<ArticleListRecyclerItem>())
-					articles?.forEach {
-						fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment))
-					}
-					fastAdapter?.withSavedInstanceState(savedInstanceState)
-					recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener() {
-						override fun onLoadMore(currentPage: Int) {
-							doAsync {
-								val newArticles = feedlyLoader?.moreItems()
-								addString(feedlyLoader?.continuation, "continuation")
-								if (newArticles != null) articles?.addAll(newArticles)
-								uiThread {
-									newArticles?.forEach {
-										fastAdapter?.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment))
-									}
-								}
+			addString(feedlyLoader?.continuation, "continuation")
+		}
+		if (articles.notNullAndEmpty()) {
+			recyclerOne?.clearOnScrollListeners()
+			fastAdapter.clear()
+			fastAdapter.add(mutableListOf<ArticleListRecyclerItem>().apply {
+				articles.forEach { add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment)) }
+			})
+			recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
+				override fun onLoadMore(currentPage: Int) {
+					doAsync {
+						val newArticles = feedlyLoader?.moreItems()
+						addString(feedlyLoader?.continuation, "continuation")
+						if (newArticles != null) articles.addAll(newArticles)
+						onUiThread {
+							newArticles?.forEach {
+								fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment))
 							}
 						}
-					})
-				} else {
-					context.nothingFound()
-					fragmentNavigation.popFragment()
+					}
 				}
-				refreshOne?.hideIndicator()
-			}
+			})
+			if (cache) scrollView?.restorePosition(this@FeedFragment)
+		} else {
+			context.nothingFound()
+			fragmentNavigation.popFragment()
 		}
+		refreshOne?.hideIndicator()
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -130,11 +135,8 @@ class FeedFragment() : BaseFragment() {
 			R.id.favorite -> {
 				favorite = !favorite
 				feed?.saved = favorite
-				if (favorite) {
-					Database.addFavorite(feed)
-				} else {
-					Database.deleteFavorite(feed?.url())
-				}
+				if (favorite) Database.addFavorite(feed)
+				else Database.deleteFavorite(feed?.url())
 				item.icon = (if (favorite) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, Color.WHITE)
 				editMenuItem?.isVisible = favorite
 				true
@@ -154,8 +156,8 @@ class FeedFragment() : BaseFragment() {
 									else -> FeedlyLoader.Ranked.NEWEST
 								}
 							}
-							articles = null
-							loadArticles(true)
+							articles.clear()
+							loadArticles()
 							addString(when (feedlyLoader?.ranked) {
 								FeedlyLoader.Ranked.OLDEST -> "oldest"
 								else -> "newest"
@@ -172,21 +174,18 @@ class FeedFragment() : BaseFragment() {
 				MaterialDialog.Builder(context)
 						.title(android.R.string.search_go)
 						.input(null, null, { _, query ->
-							progressDialog.show()
-							doAsync {
-								val foundArticles = FeedlyLoader().apply {
-									type = FeedlyLoader.FeedTypes.SEARCH
-									feedUrl = "feed/" + feed?.url()
-									this.query = query.toString()
-								}.items(false)
-								uiThread {
-									progressDialog.dismiss()
-									if (foundArticles.notNullAndEmpty()) {
-										fragmentNavigation.pushFragment(ArticleSearchResultFragment().addObject(foundArticles?.toList(), "articles"), "Results for " + query.toString())
-									} else {
-										context.nothingFound()
-									}
+							async {
+								progressDialog.show()
+								val foundArticles = await {
+									FeedlyLoader().apply {
+										type = FeedlyLoader.FeedTypes.SEARCH
+										feedUrl = "feed/" + feed?.url()
+										this.query = query.toString()
+									}.items(false)
 								}
+								progressDialog.dismiss()
+								if (foundArticles.notNullAndEmpty()) fragmentNavigation.pushFragment(ArticleSearchResultFragment().addObject(foundArticles?.toList(), "articles"), "Results for " + query.toString())
+								else context.nothingFound()
 							}
 						})
 						.negativeText(android.R.string.cancel)
@@ -195,7 +194,7 @@ class FeedFragment() : BaseFragment() {
 				true
 			}
 			R.id.refresh -> {
-				loadArticles(false)
+				loadArticles()
 				true
 			}
 			R.id.edit_title -> {
@@ -228,7 +227,7 @@ class FeedFragment() : BaseFragment() {
 	}
 
 	override fun onSaveInstanceState(outState: Bundle?) {
-		fastAdapter?.saveInstanceState(outState)
+		fastAdapter.saveInstanceState(outState)
 		super.onSaveInstanceState(outState)
 	}
 }

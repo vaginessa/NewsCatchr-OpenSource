@@ -21,6 +21,7 @@ import android.view.View
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.readit.R
 import java.util.*
@@ -37,11 +38,9 @@ fun View.showView() {
 	visibility = View.VISIBLE
 }
 
-fun ImageView.loadImage(url: String?) {
+fun ImageView.loadImage(url: String?, crop: Boolean = true) {
 	try {
-		Glide.with(context)
-				.load(url)
-				.into(this)
+		Glide.with(context).load(url).into(this)
 	} catch (e: Exception) {
 		e.printStackTrace()
 	}

@@ -8,17 +8,19 @@
  * You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.*
+import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mcxiaoke.koi.ext.find
 import com.mcxiaoke.koi.ext.readString
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
@@ -26,64 +28,59 @@ import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.extensions.convertOpmlToFeeds
-import jlelse.newscatchr.extensions.notNullAndEmpty
-import jlelse.newscatchr.extensions.notNullOrBlank
-import jlelse.newscatchr.extensions.sendBroadcast
+import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
+import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
-import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.find
 import org.jetbrains.anko.support.v4.onUiThread
-import org.jetbrains.anko.uiThread
 import java.util.*
 
 class FavoritesFragment : BaseFragment(), ItemTouchCallback {
-	private var fastAdapter: FastItemAdapter<FeedListRecyclerItem>? = null
+	private var fragmentView: View? = null
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private var fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
+	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.refreshrecyclerview_scrollview) }
+	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var feeds: MutableList<Feed>? = null
-	private var savedInstanceState: Bundle? = null
-	private var recyclerOne: RecyclerView? = null
-	private var refreshOne: SwipeRefreshLayout? = null
+
+	override val saveStateScrollViews: Array<NestedScrollView?>?
+		get() = arrayOf(scrollView)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
-		this.savedInstanceState = savedInstanceState
-		val view = inflater?.inflate(R.layout.refreshrecycler, container, false)
+		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
-		recyclerOne = view?.find<RecyclerView>(R.id.recyclerOne)?.apply {
-			layoutManager = LinearLayoutManager(context)
-			ItemTouchHelper(SimpleDragCallback(this@FavoritesFragment)).attachToRecyclerView(this)
+		ItemTouchHelper(SimpleDragCallback(this)).attachToRecyclerView(recyclerOne)
+		recyclerOne?.adapter = fastAdapter
+		fastAdapter.withSavedInstanceState(savedInstanceState)
+		refreshOne?.setOnRefreshListener {
+			load()
 		}
-		refreshOne = view?.find<SwipeRefreshLayout>(R.id.refreshOne)?.apply {
-			setOnRefreshListener {
-				load()
-			}
-		}
-		load()
-		return view
+		load(true)
+		return fragmentView
 	}
 
-	private fun load() {
-		onUiThread {
-			refreshOne?.isRefreshing = true
-			feeds = Database.allFavorites.toMutableList()
-			if (feeds.notNullAndEmpty()) {
-				fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
-				recyclerOne?.adapter = fastAdapter
-				fastAdapter?.setNewList(mutableListOf<FeedListRecyclerItem>())
-				feeds?.forEach {
-					fastAdapter?.add(FeedListRecyclerItem().withFeed(it).withFragment(this@FavoritesFragment).withAdapter(fastAdapter!!))
-				}
-				fastAdapter?.withSavedInstanceState(savedInstanceState)
+	private fun load(first: Boolean = false) {
+		feeds = Database.allFavorites.toMutableList()
+		if (feeds.notNullAndEmpty()) {
+			fastAdapter.clear()
+			feeds?.forEach {
+				fastAdapter.add(FeedListRecyclerItem().withFeed(it).withFragment(this@FavoritesFragment).withAdapter(fastAdapter))
 			}
-			refreshOne?.isRefreshing = false
+			if (first) scrollView?.restorePosition(this)
+		} else {
+			fastAdapter.clear()
 		}
+		refreshOne?.hideIndicator()
 	}
 
 	override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
-		Collections.swap(fastAdapter?.adapterItems, oldPosition, newPosition)
-		fastAdapter?.notifyAdapterItemMoved(oldPosition, newPosition)
+		Collections.swap(fastAdapter.adapterItems, oldPosition, newPosition)
+		fastAdapter.notifyAdapterItemMoved(oldPosition, newPosition)
 		Collections.swap(feeds, oldPosition, newPosition)
 		if (feeds != null) Database.allFavorites = feeds!!.toTypedArray()
 		sendBroadcast(Intent("favorites_updated"))
@@ -100,7 +97,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		when (item?.itemId) {
 			R.id.backup -> {
 				backupRestore(activity as MainActivity, {
-					load()
+					onUiThread { load() }
 				})
 				return true
 			}
@@ -121,41 +118,34 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		startActivityForResult(intent, 555)
 	}
 
-	private fun importOpml(opml: String?) {
-		onUiThread {
-			doAsync {
-				var imported = 0
-				if (opml.notNullOrBlank()) {
-					val feeds = opml?.convertOpmlToFeeds()
-					feeds?.forEach { Database.addFavorite(it) }
-					imported = feeds?.size ?: 0
-				}
-				uiThread {
-					sendBroadcast(Intent("favorites_updated"))
-					MaterialDialog.Builder(context)
-							.title(R.string.import_opml)
-							.content(if (imported != 0) R.string.suc_import else R.string.import_failed)
-							.positiveText(android.R.string.ok)
-							.show()
-					load()
-				}
-			}
+	private fun importOpml(opml: String?) = async {
+		var imported = 0
+		var feeds: Array<Feed>?
+		if (opml.notNullOrBlank()) await {
+			feeds = opml?.convertOpmlToFeeds()
+			feeds?.forEach { Database.addFavorite(it) }
+			imported = feeds?.size ?: 0
 		}
+		sendBroadcast(Intent("favorites_updated"))
+		MaterialDialog.Builder(context)
+				.title(R.string.import_opml)
+				.content(if (imported != 0) R.string.suc_import else R.string.import_failed)
+				.positiveText(android.R.string.ok)
+				.show()
+		load()
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) {
-			doAsync {
-				var opml: String? = null
-				if (data != null && data.data != null) opml = activity.contentResolver.openInputStream(data.data).readString()
-				importOpml(opml)
-			}
+		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) async {
+			var opml: String? = null
+			if (data != null && data.data != null) opml = await { activity.contentResolver.openInputStream(data.data).readString() }
+			importOpml(opml)
 		}
 	}
 
 	override fun onSaveInstanceState(outState: Bundle?) {
-		fastAdapter?.saveInstanceState(outState)
+		fastAdapter.saveInstanceState(outState)
 		super.onSaveInstanceState(outState)
 	}
 }

@@ -47,7 +47,7 @@ class ArticleSearchResultFragment : BaseFragment() {
 			recyclerOne?.adapter = null
 			recyclerOne?.adapter = fastAdapter
 			fastAdapter.withSavedInstanceState(savedInstanceState)
-			fastAdapter.setNewList(ArrayList<ArticleListRecyclerItem>())
+			fastAdapter.clear()
 			articles?.forEach {
 				fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@ArticleSearchResultFragment))
 			}

@@ -109,7 +109,27 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		super.onCreateView(inflater, container, savedInstanceState)
 		setHasOptionsMenu(true)
 		fragmentView = fragmentView ?: HomeFragmentUI().createView(AnkoContext.create(context, this))
-		init()
+		tagsTitle?.apply {
+			hideView()
+			text = R.string.rec_topics.resStr()
+		}
+		refresh?.setOnRefreshListener {
+			loadLastFeeds()
+			loadFavoriteFeeds()
+			loadRecommendedFeeds()
+		}
+		recyclerOne?.showView()
+		recyclerOne?.adapter = null
+		recyclerOne?.adapter = headerAdapterOne
+		loadLastFeeds(true)
+		recyclerTwo?.showView()
+		recyclerTwo?.adapter = null
+		recyclerTwo?.adapter = headerAdapterTwo
+		loadFavoriteFeeds(true)
+		recyclerThree?.showView()
+		recyclerThree?.adapter = null
+		recyclerThree?.adapter = headerAdapterThree
+		loadRecommendedFeeds(true)
 		return fragmentView
 	}
 
@@ -132,7 +152,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 					})
 					.itemsCallback { _, _, i, _ ->
 						Preferences.recommendationsLanguage = availableLocales[i].language
-						loadRecommendedFeeds(false)
+						loadRecommendedFeeds()
 					}
 					.negativeText(android.R.string.cancel)
 					.show()
@@ -141,67 +161,43 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		else -> super.onOptionsItemSelected(item)
 	}
 
-	private fun init() {
-		tagsTitle?.apply {
-			hideView()
-			text = R.string.rec_topics.resStr()
-		}
-		refresh?.apply {
-			setOnRefreshListener {
-				loadRecommendedFeeds(false)
-			}
-		}
-		recyclerOne?.showView()
-		recyclerOne?.adapter = null
-		recyclerOne?.adapter = headerAdapterOne
-		loadLastFeeds()
-		recyclerTwo?.showView()
-		recyclerTwo?.adapter = null
-		recyclerTwo?.adapter = headerAdapterTwo
-		loadFavoriteFeeds()
-		recyclerThree?.showView()
-		recyclerThree?.adapter = null
-		recyclerThree?.adapter = headerAdapterThree
-		loadRecommendedFeeds(true)
-	}
-
-	private fun loadLastFeeds() = async {
+	private fun loadLastFeeds(first: Boolean = false) = async {
 		val lastFeeds = await { Database.allLastFeeds.toTypedArray().takeLast(5).reversed() }
 		if (lastFeeds.notNullAndEmpty()) {
 			recyclerOne?.showView()
-			fastAdapterOne.setNewList(mutableListOf<FeedListRecyclerItem>())
+			fastAdapterOne.clear()
 			lastFeeds.forEachIndexed { i, feed ->
 				fastAdapterOne.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
 			}
-			moreAdapterOne.setNewList(mutableListOf<MoreRecyclerItem>())
+			moreAdapterOne.clear()
 			moreAdapterOne.add(MoreRecyclerItem().withCallback {
 				fragmentNavigation.pushFragment(FeedListFragment().addObject(Database.allLastFeeds.reversed().toTypedArray(), "feeds"), R.string.last_feeds.resStr())
 			})
 		} else {
 			recyclerOne?.hideView()
 		}
-		restoreScrollState()
+		if (first) restoreScrollState()
 	}
 
-	private fun loadFavoriteFeeds() = async {
+	private fun loadFavoriteFeeds(first: Boolean = false) = async {
 		val favoriteFeeds = await { Database.allFavorites.take(5) }
 		if (favoriteFeeds.notNullAndEmpty()) {
 			recyclerOne?.showView()
-			fastAdapterTwo.setNewList(mutableListOf<FeedListRecyclerItem>())
+			fastAdapterTwo.clear()
 			favoriteFeeds.forEachIndexed { i, feed ->
 				fastAdapterTwo.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
 			}
-			moreAdapterTwo.setNewList(mutableListOf<MoreRecyclerItem>())
+			moreAdapterTwo.clear()
 			moreAdapterTwo.add(MoreRecyclerItem().withCallback {
 				fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
 			})
 		} else {
 			recyclerTwo?.hideView()
 		}
-		restoreScrollState()
+		if (first) restoreScrollState()
 	}
 
-	private fun loadRecommendedFeeds(cache: Boolean) = async {
+	private fun loadRecommendedFeeds(cache: Boolean = false) = async {
 		refresh?.showIndicator()
 		await {
 			if (recFeeds == null || !cache) Feedly().recommendedFeeds(Preferences.recommendationsLanguage, cache) { feeds, related ->
@@ -211,11 +207,11 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		}
 		if (recFeeds.notNullAndEmpty()) {
 			recyclerOne?.showView()
-			fastAdapterThree.setNewList(mutableListOf<FeedListRecyclerItem>())
+			fastAdapterThree.clear()
 			recFeeds?.take(15)?.forEachIndexed { i, feed ->
 				fastAdapterThree.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
 			}
-			moreAdapterThree.setNewList(mutableListOf<MoreRecyclerItem>())
+			moreAdapterThree.clear()
 			moreAdapterThree.add(MoreRecyclerItem().withCallback {
 				fragmentNavigation.pushFragment(FeedListFragment().addObject(recFeeds, "feeds").addObject(recRelated, "tags"), R.string.recommendations.resStr())
 			})
@@ -234,12 +230,10 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			tagsBox?.hideView()
 		}
 		refresh?.hideIndicator()
-		restoreScrollState()
+		if (cache) restoreScrollState()
 	}
 
-	private fun restoreScrollState() {
-		scrollView?.restorePosition(this)
-	}
+	private fun restoreScrollState() = scrollView?.restorePosition(this)
 
 	override fun onDestroy() {
 		tryOrNull { activity.unregisterReceiver(lastFeedReceiver) }

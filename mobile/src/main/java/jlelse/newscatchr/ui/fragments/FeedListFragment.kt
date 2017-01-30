@@ -47,10 +47,12 @@ class FeedListFragment : BaseFragment() {
 			recyclerOne?.adapter = null
 			recyclerOne?.adapter = fastAdapter
 			fastAdapter.withSavedInstanceState(savedInstanceState)
-			fastAdapter.setNewList(mutableListOf<FeedListRecyclerItem>())
-			feeds?.forEachIndexed { i, feed ->
-				fastAdapter.add(FeedListRecyclerItem().withFeed(feed).withIsLast(i == feeds?.lastIndex).withFragment(this@FeedListFragment).withAdapter(fastAdapter))
-			}
+			fastAdapter.clear()
+			fastAdapter.add(mutableListOf<FeedListRecyclerItem>().apply {
+				feeds?.forEachIndexed { i, feed ->
+					add(FeedListRecyclerItem().withFeed(feed).withIsLast(i == feeds?.lastIndex).withFragment(this@FeedListFragment).withAdapter(fastAdapter))
+				}
+			})
 			scrollView?.restorePosition(this)
 		}
 		tags = getAddedObject<Array<String>>("tags")

@@ -55,6 +55,8 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 		return R.layout.articlelistrecycleritem
 	}
 
+
+
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
 		super.bindView(viewHolder, payloads)
 		val context = viewHolder.itemView.context

@@ -38,24 +38,24 @@ class BookmarksFragment : BaseFragment() {
 	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
 	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.refreshrecyclerview_scrollview) }
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
-	private var savedInstanceState: Bundle? = null
 
 	override val saveStateScrollViews: Array<NestedScrollView?>?
 		get() = arrayOf(scrollView)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
-		this.savedInstanceState = savedInstanceState
 		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
 		refreshOne?.setOnRefreshListener {
-			loadArticles(false)
+			loadArticles()
 		}
+		recyclerOne?.adapter = fastAdapter
+		fastAdapter.withSavedInstanceState(savedInstanceState)
 		loadArticles(true)
 		return fragmentView
 	}
 
-	fun loadArticles(cache: Boolean) = async {
+	fun loadArticles(cache: Boolean = false) = async {
 		refreshOne?.showIndicator()
 		val articles = await {
 			if (!cache && Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
@@ -64,14 +64,11 @@ class BookmarksFragment : BaseFragment() {
 			Database.allBookmarks
 		}
 		if (articles.notNullAndEmpty()) {
-			recyclerOne?.adapter = null
-			recyclerOne?.adapter = fastAdapter
-			fastAdapter.withSavedInstanceState(savedInstanceState)
-			fastAdapter.setNewList(mutableListOf<ArticleListRecyclerItem>())
+			fastAdapter.clear()
 			articles.forEach {
 				fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@BookmarksFragment))
 			}
-			scrollView?.restorePosition(this@BookmarksFragment)
+			if (cache) scrollView?.restorePosition(this@BookmarksFragment)
 		} else {
 			fastAdapter.clear()
 		}
@@ -86,7 +83,7 @@ class BookmarksFragment : BaseFragment() {
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 		when (item?.itemId) {
 			R.id.refresh -> {
-				loadArticles(false)
+				loadArticles()
 				return true
 			}
 			else -> {

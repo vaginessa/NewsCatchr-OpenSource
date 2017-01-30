@@ -22,7 +22,6 @@ import jlelse.newscatchr.backend.helpers.scheduleSync
 import jlelse.newscatchr.extensions.setLocale
 import jlelse.newscatchr.extensions.setNightMode
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
-import org.jetbrains.anko.doAsync
 
 /**
  * Application class
@@ -35,16 +34,14 @@ class NewsCatchr : Application() {
 		Paper.init(this)
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 		setNightMode()
-		doAsync {
-			JobManager.create(this@NewsCatchr).addJobCreator { tag ->
-				when (tag) {
-					SyncJob.TAG -> SyncJob()
-					else -> null
-				}
+		JobManager.create(this@NewsCatchr).addJobCreator { tag ->
+			when (tag) {
+				SyncJob.TAG -> SyncJob()
+				else -> null
 			}
-			if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
-			Paper.book("hosts").destroy()
 		}
+		if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
+		Paper.book("hosts").destroy()
 	}
 }
 
