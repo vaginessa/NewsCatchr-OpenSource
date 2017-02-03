@@ -43,6 +43,12 @@ android {
     }
 }
 
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
 dependencies {
     compile('com.mikepenz:fastadapter:2.1.6@aar') {
         transitive = true
@@ -80,7 +86,7 @@ dependencies {
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.ext.KOTLIN"
     compile 'com.mcxiaoke.koi:core:0.5.3@aar'
-    compile 'co.metalab.asyncawait:asyncawait:0.9'
+    // compile 'co.metalab.asyncawait:asyncawait:0.9' temp disabled due to Kotlin API change
     // Anko
     compile "org.jetbrains.anko:anko-sdk15:$rootProject.ext.ANKO"
     compile "org.jetbrains.anko:anko-support-v4:$rootProject.ext.ANKO"

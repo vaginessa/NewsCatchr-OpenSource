@@ -6,7 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0-beta3'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.0-beta-22'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.0-beta-38'
         classpath 'com.google.gms:google-services:3.0.0'
     }
 }
@@ -21,9 +21,9 @@ ext {
     VERSION_CODE = 52
     TARGET_SDK = 25
     BUILD_TOOLS = "25.0.2"
-    SUPPORT_LIBS = "25.1.0"
+    SUPPORT_LIBS = "25.1.1"
     PLAY_SERVICES = "10.0.1"
-    KOTLIN = "1.1.0-beta-22"
+    KOTLIN = "1.1.0-beta-38"
     ANKO = "0.9"
 }
 
