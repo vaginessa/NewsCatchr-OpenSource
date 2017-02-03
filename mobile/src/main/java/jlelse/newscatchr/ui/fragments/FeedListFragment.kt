@@ -20,8 +20,11 @@ import com.google.android.flexbox.FlexboxLayout
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.extensions.*
-import jlelse.newscatchr.ui.layout.RecyclerTagsUI
+import jlelse.newscatchr.ui.layout.BasicRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.NCAdapter
+import jlelse.newscatchr.ui.recycleritems.TagsRecyclerItem
+import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
@@ -31,45 +34,32 @@ class FeedListFragment : BaseFragment() {
 	private var fragmentView: View? = null
 	private var feeds: Array<Feed>? = null
 	private var tags: Array<String>? = null
-	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.basicrecyclerview_recycler) }
+	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.basicrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
-	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.basicrecyclerview_scrollview) }
-	private val tagsBox: FlexboxLayout? by lazy { fragmentView?.find<FlexboxLayout>(R.id.basicrecyclerview_tags) }
-
-	override val saveStateScrollViews: Array<NestedScrollView?>?
-		get() = arrayOf(scrollView)
+	private var tagsAdapter = NCAdapter<TagsRecyclerItem>(order = 100)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
-		fragmentView = fragmentView ?: RecyclerTagsUI().createView(AnkoContext.create(context, this))
+		fragmentView = fragmentView ?: BasicRecyclerUI().createView(AnkoContext.create(context, this))
+		if (recyclerOne?.adapter == null) {
+			tagsAdapter.wrap(fastAdapter)
+			recyclerOne?.adapter = tagsAdapter
+		}
 		feeds = getAddedObject<Array<Feed>>("feeds")
+		fastAdapter.clear()
 		if (feeds.notNullAndEmpty()) {
-			recyclerOne?.adapter = null
-			recyclerOne?.adapter = fastAdapter
-			fastAdapter.withSavedInstanceState(savedInstanceState)
-			fastAdapter.clear()
 			fastAdapter.add(mutableListOf<FeedListRecyclerItem>().apply {
 				feeds?.forEachIndexed { i, feed ->
 					add(FeedListRecyclerItem().withFeed(feed).withIsLast(i == feeds?.lastIndex).withFragment(this@FeedListFragment).withAdapter(fastAdapter))
 				}
 			})
-			scrollView?.restorePosition(this)
 		}
 		tags = getAddedObject<Array<String>>("tags")
+		tagsAdapter.clear()
 		if (tags.notNullAndEmpty()) {
-			tagsBox?.showView()
-			tagsBox?.removeAllViews()
-			tags?.forEach {
-				tagsBox?.addTagView(this, it)
-			}
-		} else {
-			tagsBox?.hideView()
+			tagsAdapter.add(TagsRecyclerItem().withTags(this, tags!!))
 		}
 		return fragmentView
 	}
 
-	override fun onSaveInstanceState(outState: Bundle?) {
-		super.onSaveInstanceState(outState)
-		fastAdapter.saveInstanceState(outState)
-	}
 }

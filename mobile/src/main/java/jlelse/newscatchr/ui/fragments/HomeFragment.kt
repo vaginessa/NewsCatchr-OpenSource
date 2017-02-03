@@ -37,8 +37,8 @@ import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.layout.HomeFragmentUI
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.HeaderRecyclerItem
-import jlelse.newscatchr.ui.recycleritems.MoreAdapter
 import jlelse.newscatchr.ui.recycleritems.MoreRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.NCAdapter
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
@@ -55,13 +55,13 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	private val recyclerThree: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerthree) }
 	private val fastAdapterOne = FastItemAdapter<FeedListRecyclerItem>()
 	private val headerAdapterOne = HeaderAdapter<HeaderRecyclerItem>()
-	private val moreAdapterOne = MoreAdapter<MoreRecyclerItem>()
+	private val moreAdapterOne = NCAdapter<MoreRecyclerItem>(order = 1000)
 	private val fastAdapterTwo = FastItemAdapter<FeedListRecyclerItem>()
 	private val headerAdapterTwo = HeaderAdapter<HeaderRecyclerItem>()
-	private val moreAdapterTwo = MoreAdapter<MoreRecyclerItem>()
+	private val moreAdapterTwo = NCAdapter<MoreRecyclerItem>(order = 1000)
 	private val fastAdapterThree = FastItemAdapter<FeedListRecyclerItem>()
 	private val headerAdapterThree = HeaderAdapter<HeaderRecyclerItem>()
-	private val moreAdapterThree = MoreAdapter<MoreRecyclerItem>()
+	private val moreAdapterThree = NCAdapter<MoreRecyclerItem>(order = 1000)
 	private val tagsTitle: TextView? by lazy { fragmentView?.find<TextView>(R.id.homefragment_tagstitle) }
 	private val tagsBox: FlexboxLayout? by lazy { fragmentView?.find<FlexboxLayout>(R.id.homefragment_tagsbox) }
 	private val refresh: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.homefragment_refresh) }

@@ -16,6 +16,7 @@
 	<item name="library_item_id" type="id"/>
 	<item name="header_item_id" type="id"/>
 	<item name="more_item_id" type="id"/>
+	<item name="tags_item_id" type="id"/>
 
 	<!-- Layout ids -->
 	<item name="homefragment_refresh" type="id"/>
