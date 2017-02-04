@@ -17,8 +17,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.mcxiaoke.koi.ext.find
-import com.mcxiaoke.koi.ext.onClick
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
@@ -28,6 +26,8 @@ import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.fragments.FeedFragment
 import jlelse.readit.R
+import org.jetbrains.anko.find
+import org.jetbrains.anko.onClick
 
 @Keep
 class FeedListRecyclerItem : AbstractItem<FeedListRecyclerItem, FeedListRecyclerItem.ViewHolder>() {

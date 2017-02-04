@@ -24,7 +24,7 @@ ext {
     SUPPORT_LIBS = "25.1.1"
     PLAY_SERVICES = "10.0.1"
     KOTLIN = "1.1.0-beta-38"
-    ANKO = "0.9"
+    ANKO = "0.9.1"
 }
 
 allprojects {
@@ -34,5 +34,6 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
+        maven { url 'https://dl.bintray.com/jetbrains/anko' }
     }
 }

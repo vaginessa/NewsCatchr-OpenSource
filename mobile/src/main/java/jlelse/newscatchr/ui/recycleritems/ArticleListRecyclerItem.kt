@@ -18,8 +18,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
-import com.mcxiaoke.koi.ext.find
-import com.mcxiaoke.koi.ext.onClick
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.backend.Article
@@ -29,6 +27,8 @@ import jlelse.newscatchr.ui.fragments.ArticleFragment
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
+import org.jetbrains.anko.find
+import org.jetbrains.anko.onClick
 
 @Keep
 class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleListRecyclerItem.ViewHolder>() {

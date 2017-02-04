@@ -19,7 +19,7 @@ import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.mcxiaoke.koi.ext.dpToPx
+import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.readit.R
 import org.jetbrains.anko.*

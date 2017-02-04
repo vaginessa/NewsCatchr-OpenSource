@@ -15,7 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.TypedValue
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
-import com.mcxiaoke.koi.ext.dpToPx
+import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.extensions.flexboxLayout
 import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.swipeRefreshLayout

@@ -14,10 +14,10 @@ import android.support.annotation.Keep
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
-import com.mcxiaoke.koi.ext.find
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.readit.R
+import org.jetbrains.anko.find
 
 
 @Keep

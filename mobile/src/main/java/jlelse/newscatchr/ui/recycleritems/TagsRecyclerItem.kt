@@ -13,12 +13,12 @@ package jlelse.newscatchr.ui.recycleritems
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
-import com.mcxiaoke.koi.ext.find
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
+import org.jetbrains.anko.find
 
 class TagsRecyclerItem : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()

@@ -12,6 +12,7 @@ package jlelse.newscatchr.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.support.v4.app.Fragment
@@ -21,7 +22,6 @@ import android.view.View
 import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.Target
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.readit.R
 import java.util.*
@@ -85,4 +85,10 @@ fun NestedScrollView.savePosition(fragment: Fragment?) {
 
 fun NestedScrollView.restorePosition(fragment: Fragment?) {
 	fragment?.getAddedObject<IntArray>("SCROLL_VIEW_POSITION")?.let { post { scrollTo(it[0], it[1]) } }
+}
+
+fun Int.dpToPx(): Int {
+	val metrics = Resources.getSystem().displayMetrics
+	val px = this * (metrics.densityDpi / 160f)
+	return Math.round(px)
 }

@@ -24,7 +24,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.afollestad.materialdialogs.MaterialDialog
-import com.mcxiaoke.koi.ext.startActivity
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.PocketAuth
 import jlelse.newscatchr.backend.apis.backupRestore
@@ -37,6 +36,7 @@ import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
 import java.util.*

@@ -59,6 +59,7 @@ class FeedListFragment : BaseFragment() {
 		if (tags.notNullAndEmpty()) {
 			tagsAdapter.add(TagsRecyclerItem().withTags(this, tags!!))
 		}
+		recyclerOne?.restorePosition()
 		return fragmentView
 	}
 

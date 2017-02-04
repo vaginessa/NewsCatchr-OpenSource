@@ -13,13 +13,13 @@ package jlelse.newscatchr.ui.views
 import android.view.LayoutInflater
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
-import com.mcxiaoke.koi.ext.find
-import com.mcxiaoke.koi.ext.onClick
 import jlelse.newscatchr.extensions.addString
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.fragments.MixFragment
 import jlelse.readit.R
+import org.jetbrains.anko.find
+import org.jetbrains.anko.onClick
 
 fun FlexboxLayout.addTagView(fragment: BaseFragment, tagString: String?) = tryOrNull {
 	addView(LayoutInflater.from(fragment.context).inflate(R.layout.tagitem, null)?.apply {

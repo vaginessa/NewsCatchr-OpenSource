@@ -21,7 +21,6 @@ import android.widget.TextView
 import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.flexbox.FlexboxLayout
-import com.mcxiaoke.koi.ext.find
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.apis.ReadabilityApi
@@ -38,6 +37,7 @@ import jlelse.newscatchr.ui.views.ZoomTextView
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.find
 import java.util.*
 
 class ArticleFragment : BaseFragment(), FAB {

@@ -14,7 +14,7 @@ import android.graphics.Typeface
 import android.util.TypedValue
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
-import com.mcxiaoke.koi.ext.dpToPx
+import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.extensions.flexboxLayout
 import jlelse.newscatchr.extensions.swipeRefreshLayout
 import jlelse.newscatchr.extensions.zoomTextView

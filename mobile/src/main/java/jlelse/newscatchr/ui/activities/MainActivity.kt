@@ -31,9 +31,6 @@ import com.anjlab.android.iab.v3.TransactionDetails
 import com.bumptech.glide.Glide
 import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.wearable.Wearable
-import com.mcxiaoke.koi.ext.find
-import com.mcxiaoke.koi.ext.newIntent
-import com.mcxiaoke.koi.ext.onClick
 import com.ncapdevi.fragnav.FragNavController
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.SharingApi
@@ -50,8 +47,7 @@ import jlelse.newscatchr.ui.layout.MainActivityUI
 import jlelse.newscatchr.ui.views.Toolbar
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	private lateinit var fragNavController: FragNavController
@@ -192,12 +188,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	fun createHomeScreenShortcut(title: String, feedId: String) {
 		Intent().apply {
 			putExtra("duplicate", false)
-			putExtra(Intent.EXTRA_SHORTCUT_INTENT, newIntent<MainActivity>().apply {
-				putExtra("feedtitle", title)
-				putExtra("feedid", feedId)
-				addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-				addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-			})
+			putExtra(Intent.EXTRA_SHORTCUT_INTENT, intentFor<MainActivity>("feedtitle" to title, "feedid" to feedId).newTask().clearTop())
 			putExtra(Intent.EXTRA_SHORTCUT_NAME, title)
 			putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(applicationContext, R.drawable.icon))
 			action = "com.android.launcher.action.INSTALL_SHORTCUT"
