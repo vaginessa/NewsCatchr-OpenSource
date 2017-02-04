@@ -84,7 +84,7 @@ fun NestedScrollView.savePosition(fragment: Fragment?) {
 }
 
 fun NestedScrollView.restorePosition(fragment: Fragment?) {
-	fragment?.getAddedObject<IntArray>("SCROLL_VIEW_POSITION")?.let { post { scrollTo(it[0], it[1]) } }
+	fragment?.getAddedObject("SCROLL_VIEW_POSITION", IntArray::class.java)?.let { post { scrollTo(it[0], it[1]) } }
 }
 
 fun Int.dpToPx(): Int {

@@ -11,21 +11,18 @@
 package jlelse.newscatchr.ui.fragments
 
 import android.os.Bundle
-import android.support.v4.widget.NestedScrollView
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.flexbox.FlexboxLayout
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.getAddedObject
+import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.ui.layout.BasicRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.NCAdapter
 import jlelse.newscatchr.ui.recycleritems.TagsRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
-import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
@@ -45,7 +42,7 @@ class FeedListFragment : BaseFragment() {
 			tagsAdapter.wrap(fastAdapter)
 			recyclerOne?.adapter = tagsAdapter
 		}
-		feeds = getAddedObject<Array<Feed>>("feeds")
+		feeds = getAddedObject("feeds", Array<Feed>::class.java)
 		fastAdapter.clear()
 		if (feeds.notNullAndEmpty()) {
 			fastAdapter.add(mutableListOf<FeedListRecyclerItem>().apply {
@@ -54,7 +51,7 @@ class FeedListFragment : BaseFragment() {
 				}
 			})
 		}
-		tags = getAddedObject<Array<String>>("tags")
+		tags = getAddedObject("tags", Array<String>::class.java)
 		tagsAdapter.clear()
 		if (tags.notNullAndEmpty()) {
 			tagsAdapter.add(TagsRecyclerItem().withTags(this, tags!!))

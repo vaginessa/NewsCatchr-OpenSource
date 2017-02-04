@@ -29,13 +29,13 @@ class ArticleSearchResultFragment : BaseFragment() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.basicrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
-	private var articles: List<Article>? = null
+	private var articles: Array<Article>? = null
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
 		fragmentView = fragmentView ?: BasicRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
-		articles = getAddedObject<List<Article>>("articles")
+		articles = getAddedObject("articles", Array<Article>::class.java)
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
 		if (articles.notNullAndEmpty()) {
 			fastAdapter.clear()

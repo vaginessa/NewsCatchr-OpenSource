@@ -13,14 +13,12 @@ package jlelse.newscatchr.extensions
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.afollestad.json.Json
+import com.afollestad.json.JsonSerializer
 
-inline fun <reified T> Gson.fromJson(json: String): T = this.fromJson<T>(json, object : TypeToken<T>() {}.type)
+fun Bundle.addObject(objectToAdd: Any?, key: String) = putString(key, objectToAdd?.toJson())
 
-fun Bundle.addObject(objectToAdd: Any?, key: String) = putString(key, Gson().toJson(objectToAdd))
-
-inline fun <reified T> Bundle.getObject(key: String): T? = tryOrNull { Gson().fromJson<T>(getString(key)) }
+fun <T : Any?> Bundle.getObject(key: String, objectClass: Class<T>): T? = JsonSerializer.get().deserialize(Json(getString(key)), objectClass)
 
 fun Fragment.addTitle(title: String?): Fragment = addObject(title, "ncTitle")
 
@@ -28,7 +26,7 @@ fun Fragment.getAddedTitle(): String? = getAddedString("ncTitle")
 
 fun Fragment.addString(stringToAdd: String?, key: String): Fragment = addObject(stringToAdd, key)
 
-fun Fragment.getAddedString(key: String): String? = getAddedObject<String>(key)
+fun Fragment.getAddedString(key: String): String? = getAddedObject(key, String::class.java)
 
 fun Fragment.addObject(objectToAdd: Any?, key: String): Fragment {
 	val args = arguments ?: Bundle()
@@ -44,6 +42,6 @@ fun Fragment.addObject(objectToAdd: Any?, key: String): Fragment {
 	return this
 }
 
-inline fun <reified T> Fragment.getAddedObject(key: String): T? = if (arguments != null && arguments.containsKey(key)) arguments.getObject(key) else null
+fun <T : Any?> Fragment.getAddedObject(key: String, objectClass: Class<T>): T? = if (arguments != null && arguments.containsKey(key)) arguments.getObject(key, objectClass) else null
 
 fun Fragment.sendBroadcast(intent: Intent) = context.sendBroadcast(intent)

@@ -18,7 +18,7 @@ import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.content.res.AppCompatResources
 import android.text.Html
 import android.text.Spanned
-import com.google.gson.Gson
+import com.afollestad.json.JsonSerializer
 import jlelse.newscatchr.appContext
 import jlelse.newscatchr.backend.Feed
 import org.json.JSONArray
@@ -53,7 +53,7 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 	}.toTypedArray()
 }
 
-fun Any.toJson(): String = Gson().toJson(this)
+fun Any.toJson(): String = tryOrNull { JsonSerializer.get().serialize(this).toString() } ?: tryOrNull { this.toString() } ?: ""
 
 fun String.jsonArray(): JSONArray? = tryOrNull { JSONArray(this) }
 

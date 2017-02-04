@@ -14,14 +14,14 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.design.widget.Snackbar
+import com.afollestad.json.JsonArray
+import com.afollestad.json.JsonSerializer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudrail.si.CloudRail
 import com.cloudrail.si.interfaces.CloudStorage
 import com.cloudrail.si.services.Dropbox
 import com.cloudrail.si.services.GoogleDrive
 import com.cloudrail.si.services.OneDrive
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
@@ -117,8 +117,8 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$bookmarksFile")
 		return if (downloadFile(bookmarksFile, file)) {
 			try {
-				Gson().fromJson<List<Article>>(file.readText(), object : TypeToken<List<Article>>() {}.type)?.let {
-					if (it.notNullAndEmpty()) Database.allBookmarks = it.toTypedArray()
+				JsonSerializer.get().deserializeArray(JsonArray<Article>(file.readText()), Article::class.java)?.let {
+					if (it.notNullAndEmpty()) Database.allBookmarks = it
 				}
 				true
 			} catch (e: Exception) {
@@ -132,8 +132,8 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$favoritesFile")
 		return if (downloadFile(favoritesFile, file)) {
 			try {
-				Gson().fromJson<List<Feed>>(file.readText(), object : TypeToken<List<Feed>>() {}.type)?.let {
-					if (it.notNullAndEmpty()) Database.allFavorites = it.toTypedArray()
+				JsonSerializer.get().deserializeArray(JsonArray<Feed>(file.readText()), Feed::class.java)?.let {
+					if (it.notNullAndEmpty()) Database.allFavorites = it
 				}
 				true
 			} catch (e: Exception) {
@@ -147,8 +147,8 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$readUrlsFile")
 		return if (downloadFile(readUrlsFile, file)) {
 			try {
-				Gson().fromJson<Set<String>>(file.readText(), object : TypeToken<Set<String>>() {}.type)?.let {
-					if (it.notNullAndEmpty()) Database.allReadUrls = it
+				JsonSerializer.get().deserializeArray(JsonArray<String>(file.readText()), String::class.java)?.let {
+					if (it.notNullAndEmpty()) Database.allReadUrls = it.toSet()
 				}
 				true
 			} catch (e: Exception) {

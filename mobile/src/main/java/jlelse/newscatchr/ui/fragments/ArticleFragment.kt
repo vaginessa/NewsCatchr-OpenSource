@@ -70,7 +70,7 @@ class ArticleFragment : BaseFragment(), FAB {
 				}
 			}
 		}
-		article = getAddedObject("article") ?: savedInstanceState?.getObject("article")
+		article = getAddedObject("article", Article::class.java) ?: savedInstanceState?.getObject("article", Article::class.java)
 		bookmark = Database.isSavedBookmark(article?.url)
 		initZoom()
 		showArticle(article)

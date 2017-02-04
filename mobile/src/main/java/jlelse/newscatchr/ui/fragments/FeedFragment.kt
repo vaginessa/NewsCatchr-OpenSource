@@ -61,7 +61,7 @@ class FeedFragment : BaseFragment() {
 			loadArticles()
 		}
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = footerAdapter.wrap(fastAdapter)
-		feed = getAddedObject<Feed>("feed")
+		feed = getAddedObject("feed", Feed::class.java)
 		favorite = Database.isSavedFavorite(feed?.url())
 		feedlyLoader = FeedlyLoader().apply {
 			type = FeedlyLoader.FeedTypes.FEED
@@ -178,7 +178,7 @@ class FeedFragment : BaseFragment() {
 									}.items(false)
 								}
 								progressDialog.dismiss()
-								if (foundArticles.notNullAndEmpty()) fragmentNavigation.pushFragment(ArticleSearchResultFragment().addObject(foundArticles?.toList(), "articles"), "Results for " + query.toString())
+								if (foundArticles.notNullAndEmpty()) fragmentNavigation.pushFragment(ArticleSearchResultFragment().addObject(foundArticles, "articles"), "Results for " + query.toString())
 								else context.nothingFound()
 							}
 						})
