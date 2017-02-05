@@ -31,30 +31,24 @@ class Feedly {
 	private val RANKED = "ranked="
 	private val QUERY = "query="
 
-	fun streamIds(id: String?, count: Int?, continuation: String?, ranked: String?): Ids? {
-		return tryOrNull {
-			var url = "$BASE_URL/streams/ids?$STREAM_ID%s"
-			if (count != null) url += "&$COUNT$count"
-			if (continuation.notNullOrBlank()) url += "&$CONTINUATION$continuation"
-			if (ranked.notNullOrBlank()) url += "&$RANKED$ranked"
-			Bridge.get(url, id).asClass(Ids::class.java)
-		}
+	fun streamIds(id: String?, count: Int?, continuation: String?, ranked: String?): Ids? = tryOrNull {
+		var url = "$BASE_URL/streams/ids?$STREAM_ID%s"
+		if (count != null) url += "&$COUNT$count"
+		if (continuation.notNullOrBlank()) url += "&$CONTINUATION$continuation"
+		if (ranked.notNullOrBlank()) url += "&$RANKED$ranked"
+		Bridge.get(url, id).asClass(Ids::class.java)
 	}
 
-	fun mixIds(id: String?, count: Int?): Ids? {
-		return tryOrNull {
-			var url = "$BASE_URL/mixes/ids?$STREAM_ID%s"
-			if (count != null) url += "&$COUNT$count"
-			Bridge.get(url, id).asClass(Ids::class.java)
-		}
+	fun mixIds(id: String?, count: Int?): Ids? = tryOrNull {
+		var url = "$BASE_URL/mixes/ids?$STREAM_ID%s"
+		if (count != null) url += "&$COUNT$count"
+		Bridge.get(url, id).asClass(Ids::class.java)
 	}
 
 	fun entries(ids: Array<out String>): Array<Article>? = tryOrNull {
 		if (ids.isNotEmpty()) {
 			Bridge.post("$BASE_URL/entries/.mget").body(JSONArray().apply { ids.forEach { put(it) } }).asClassArray(Article::class.java)
-		} else {
-			null
-		}
+		} else null
 	}
 
 	fun feedSearch(query: String?, count: Int?, locale: String?, promoted: Boolean?, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
@@ -86,11 +80,9 @@ class Feedly {
 		callback(feeds, related)
 	}
 
-	fun articleSearch(id: String?, query: String?): ArticleSearch? {
-		return tryOrNull {
-			val url = "$BASE_URL/search/contents?$STREAM_ID%s&$QUERY%s&ct=feedly.desktop"
-			Bridge.get(url, id, query).asClass(ArticleSearch::class.java)
-		}
+	fun articleSearch(id: String?, query: String?): ArticleSearch? = tryOrNull {
+		val url = "$BASE_URL/search/contents?$STREAM_ID%s&$QUERY%s&ct=feedly.desktop"
+		Bridge.get(url, id, query).asClass(ArticleSearch::class.java)
 	}
 
 }

@@ -14,8 +14,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.design.widget.Snackbar
-import com.afollestad.json.JsonArray
-import com.afollestad.json.JsonSerializer
+import com.afollestad.json.Ason
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudrail.si.CloudRail
 import com.cloudrail.si.interfaces.CloudStorage
@@ -25,7 +24,10 @@ import com.cloudrail.si.services.OneDrive
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.notNullAndEmpty
+import jlelse.newscatchr.extensions.notNullOrBlank
+import jlelse.newscatchr.extensions.readString
+import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
@@ -72,7 +74,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$bookmarksFile").apply {
 			delete()
 			createNewFile()
-			writeText(Database.allBookmarks.toList().toJson())
+			writeText(Ason.serialize(Database.allBookmarks).toString())
 		}
 		return if (file.exists()) uploadFile(bookmarksFile, file.inputStream(), file.length()) else false
 	}
@@ -81,7 +83,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$favoritesFile").apply {
 			delete()
 			createNewFile()
-			writeText(Database.allFavorites.toList().toJson())
+			writeText(Ason.serialize(Database.allFavorites).toString())
 		}
 		return if (file.exists()) uploadFile(favoritesFile, file.inputStream(), file.length()) else false
 	}
@@ -90,7 +92,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$readUrlsFile").apply {
 			delete()
 			createNewFile()
-			writeText(Database.allReadUrls.toList().toJson())
+			writeText(Ason.serialize(Database.allReadUrls).toString())
 		}
 		return if (file.exists()) uploadFile(readUrlsFile, file.inputStream(), file.length()) else false
 	}
@@ -117,7 +119,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$bookmarksFile")
 		return if (downloadFile(bookmarksFile, file)) {
 			try {
-				JsonSerializer.get().deserializeArray(JsonArray<Article>(file.readText()), Article::class.java)?.let {
+				Ason.deserialize(Ason(file.readText()), Array<Article>::class.java)?.let {
 					if (it.notNullAndEmpty()) Database.allBookmarks = it
 				}
 				true
@@ -132,7 +134,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$favoritesFile")
 		return if (downloadFile(favoritesFile, file)) {
 			try {
-				JsonSerializer.get().deserializeArray(JsonArray<Feed>(file.readText()), Feed::class.java)?.let {
+				Ason.deserialize(Ason(file.readText()), Array<Feed>::class.java)?.let {
 					if (it.notNullAndEmpty()) Database.allFavorites = it
 				}
 				true
@@ -147,7 +149,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		val file = File("${context.filesDir.path}/$readUrlsFile")
 		return if (downloadFile(readUrlsFile, file)) {
 			try {
-				JsonSerializer.get().deserializeArray(JsonArray<String>(file.readText()), String::class.java)?.let {
+				Ason.deserialize(Ason(file.readText()), Array<String>::class.java)?.let {
 					if (it.notNullAndEmpty()) Database.allReadUrls = it.toSet()
 				}
 				true

@@ -13,7 +13,7 @@ package jlelse.newscatchr.ui.views
 import android.view.LayoutInflater
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
-import jlelse.newscatchr.extensions.addString
+import jlelse.newscatchr.extensions.addObject
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.fragments.MixFragment
@@ -26,7 +26,7 @@ fun FlexboxLayout.addTagView(fragment: BaseFragment, tagString: String?) = tryOr
 		find<TextView>(R.id.tagView).apply {
 			text = "#$tagString"
 			onClick {
-				fragment.fragmentNavigation.pushFragment(MixFragment().addString("topic/$tagString", "feedId"), "#$tagString")
+				fragment.fragmentNavigation.pushFragment(MixFragment().addObject("topic/$tagString", "feedId"), "#$tagString")
 			}
 		}
 	})

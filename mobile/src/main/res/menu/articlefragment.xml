@@ -34,6 +34,6 @@
 			android:id="@+id/translate"
 			android:title="Translate"
 			app:showAsAction="ifRoom"
-			android:visible="false"/>
+			android:visible="true"/>
 
 </menu>

@@ -86,7 +86,7 @@ class FeedFragment : BaseFragment() {
 				articles.clear()
 				articles.addAll(it)
 			}
-			addString(feedlyLoader?.continuation, "continuation")
+			addObject(feedlyLoader?.continuation, "continuation")
 		}
 		if (articles.notNullAndEmpty()) {
 			recyclerOne?.clearOnScrollListeners()
@@ -98,7 +98,7 @@ class FeedFragment : BaseFragment() {
 				override fun onLoadMore(currentPage: Int) {
 					doAsync {
 						val newArticles = feedlyLoader?.moreItems()
-						addString(feedlyLoader?.continuation, "continuation")
+						addObject(feedlyLoader?.continuation, "continuation")
 						if (newArticles != null) articles.addAll(newArticles)
 						onUiThread {
 							newArticles?.forEach {
@@ -152,7 +152,7 @@ class FeedFragment : BaseFragment() {
 							}
 							articles.clear()
 							loadArticles()
-							addString(when (feedlyLoader?.ranked) {
+							addObject(when (feedlyLoader?.ranked) {
 								FeedlyLoader.Ranked.OLDEST -> "oldest"
 								else -> "newest"
 							}, "ranked")
@@ -198,7 +198,7 @@ class FeedFragment : BaseFragment() {
 							if (input.toString().notNullOrBlank()) {
 								Database.updateFavoriteTitle(feed?.url(), input.toString())
 								feed?.title = input.toString()
-								if (feed != null) addObject(feed!!, "feed")
+								addObject(feed, "feed")
 								addTitle(feed?.title)
 								val curActivity = activity
 								if (curActivity is MainActivity) curActivity.refreshFragmentDependingTitle(this)

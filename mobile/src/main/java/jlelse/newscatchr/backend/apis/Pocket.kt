@@ -14,6 +14,7 @@ import android.support.annotation.Keep
 import com.afollestad.bridge.Bridge
 import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
+import com.afollestad.json.Ason
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.jsonObject
 import jlelse.newscatchr.extensions.tryOrNull
@@ -30,13 +31,8 @@ class Pocket {
 				.header("Host", "getpocket.com")
 				.header("Content-Type", "application/json; charset=UTF-8")
 				.header("X-Accept", "application/json")
-				.body(AddRequest().apply {
-					this.url = url
-					consumer_key = PocketApiKey
-					access_token = Preferences.pocketAccessToken
-				})
-				.response()
-				?.asClass(AddResponse::class.java)?.item_id
+				.body(Ason().put("url", url).put("consumer_key", PocketApiKey).put("access_token", Preferences.pocketAccessToken).toStockJson())
+				.asJsonObject()?.optString("item_id")
 	}
 
 	fun archive(itemId: String) {
@@ -80,24 +76,6 @@ class Pocket {
 					}
 		}.toTypedArray()
 	}
-}
-
-@Keep
-@ContentType("application/json")
-class AddRequest {
-	@Body
-	var url: String? = null
-	@Body
-	var consumer_key: String? = null
-	@Body
-	var access_token: String? = null
-}
-
-@Keep
-@ContentType("application/json")
-class AddResponse {
-	@Body
-	var item_id: String? = null
 }
 
 @Keep

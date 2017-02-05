@@ -80,11 +80,11 @@ fun Context.setLocale() {
 }
 
 fun NestedScrollView.savePosition(fragment: Fragment?) {
-	fragment?.addObject(intArrayOf(scrollX, scrollY), "SCROLL_VIEW_POSITION")
+	fragment?.addObject(arrayOf(scrollX, scrollY), "SCROLL_VIEW_POSITION")
 }
 
 fun NestedScrollView.restorePosition(fragment: Fragment?) {
-	fragment?.getAddedObject("SCROLL_VIEW_POSITION", IntArray::class.java)?.let { post { scrollTo(it[0], it[1]) } }
+	fragment?.getAddedObject("SCROLL_VIEW_POSITION", Array<Int>::class.java)?.let { post { scrollTo(it[0], it[1]) } }
 }
 
 fun Int.dpToPx(): Int {

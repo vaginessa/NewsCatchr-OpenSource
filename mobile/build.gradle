@@ -57,7 +57,7 @@ dependencies {
     compile 'com.mikepenz:fastadapter-extensions:2.1.0@aar'
     compile 'com.afollestad.material-dialogs:core:0.9.2.3'
     compile 'com.afollestad:bridge:4.1.0'
-    compile('com.afollestad:json:0.1.0') {
+    compile('com.afollestad:ason:1.0.0') {
         exclude group: 'org.json', module: 'json'
     }
     compile 'com.github.bumptech.glide:glide:3.7.0'

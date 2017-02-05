@@ -70,7 +70,7 @@ class ArticleFragment : BaseFragment(), FAB {
 				}
 			}
 		}
-		article = getAddedObject("article", Article::class.java) ?: savedInstanceState?.getObject("article", Article::class.java)
+		article = getAddedObject("article", Article::class.java)
 		bookmark = Database.isSavedBookmark(article?.url)
 		initZoom()
 		showArticle(article)
@@ -98,7 +98,7 @@ class ArticleFragment : BaseFragment(), FAB {
 		if (visualUrl.notNullOrBlank()) visualView?.apply {
 			showView()
 			loadImage(visualUrl)
-			tryOrNull(activity != null) { (activity as MainActivity).loadToolbarBackground(visualUrl) }
+			tryOrNull(execute = activity != null) { (activity as MainActivity).loadToolbarBackground(visualUrl) }
 		} else visualView?.hideView()
 	}
 
@@ -167,7 +167,7 @@ class ArticleFragment : BaseFragment(), FAB {
 	}
 
 
-	private fun showWearNotification() = tryOrNull(activity != null) { (activity as MainActivity).buildWearNotification(article?.title ?: "", (article?.content ?: "").toHtml().toString()) }
+	private fun showWearNotification() = tryOrNull(execute = activity != null) { (activity as MainActivity).buildWearNotification(article?.title ?: "", (article?.content ?: "").toHtml().toString()) }
 
 	private fun shareArticle() = article?.share(activity)
 
@@ -227,10 +227,5 @@ class ArticleFragment : BaseFragment(), FAB {
 		else -> {
 			super.onOptionsItemSelected(item)
 		}
-	}
-
-	override fun onSaveInstanceState(outState: Bundle?) {
-		outState?.addObject(article, "article")
-		super.onSaveInstanceState(outState)
 	}
 }

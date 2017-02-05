@@ -13,18 +13,15 @@ package jlelse.newscatchr.extensions
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import com.afollestad.json.Json
-import com.afollestad.json.JsonSerializer
+import com.afollestad.json.Ason
 
-fun Bundle.addObject(objectToAdd: Any?, key: String) = putString(key, objectToAdd?.toJson())
+fun Bundle.addObject(objectToAdd: Any?, key: String) = tryOrNull { putString(key, Ason().put(key, objectToAdd).toString()) }
 
-fun <T : Any?> Bundle.getObject(key: String, objectClass: Class<T>): T? = JsonSerializer.get().deserialize(Json(getString(key)), objectClass)
+fun <T : Any?> Bundle.getObject(key: String, objectClass: Class<T>): T? = tryOrNull { Ason(getString(key)).get(key, objectClass) }
 
 fun Fragment.addTitle(title: String?): Fragment = addObject(title, "ncTitle")
 
 fun Fragment.getAddedTitle(): String? = getAddedString("ncTitle")
-
-fun Fragment.addString(stringToAdd: String?, key: String): Fragment = addObject(stringToAdd, key)
 
 fun Fragment.getAddedString(key: String): String? = getAddedObject(key, String::class.java)
 
@@ -35,7 +32,7 @@ fun Fragment.addObject(objectToAdd: Any?, key: String): Fragment {
 	try {
 		arguments = args
 	} catch (e: Exception) {
-		tryOrNull(e is IllegalStateException) {
+		tryOrNull(execute = e is IllegalStateException) {
 			arguments.putAll(args)
 		}
 	}

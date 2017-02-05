@@ -68,7 +68,7 @@ object Database {
 	}
 
 	fun addBookmark(article: Article?) {
-		tryOrNull(article != null) {
+		tryOrNull(execute = article != null) {
 			if (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
 				doAsync {
 					article!!.pocketId = PocketHandler().addToPocket(article)
@@ -82,7 +82,7 @@ object Database {
 	}
 
 	fun deleteBookmark(url: String?) {
-		tryOrNull(url.notNullOrBlank()) {
+		tryOrNull(execute = url.notNullOrBlank()) {
 			allBookmarks.filter { it.url == url }.forEach {
 				val pocket = Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
 				if (pocket && it.fromPocket) doAsync {

@@ -18,7 +18,6 @@ import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v7.content.res.AppCompatResources
 import android.text.Html
 import android.text.Spanned
-import com.afollestad.json.JsonSerializer
 import jlelse.newscatchr.appContext
 import jlelse.newscatchr.backend.Feed
 import org.json.JSONArray
@@ -53,8 +52,6 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 	}.toTypedArray()
 }
 
-fun Any.toJson(): String = tryOrNull { JsonSerializer.get().serialize(this).toString() } ?: tryOrNull { this.toString() } ?: ""
-
 fun String.jsonArray(): JSONArray? = tryOrNull { JSONArray(this) }
 
 fun String.jsonObject(): JSONObject? = tryOrNull { JSONObject(this) }
@@ -82,14 +79,12 @@ fun String.toHtml(): Spanned = if (android.os.Build.VERSION.SDK_INT < 24) {
 	Html.fromHtml(this, Html.FROM_HTML_MODE_LEGACY)
 }
 
-fun <T> tryOrNull(code: () -> T): T? = try {
-	code()
+fun <T> tryOrNull(print: Boolean = false, execute: Boolean = true, code: () -> T): T? = try {
+	if (execute) code() else null
 } catch(e: Exception) {
-	e.printStackTrace()
+	if (print) e.printStackTrace()
 	null
 }
-
-fun <T> tryOrNull(arg: Boolean?, code: () -> T): T? = if (arg ?: false) tryOrNull(code) else null
 
 fun sharedPref(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
 
