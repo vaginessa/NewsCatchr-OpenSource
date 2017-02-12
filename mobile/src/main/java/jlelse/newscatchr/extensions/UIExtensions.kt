@@ -15,7 +15,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
-import android.support.v4.app.Fragment
 import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
@@ -23,6 +22,7 @@ import android.widget.ImageView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.helpers.Preferences
+import jlelse.newscatchr.ui.interfaces.FragmentValues
 import jlelse.readit.R
 import java.util.*
 
@@ -79,12 +79,12 @@ fun Context.setLocale() {
 	}, resources.displayMetrics)
 }
 
-fun NestedScrollView.savePosition(fragment: Fragment?) {
-	fragment?.addObject(arrayOf(scrollX, scrollY), "SCROLL_VIEW_POSITION")
+fun NestedScrollView.savePosition(fragment: FragmentValues?) {
+	fragment?.addObject("SCROLL_VIEW_POSITION", arrayOf(scrollX, scrollY))
 }
 
-fun NestedScrollView.restorePosition(fragment: Fragment?) {
-	fragment?.getAddedObject("SCROLL_VIEW_POSITION", Array<Int>::class.java)?.let { post { scrollTo(it[0], it[1]) } }
+fun NestedScrollView.restorePosition(fragment: FragmentValues?) {
+	fragment?.getAddedObject<Array<Int>>("SCROLL_VIEW_POSITION")?.let { post { scrollTo(it[0], it[1]) } }
 }
 
 fun Int.dpToPx(): Int {

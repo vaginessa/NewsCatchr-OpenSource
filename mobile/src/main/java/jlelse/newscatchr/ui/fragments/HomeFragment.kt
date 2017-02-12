@@ -171,7 +171,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 				fastAdapterOne.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
 			}
 			moreAdapterOne.add(MoreRecyclerItem().withCallback {
-				fragmentNavigation.pushFragment(FeedListFragment().addObject(Database.allLastFeeds.reversed().toTypedArray(), "feeds"), R.string.last_feeds.resStr())
+				fragmentNavigation.pushFragment(FeedListFragment().apply {
+					addObject("feeds", Database.allLastFeeds.reversed().toTypedArray())
+				}, R.string.last_feeds.resStr())
 			})
 		} else recyclerOne?.hideView()
 		if (first) restoreScrollState()
@@ -209,7 +211,10 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 				fastAdapterThree.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
 			}
 			moreAdapterThree.add(MoreRecyclerItem().withCallback {
-				fragmentNavigation.pushFragment(FeedListFragment().addObject(recFeeds, "feeds").addObject(recRelated, "tags"), R.string.recommendations.resStr())
+				fragmentNavigation.pushFragment(FeedListFragment().apply {
+					addObject("feeds", recFeeds)
+					addObject("tags", recRelated)
+				}, R.string.recommendations.resStr())
 			})
 		} else recyclerThree?.hideView()
 		if (recRelated.notNullAndEmpty()) {

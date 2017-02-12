@@ -10,8 +10,8 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  package="jlelse.readit"
-		  android:installLocation="auto">
+          package="jlelse.readit"
+          android:installLocation="auto">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -21,26 +21,26 @@
 	<uses-permission android:name="com.android.vending.BILLING"/>
 
 	<uses-feature
-		android:name="android.hardware.touchscreen"
-		android:required="false"/>
+			android:name="android.hardware.touchscreen"
+			android:required="false"/>
 
 	<application
-		android:name="jlelse.newscatchr.NewsCatchr"
-		android:allowBackup="true"
-		android:fullBackupContent="@xml/backup"
-		android:icon="@drawable/icon"
-		android:roundIcon="@drawable/icon_round"
-		android:label="@string/app_name"
-		android:supportsRtl="true"
-		android:theme="@style/AppTheme">
+			android:name="jlelse.newscatchr.NewsCatchr"
+			android:allowBackup="true"
+			android:fullBackupContent="@xml/backup"
+			android:icon="@drawable/icon"
+			android:roundIcon="@drawable/icon_round"
+			android:label="@string/app_name"
+			android:supportsRtl="true"
+			android:theme="@style/AppTheme">
 
 		<activity
-			android:name="jlelse.newscatchr.ui.activities.MainActivity"
-			android:configChanges="locale"
-			android:exported="true"
-			android:label="@string/app_name"
-			android:launchMode="singleTask"
-			android:theme="@style/AppTheme">
+				android:name="jlelse.newscatchr.ui.activities.MainActivity"
+				android:configChanges="locale"
+				android:exported="true"
+				android:label="@string/app_name"
+				android:launchMode="singleTask"
+				android:theme="@style/AppTheme">
 			<!-- Launcher -->
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -72,17 +72,24 @@
 			</intent-filter>
 			<!-- Launcher shortcuts -->
 			<meta-data
-				android:name="android.app.shortcuts"
-				android:resource="@xml/shortcuts"/>
+					android:name="android.app.shortcuts"
+					android:resource="@xml/shortcuts"/>
+			<!-- CloudRail -->
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW"/>
+				<category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE"/>
+				<data android:host="www.cloudrailauth.com" android:scheme="https" android:path="/auth"/>
+			</intent-filter>
 		</activity>
 
 		<activity
-			android:name="jlelse.newscatchr.ui.activities.IssueActivity"
-			android:theme="@style/IssueTheme"/>
+				android:name="jlelse.newscatchr.ui.activities.IssueActivity"
+				android:theme="@style/IssueTheme"/>
 
 		<meta-data
-			android:name="com.google.android.gms.version"
-			android:value="@integer/google_play_services_version"/>
+				android:name="com.google.android.gms.version"
+				android:value="@integer/google_play_services_version"/>
 
 	</application>
 

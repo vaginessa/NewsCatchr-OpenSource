@@ -14,6 +14,8 @@ import android.app.Activity
 import android.support.annotation.Keep
 import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
+import com.afollestad.json.Ason
+import com.afollestad.json.AsonIgnore
 import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.UrlShortenerApi
 import jlelse.newscatchr.backend.apis.askForSharingService
@@ -35,11 +37,17 @@ class Article(
 		@Body
 		var title: String? = null,
 		@Body
+		@AsonIgnore
 		var canonical: Array<Alternate>? = null,
+		var canonicalHref: String? = null,
 		@Body
+		@AsonIgnore
 		var alternate: Array<Alternate>? = null,
+		var alternateHref: String? = null,
 		@Body
+		@AsonIgnore
 		var enclosure: Array<Alternate>? = null,
+		var enclosureHref: String? = null,
 		@Body
 		var keywords: Array<String>? = null,
 		@Body(name = "visual.url")
@@ -57,7 +65,16 @@ class Article(
 		var cleanedContent: Boolean = false,
 		var checkedUrl: Boolean = false,
 		var checkedImageUrl: Boolean = false
-) {
+) : Jsonizable<Article> {
+	fun fix() {
+		canonicalHref = canonical?.firstOrNull()?.href
+		canonical = null
+		alternateHref = alternate?.firstOrNull()?.href
+		alternate = null
+		enclosureHref = enclosure?.firstOrNull()?.href
+		enclosure = null
+	}
+
 	fun process(force: Boolean = false): Article {
 		if (force) {
 			cleanedContent = false
@@ -70,12 +87,12 @@ class Article(
 			cleanedContent = true
 		}
 		if (!checkedUrl) {
-			if (canonical != null && canonical?.firstOrNull()?.href.notNullOrBlank()) url = canonical?.firstOrNull()?.href
-			else if (alternate != null && alternate?.firstOrNull()?.href.notNullOrBlank()) url = alternate?.firstOrNull()?.href
+			if (canonicalHref.notNullOrBlank()) url = canonicalHref
+			else if (alternateHref.notNullOrBlank()) url = alternateHref
 			checkedUrl = true
 		}
 		if (!checkedImageUrl) {
-			if (enclosure.notNullAndEmpty() && enclosure?.firstOrNull()?.href.notNullOrBlank()) visualUrl = enclosure?.firstOrNull()?.href
+			if (enclosureHref.notNullOrBlank()) visualUrl = enclosureHref
 			checkedImageUrl = true
 		}
 		return this
@@ -93,6 +110,53 @@ class Article(
 				}
 			}
 		})
+	}
+
+	override fun toAson() = Ason().apply {
+		put("originalId", originalId)
+		put("published", published)
+		put("author", author)
+		put("title", title)
+		put("canonicalHref", canonicalHref)
+		put("alternateHref", alternateHref)
+		put("enclosureHref", enclosureHref)
+		put("keywords", keywords?.joinToString(separator = arraySeparator))
+		put("visualUrl", visualUrl)
+		put("originTitle", originTitle)
+		put("content", content)
+		put("contentB", contentB)
+		put("excerpt", excerpt)
+		put("url", url)
+		put("pocketId", pocketId)
+		put("fromPocket", fromPocket)
+		put("cleanedContent", cleanedContent)
+		put("checkedUrl", checkedUrl)
+		put("checkedImageUrl", checkedImageUrl)
+	}
+
+	override fun fromJson(json: String?): Article {
+		tryOrNull { Ason(json) }?.apply {
+			originalId = get("originalId", originalId)
+			published = get("published", published)
+			author = get("author", author)
+			title = get("title", title)
+			canonicalHref = get("canonicalHref", canonicalHref)
+			alternateHref = get("alternateHref", alternateHref)
+			enclosureHref = get("enclosureHref", enclosureHref)
+			keywords = tryOrNull { getString("keywords").split(arraySeparator).toTypedArray() } ?: keywords
+			visualUrl = get("visualUrl", visualUrl)
+			originTitle = get("originTitle", originTitle)
+			content = get("content", content)
+			contentB = get("contentB", contentB)
+			excerpt = get("excerpt", excerpt)
+			url = get("url", url)
+			pocketId = get("pocketId", pocketId)
+			fromPocket = get("fromPocket", fromPocket)
+			cleanedContent = get("cleanedContent", cleanedContent)
+			checkedUrl = get("checkedUrl", checkedUrl)
+			checkedImageUrl = get("checkedImageUrl", checkedImageUrl)
+		}
+		return this
 	}
 }
 

@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
-import jlelse.newscatchr.extensions.getAddedObject
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.ui.layout.BasicRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
@@ -31,11 +30,12 @@ class ArticleSearchResultFragment : BaseFragment() {
 	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
 	private var articles: Array<Article>? = null
 
+	@SuppressWarnings("unchecked")
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		super.onCreateView(inflater, container, savedInstanceState)
 		fragmentView = fragmentView ?: BasicRecyclerUI().createView(AnkoContext.create(context, this))
 		setHasOptionsMenu(true)
-		articles = getAddedObject("articles", Array<Article>::class.java)
+		articles = getAddedObject("articles")
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
 		if (articles.notNullAndEmpty()) {
 			fastAdapter.clear()

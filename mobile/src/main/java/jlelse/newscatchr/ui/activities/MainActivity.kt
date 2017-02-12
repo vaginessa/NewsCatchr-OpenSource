@@ -43,6 +43,7 @@ import jlelse.newscatchr.lastTab
 import jlelse.newscatchr.ui.fragments.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
+import jlelse.newscatchr.ui.interfaces.FragmentValues
 import jlelse.newscatchr.ui.layout.MainActivityUI
 import jlelse.newscatchr.ui.views.Toolbar
 import jlelse.readit.R
@@ -107,9 +108,9 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		setSupportActionBar(toolbar)
 
 		fragNavController = FragNavController(savedInstanceState, supportFragmentManager, R.id.mainactivity_container, listOf(
-				HomeFragment().addTitle(R.string.news.resStr()),
-				BookmarksFragment().addTitle(R.string.bookmarks.resStr()),
-				SettingsFragment().addTitle(R.string.settings.resStr())
+				HomeFragment().apply { addTitle(R.string.news.resStr()) },
+				BookmarksFragment().apply { addTitle(R.string.bookmarks.resStr()) },
+				SettingsFragment().apply { addTitle(R.string.settings.resStr()) }
 		), 0)
 		fragNavController.setTransactionListener(object : FragNavController.TransactionListener {
 			override fun onFragmentTransaction(fragment: Fragment?) = checkFragmentDependingThings()
@@ -153,10 +154,9 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 			intent.getStringExtra("feedid")?.let {
 				fragNavController.clearStack()
 				val feedTitle = intent.getStringExtra("feedtitle")
-				if (it.notNullOrBlank()) pushFragment(FeedFragment().addObject(Feed(
-						feedId = it,
-						title = feedTitle
-				), "feed"), feedTitle)
+				if (it.notNullOrBlank()) pushFragment(FeedFragment().apply {
+					addObject("feed", Feed(feedId = it, title = feedTitle))
+				}, feedTitle)
 			}
 			// Browser
 			if (intent.scheme == "http" || intent.scheme == "https") {
@@ -235,11 +235,12 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 	fun refreshFragmentDependingTitle(fragment: Fragment?) = tryOrNull {
 		toolbar?.title = R.string.app_name.resStr()
-		subtitle?.text = fragment?.getAddedTitle()
+		if (fragment is FragmentValues) subtitle?.text = fragment.getAddedTitle()
 	}
 
 	override fun pushFragment(fragment: Fragment, title: String?) {
-		fragment.addTitle(title ?: fragNavController.currentFrag?.getAddedTitle())
+		val currentFrag = fragNavController.currentFrag
+		if (fragment is FragmentValues) fragment.addTitle(title ?: if (currentFrag is FragmentValues) currentFrag.getAddedTitle() ?: "" else "")
 		fragNavController.pushFragment(fragment)
 	}
 

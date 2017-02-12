@@ -14,13 +14,13 @@ import android.support.annotation.Keep
 import com.afollestad.bridge.Bridge
 import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
+import com.afollestad.json.Ason
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.readFromCache
 import jlelse.newscatchr.backend.helpers.saveToCache
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
-import org.json.JSONArray
 
 class Feedly {
 
@@ -45,9 +45,9 @@ class Feedly {
 		Bridge.get(url, id).asClass(Ids::class.java)
 	}
 
-	fun entries(ids: Array<out String>): Array<Article>? = tryOrNull {
+	fun entries(ids: Array<String>): Array<Article>? = tryOrNull {
 		if (ids.isNotEmpty()) {
-			Bridge.post("$BASE_URL/entries/.mget").body(JSONArray().apply { ids.forEach { put(it) } }).asClassArray(Article::class.java)
+			Bridge.post("$BASE_URL/entries/.mget").body(Ason.serializeArray<String>(ids).toStockJson()).asClassArray(Article::class.java)?.apply { forEach { it.fix() } }
 		} else null
 	}
 

@@ -19,7 +19,6 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.loaders.FeedlyLoader
-import jlelse.newscatchr.extensions.getAddedString
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.nothingFound
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI

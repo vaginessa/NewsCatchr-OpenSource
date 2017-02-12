@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
-import jlelse.newscatchr.extensions.getAddedObject
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.ui.layout.BasicRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
@@ -42,7 +41,7 @@ class FeedListFragment : BaseFragment() {
 			tagsAdapter.wrap(fastAdapter)
 			recyclerOne?.adapter = tagsAdapter
 		}
-		feeds = getAddedObject("feeds", Array<Feed>::class.java)
+		feeds = getAddedObject("feeds")
 		fastAdapter.clear()
 		if (feeds.notNullAndEmpty()) {
 			fastAdapter.add(mutableListOf<FeedListRecyclerItem>().apply {
@@ -51,7 +50,7 @@ class FeedListFragment : BaseFragment() {
 				}
 			})
 		}
-		tags = getAddedObject("tags", Array<String>::class.java)
+		tags = getAddedObject("tags")
 		tagsAdapter.clear()
 		if (tags.notNullAndEmpty()) {
 			tagsAdapter.add(TagsRecyclerItem().withTags(this, tags!!))

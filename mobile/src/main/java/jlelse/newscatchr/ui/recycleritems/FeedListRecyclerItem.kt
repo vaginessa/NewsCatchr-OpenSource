@@ -22,7 +22,10 @@ import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.getPrimaryTextColor
+import jlelse.newscatchr.extensions.hideView
+import jlelse.newscatchr.extensions.resDrw
+import jlelse.newscatchr.extensions.showView
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.fragments.FeedFragment
 import jlelse.readit.R
@@ -73,7 +76,9 @@ class FeedListRecyclerItem : AbstractItem<FeedListRecyclerItem, FeedListRecycler
 			setTitleText(feed?.title, viewHolder.title)
 			viewHolder.website.text = Uri.parse(feed?.website ?: feed?.url()).host
 			viewHolder.itemView.onClick {
-				fragment?.fragmentNavigation?.pushFragment(FeedFragment().addObject(feed!!, "feed"), feed?.title)
+				fragment?.fragmentNavigation?.pushFragment(FeedFragment().apply {
+					addObject("feed", feed)
+				}, feed?.title)
 			}
 			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed?.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
 			viewHolder.favorite.onClick {

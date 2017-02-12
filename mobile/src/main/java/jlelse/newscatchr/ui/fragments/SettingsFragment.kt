@@ -31,6 +31,7 @@ import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.IssueActivity
 import jlelse.newscatchr.ui.activities.MainActivity
+import jlelse.newscatchr.ui.interfaces.FragmentValues
 import jlelse.newscatchr.ui.objects.Library
 import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
@@ -41,7 +42,9 @@ import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
 import java.util.*
 
-class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, FragmentValues {
+	override val valueMap = mutableMapOf<String, Any?>()
+
 	private var purchaseReceiver: PurchaseStatusUpdateReceiver? = null
 	private var purchaseReceiverRegistered = false
 	private var syncReceiver: SyncStatusUpdateReceiver? = null

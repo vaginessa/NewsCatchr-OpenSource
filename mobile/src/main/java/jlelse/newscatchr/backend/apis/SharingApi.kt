@@ -15,7 +15,6 @@ import android.content.Context
 import android.content.Intent
 import android.support.design.widget.Snackbar
 import com.afollestad.materialdialogs.MaterialDialog
-import com.cloudrail.si.CloudRail
 import com.cloudrail.si.interfaces.Social
 import com.cloudrail.si.services.Facebook
 import com.cloudrail.si.services.Twitter
@@ -25,18 +24,12 @@ import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 
 class SharingApi(val context: Activity, network: SocialNetwork) {
-	private var social: Social? = null
-	private var progressDialog: ProgressDialog
-
-	init {
-		CloudRail.setAppKey(CloudRailApiKey)
-		progressDialog = ProgressDialog(context).apply { show() }
-		social = when (network) {
-			SocialNetwork.Twitter -> Twitter(context, TwitterClientID, TwitterClientSecret)
-			SocialNetwork.Facebook -> Facebook(context, FacebookClientID, FacebookClientSecret)
-			else -> null
-		}
+	private var social: Social? = when (network) {
+		SocialNetwork.Twitter -> Twitter(context, TwitterClientID, TwitterClientSecret)
+		SocialNetwork.Facebook -> Facebook(context, FacebookClientID, FacebookClientSecret)
+		else -> null
 	}
+	private var progressDialog: ProgressDialog = ProgressDialog(context).apply { show() }
 
 	fun share(title: String, text: String): SharingApi {
 		var errorMsg = ""

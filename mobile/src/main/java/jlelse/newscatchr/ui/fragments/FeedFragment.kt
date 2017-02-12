@@ -61,7 +61,7 @@ class FeedFragment : BaseFragment() {
 			loadArticles()
 		}
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = footerAdapter.wrap(fastAdapter)
-		feed = getAddedObject("feed", Feed::class.java)
+		feed = getAddedObject("feed")
 		favorite = Database.isSavedFavorite(feed?.url())
 		feedlyLoader = FeedlyLoader().apply {
 			type = FeedlyLoader.FeedTypes.FEED
@@ -86,7 +86,7 @@ class FeedFragment : BaseFragment() {
 				articles.clear()
 				articles.addAll(it)
 			}
-			addObject(feedlyLoader?.continuation, "continuation")
+			addString("continuation", feedlyLoader?.continuation)
 		}
 		if (articles.notNullAndEmpty()) {
 			recyclerOne?.clearOnScrollListeners()
@@ -98,7 +98,7 @@ class FeedFragment : BaseFragment() {
 				override fun onLoadMore(currentPage: Int) {
 					doAsync {
 						val newArticles = feedlyLoader?.moreItems()
-						addObject(feedlyLoader?.continuation, "continuation")
+						addString("continuation", feedlyLoader?.continuation)
 						if (newArticles != null) articles.addAll(newArticles)
 						onUiThread {
 							newArticles?.forEach {
@@ -178,7 +178,7 @@ class FeedFragment : BaseFragment() {
 									}.items(false)
 								}
 								progressDialog.dismiss()
-								if (foundArticles.notNullAndEmpty()) fragmentNavigation.pushFragment(ArticleSearchResultFragment().addObject(foundArticles, "articles"), "Results for " + query.toString())
+								if (foundArticles.notNullAndEmpty()) fragmentNavigation.pushFragment(ArticleSearchResultFragment().apply { addObject("articles", foundArticles) }, "Results for " + query.toString())
 								else context.nothingFound()
 							}
 						})
@@ -198,7 +198,7 @@ class FeedFragment : BaseFragment() {
 							if (input.toString().notNullOrBlank()) {
 								Database.updateFavoriteTitle(feed?.url(), input.toString())
 								feed?.title = input.toString()
-								addObject(feed, "feed")
+								addObject("feed", feed)
 								addTitle(feed?.title)
 								val curActivity = activity
 								if (curActivity is MainActivity) curActivity.refreshFragmentDependingTitle(this)

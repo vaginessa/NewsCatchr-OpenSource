@@ -28,7 +28,7 @@ class ReadabilityApi {
 				title = if (mercury?.get("title").notNullOrBlank()) mercury?.get("title") else title
 				content = if (mercury?.get("content").notNullOrBlank()) mercury?.get("content") else title
 				if ((mercury?.get("image")).notNullOrBlank()) {
-					enclosure = null
+					enclosureHref = null
 					visualUrl = mercury?.get("image") ?: visualUrl
 				}
 				process(true)

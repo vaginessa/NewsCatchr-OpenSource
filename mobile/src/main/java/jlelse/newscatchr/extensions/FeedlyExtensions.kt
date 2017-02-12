@@ -62,7 +62,10 @@ fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNa
 			uiThread {
 				progressDialog.dismiss()
 				if (foundFeeds.notNullAndEmpty()) {
-					fragmentNavigation.pushFragment(FeedListFragment().addObject(foundFeeds, "feeds").addObject(foundRelated, "tags"), "${R.string.search_results_for.resStr()} $finalQuery")
+					fragmentNavigation.pushFragment(FeedListFragment().apply {
+						addObject("feeds", foundFeeds)
+						addObject("tags", foundRelated)
+					}, "${R.string.search_results_for.resStr()} $finalQuery")
 				} else context.nothingFound()
 			}
 		}

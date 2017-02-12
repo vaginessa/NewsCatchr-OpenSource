@@ -45,7 +45,6 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 	private val folder = "NewsCatchr"
 
 	init {
-		CloudRail.setAppKey(CloudRailApiKey)
 		cloudStorage = when (storage) {
 			Storage.OneDrive -> OneDrive(context, OneDriveClientID, OneDriveClientSecret)
 			Storage.GoogleDrive -> GoogleDrive(context, GoogleDriveClientID, GoogleDriveClientSecret)

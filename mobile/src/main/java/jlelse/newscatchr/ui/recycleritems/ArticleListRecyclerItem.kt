@@ -93,7 +93,9 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 			viewHolder.visual.hideView()
 		}
 		viewHolder.itemView.onClick {
-			if (article != null) fragment?.fragmentNavigation?.pushFragment(ArticleFragment().addObject(article, "article"), article?.originTitle)
+			if (article != null) fragment?.fragmentNavigation?.pushFragment(ArticleFragment().apply {
+				addObject("article", article)
+			}, article?.originTitle)
 		}
 		viewHolder.bookmark.setImageDrawable((if (Database.isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
 		viewHolder.bookmark.onClick {

@@ -10,7 +10,6 @@
 
 package jlelse.newscatchr.backend.helpers
 
-import com.afollestad.json.Ason
 import io.paperdb.Paper
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.notNullOrBlank
@@ -25,7 +24,7 @@ class ArticleCache {
 
 	fun getById(id: String): Article? = tryOrNull {
 		if (sessionCache.contains(id)) sessionCache[id]
-		else if (isCached(id)) Ason.deserialize(book?.read<String>(id.formatForCache()), Article::class.java).process(true)
+		else if (isCached(id)) Article().fromJson(book?.read<String>(id.formatForCache()))
 		else null
 	}
 
@@ -33,7 +32,7 @@ class ArticleCache {
 		article.process()
 		if (article.originalId.notNullOrBlank() && article.originalId.notNullOrBlank()) {
 			sessionCache.put(article.originalId!!, article)
-			book?.write(article.originalId!!.formatForCache(), Ason.serialize(article))
+			book?.write(article.originalId!!.formatForCache(), article.toJson())
 		}
 	}
 

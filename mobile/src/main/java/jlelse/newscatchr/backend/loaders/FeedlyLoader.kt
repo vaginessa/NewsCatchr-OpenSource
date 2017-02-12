@@ -89,8 +89,10 @@ class FeedlyLoader {
 	}
 
 	private fun itemsByIds(ids: Array<String>?, cache: Boolean): Array<Article>? = if (ids.notNullAndEmpty()) {
-		ids!!.removeBlankStrings().toMutableList().filter { if (cache) !articleCache.isCached(it) else true }.toTypedArray().let {
-			if (it.notNullAndEmpty()) Feedly().entries(it)?.forEach { articleCache.save(it) }
+		ids!!.removeBlankStrings().filter { if (cache) !articleCache.isCached(it) else true }.let {
+			if (it.notNullAndEmpty()) Feedly().entries(it.toTypedArray())?.forEach {
+				articleCache.save(it)
+			}
 		}
 		mutableListOf<Article>().apply {
 			ids.removeBlankStrings().forEach {

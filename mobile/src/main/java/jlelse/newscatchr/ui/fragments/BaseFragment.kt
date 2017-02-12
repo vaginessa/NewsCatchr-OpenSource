@@ -20,8 +20,11 @@ import android.view.ViewGroup
 import jlelse.newscatchr.extensions.savePosition
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.activities.MainActivity
+import jlelse.newscatchr.ui.interfaces.FragmentValues
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment : Fragment(), FragmentValues {
+	override val valueMap = mutableMapOf<String, Any?>()
+
 	lateinit var fragmentNavigation: FragmentNavigation
 	open val saveStateScrollViews: Array<NestedScrollView?>? = null
 

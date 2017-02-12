@@ -60,17 +60,15 @@ class ArticleFragment : BaseFragment(), FAB {
 		super.onCreateView(inflater, container, savedInstanceState)
 		setHasOptionsMenu(true)
 		fragmentView = fragmentView ?: ArticleFragmentUI().createView(AnkoContext.create(context, this))
-		refreshOne?.apply {
-			setOnRefreshListener {
-				try {
-					async { showArticle(await { Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull() }) }
-				} catch (e: Exception) {
-					e.printStackTrace()
-					refreshOne?.hideIndicator()
-				}
+		refreshOne?.setOnRefreshListener {
+			try {
+				async { showArticle(await { Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull() }) }
+			} catch (e: Exception) {
+				e.printStackTrace()
+				refreshOne?.hideIndicator()
 			}
 		}
-		article = getAddedObject("article", Article::class.java)
+		article = getAddedObject("article")
 		bookmark = Database.isSavedBookmark(article?.url)
 		initZoom()
 		showArticle(article)
@@ -166,7 +164,6 @@ class ArticleFragment : BaseFragment(), FAB {
 		}
 	}
 
-
 	private fun showWearNotification() = tryOrNull(execute = activity != null) { (activity as MainActivity).buildWearNotification(article?.title ?: "", (article?.content ?: "").toHtml().toString()) }
 
 	private fun shareArticle() = article?.share(activity)
@@ -197,7 +194,10 @@ class ArticleFragment : BaseFragment(), FAB {
 			async {
 				refreshOne?.showIndicator()
 				val temp = await { ReadabilityApi().reparse(article) }
-				if (temp.second) showArticle(temp.first)
+				if (temp.second) {
+					showArticle(temp.first)
+					addObject("article", temp.first)
+				}
 			}
 			true
 		}
