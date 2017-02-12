@@ -1,14 +1,24 @@
-*.ap_
-*.dex
-*.class
-bin/
-gen/
-.gradle/
+# Private keys
+/mobile/src/main/java/jlelse/newscatchr/backend/apis/ApiKeys.kt
+# .idea folder
+.idea/libraries/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/scopes/scope_settings.xml
+.idea/gradle.xml
+# Build folders
 build/
 /*/build/
+bin/
+gen/
+# Gradle generated files
+.gradle/
+# Local settings
 local.properties
-proguard/
-*.log
-.idea/
+# File types
 *.iml
-/mobile/src/main/java/jlelse/newscatchr/backend/apis/ApiKeys.kt
