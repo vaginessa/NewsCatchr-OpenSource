@@ -18,20 +18,19 @@
 
 package jlelse.newscatchr.ui.layout
 
+import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.util.TypedValue
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
-import jlelse.newscatchr.extensions.dpToPx
-import jlelse.newscatchr.extensions.flexboxLayout
-import jlelse.newscatchr.extensions.swipeRefreshLayout
-import jlelse.newscatchr.extensions.zoomTextView
+import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.fragments.ArticleFragment
 import jlelse.readit.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.nestedScrollView
 
 class ArticleFragmentUI : AnkoComponent<ArticleFragment> {
+	@SuppressLint("PrivateResource")
 	override fun createView(ui: AnkoContext<ArticleFragment>): View = with(ui) {
 		swipeRefreshLayout {
 			id = R.id.articlefragment_refresh
@@ -43,21 +42,17 @@ class ArticleFragmentUI : AnkoComponent<ArticleFragment> {
 					textView {
 						lparams(width = matchParent, height = wrapContent) {
 							bottomMargin = 8.dpToPx()
-							marginEnd = 16.dpToPx()
 							rightMargin = 16.dpToPx()
-							marginStart = 16.dpToPx()
 							leftMargin = 16.dpToPx()
 						}
 						id = R.id.articlefragment_title
-						setTextAppearance(R.style.TextAppearance_AppCompat_Headline)
+						setTextStyle(context, R.style.TextAppearance_AppCompat_Headline)
 						setTypeface(typeface, Typeface.BOLD)
 					}
 					imageView {
 						lparams(width = matchParent, height = wrapContent) {
 							bottomMargin = 8.dpToPx()
-							marginEnd = 16.dpToPx()
 							rightMargin = 16.dpToPx()
-							marginStart = 16.dpToPx()
 							leftMargin = 16.dpToPx()
 						}
 						id = R.id.articlefragment_visual
@@ -66,24 +61,20 @@ class ArticleFragmentUI : AnkoComponent<ArticleFragment> {
 					textView {
 						lparams(width = matchParent, height = wrapContent) {
 							bottomMargin = 8.dpToPx()
-							marginEnd = 16.dpToPx()
 							rightMargin = 16.dpToPx()
-							marginStart = 16.dpToPx()
 							leftMargin = 16.dpToPx()
 						}
 						id = R.id.articlefragment_details
-						setTextAppearance(R.style.TextAppearance_AppCompat_Caption)
+						setTextStyle(context, R.style.TextAppearance_AppCompat_Caption)
 					}
 					zoomTextView {
 						lparams(width = matchParent, height = wrapContent) {
 							bottomMargin = 8.dpToPx()
-							marginEnd = 16.dpToPx()
 							rightMargin = 16.dpToPx()
-							marginStart = 16.dpToPx()
 							leftMargin = 16.dpToPx()
 						}
 						id = R.id.articlefragment_content
-						setTextAppearance(R.style.TextAppearance_AppCompat_Body1)
+						setTextStyle(context, R.style.TextAppearance_AppCompat_Body1)
 						setTextIsSelectable(true)
 						setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.toFloat())
 					}

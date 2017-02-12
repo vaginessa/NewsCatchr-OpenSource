@@ -27,6 +27,7 @@ import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.helpers.Preferences
@@ -62,7 +63,11 @@ fun Context.nothingFound() {
 }
 
 fun Context.getPrimaryTextColor(): Int {
-	return obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary)).getColor(0, Color.BLACK)
+	var color = 0
+	obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary)).apply {
+		color = getColor(0, Color.BLACK)
+	}.recycle()
+	return color
 }
 
 fun setNightMode() {
@@ -99,4 +104,10 @@ fun Int.dpToPx(): Int {
 	val metrics = Resources.getSystem().displayMetrics
 	val px = this * (metrics.densityDpi / 160f)
 	return Math.round(px)
+}
+
+@Suppress("DEPRECATION")
+fun TextView.setTextStyle(context: Context, id: Int) {
+	if (Build.VERSION.SDK_INT < 23) setTextAppearance(context, id)
+	else setTextAppearance(id)
 }
