@@ -11,14 +11,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion rootProject.ext.TARGET_SDK
-    buildToolsVersion rootProject.ext.BUILD_TOOLS
+    compileSdkVersion TARGET_SDK
+    buildToolsVersion BUILD_TOOLS
     defaultConfig {
-        applicationId rootProject.ext.APP_ID
+        applicationId APP_ID
         minSdkVersion 23
-        targetSdkVersion rootProject.ext.TARGET_SDK
-        versionCode rootProject.ext.VERSION_CODE
-        versionName rootProject.ext.VERSION_NAME
+        targetSdkVersion TARGET_SDK
+        versionCode VERSION_CODE
+        versionName VERSION_NAME
         resConfigs "en"
     }
     buildTypes {
@@ -36,5 +36,5 @@ android {
 }
 
 dependencies {
-    compile "com.google.android.gms:play-services-wearable:$rootProject.ext.PLAY_SERVICES"
+    compile "com.google.android.gms:play-services-wearable:$PLAY_SERVICES"
 }

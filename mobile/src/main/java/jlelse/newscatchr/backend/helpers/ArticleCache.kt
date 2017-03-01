@@ -39,7 +39,7 @@ class ArticleCache {
 		article.process()
 		if (article.originalId.notNullOrBlank() && article.originalId.notNullOrBlank()) {
 			sessionCache.put(article.originalId!!, article)
-			store.write(article.originalId!!.formatForCache(), article)
+			store.write<Article>(article.originalId!!.formatForCache(), article)
 		}
 	}
 

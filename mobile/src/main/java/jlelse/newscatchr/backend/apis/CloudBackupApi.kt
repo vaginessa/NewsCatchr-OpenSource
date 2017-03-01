@@ -157,7 +157,7 @@ class CloudBackupApi(val context: Activity, storage: Storage, val finished: () -
 		return if (downloadFile(readUrlsFile, file)) {
 			try {
 				Ason.deserialize(Ason(file.readText()), Array<String>::class.java)?.let {
-					if (it.notNullAndEmpty()) Database.allReadUrls = it.toSet()
+					if (it.notNullAndEmpty()) Database.allReadUrls = it
 				}
 				true
 			} catch (e: Exception) {

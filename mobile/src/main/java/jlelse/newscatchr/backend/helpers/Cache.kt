@@ -23,12 +23,9 @@ package jlelse.newscatchr.backend.helpers
 import android.content.Context
 import co.metalab.asyncawait.async
 import com.bumptech.glide.Glide
-import io.paperdb.Paper
 import jlelse.newscatchr.extensions.tryOrNull
 
-fun Any?.saveToCache(key: String?) = KeyObjectStore("cache").write(key?.formatForCache(), this)
-
-fun Array<out Any?>?.saveToCache(key: String?) = KeyObjectStore("cache").write(key?.formatForCache(), this)
+fun <T> T?.saveToCache(key: String?) = KeyObjectStore("cache").write<T>(key?.formatForCache(), this)
 
 fun <T> readFromCache(key: String?, type: Class<T>): T? = KeyObjectStore("cache").read(key?.formatForCache(), type)
 
@@ -38,8 +35,6 @@ fun Context.clearCache(finished: () -> Unit) {
 	async {
 		await {
 			KeyObjectStore("cache").destroy()
-			Paper.book("cache").destroy()
-			Paper.book("article_cache").destroy()
 			Glide.get(this@clearCache).clearDiskCache()
 		}
 		finished()

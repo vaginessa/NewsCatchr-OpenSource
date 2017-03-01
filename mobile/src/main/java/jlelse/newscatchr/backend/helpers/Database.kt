@@ -18,7 +18,6 @@
 
 package jlelse.newscatchr.backend.helpers
 
-import io.paperdb.Paper
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Pocket
@@ -31,14 +30,18 @@ import org.jetbrains.anko.doAsync
 object Database {
 
 	private val FAVORITES = "feeds_database"
+	private val favoritesStore = KeyObjectStore(FAVORITES)
 	private val BOOKMARKS = "bookmarks_database"
+	private val bookmarksStore = KeyObjectStore(BOOKMARKS)
 	private val READ_URLS = "urls_database"
+	private val readUrlsStore = KeyObjectStore(READ_URLS)
 	private val LAST_FEEDS = "last_feeds"
+	private val lastFeedsStore = KeyObjectStore(LAST_FEEDS)
 
 	var allFavorites: Array<Feed>
-		get() = tryOrNull { Paper.book(FAVORITES).read<Array<Feed>>(FAVORITES, arrayOf<Feed>()) } ?: arrayOf<Feed>()
+		get() = favoritesStore.read(FAVORITES, Array<Feed>::class.java) ?: arrayOf<Feed>()
 		set(value) {
-			tryOrNull { Paper.book(FAVORITES).write(FAVORITES, value.onlySaved()) }
+			tryOrNull { favoritesStore.write<Array<Feed>>(FAVORITES, value.onlySaved()) }
 		}
 
 	val allFavoritesUrls = allFavorites.map(Feed::url)
@@ -62,9 +65,9 @@ object Database {
 	}
 
 	var allBookmarks: Array<Article>
-		get() = tryOrNull { Paper.book(BOOKMARKS).read<Array<Article>>(BOOKMARKS, arrayOf<Article>()) } ?: arrayOf<Article>()
+		get() = bookmarksStore.read(BOOKMARKS, Array<Article>::class.java) ?: arrayOf<Article>()
 		set(value) {
-			tryOrNull { Paper.book(BOOKMARKS).write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles()) }
+			tryOrNull { bookmarksStore.write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles()) }
 		}
 
 	val allBookmarkUrls = allBookmarks.map { it.url }
@@ -101,20 +104,20 @@ object Database {
 		}
 	}
 
-	var allReadUrls: Set<String>
-		get() = tryOrNull { Paper.book(READ_URLS).read<Set<String>>(READ_URLS, setOf<String>()) } ?: setOf<String>()
+	var allReadUrls: Array<String>
+		get() = readUrlsStore.read(READ_URLS, Array<String>::class.java) ?: arrayOf<String>()
 		set(value) {
-			tryOrNull { Paper.book(READ_URLS).write(READ_URLS, value.cleanNullable()) }
+			tryOrNull { readUrlsStore.write<Array<String>>(READ_URLS, value.cleanNullable()) }
 		}
 
 	fun addReadUrl(url: String?) {
 		if (url.notNullOrBlank() && !isSavedReadUrl(url)) allReadUrls += url!!
 	}
 
-	var allLastFeeds: Set<Feed>
-		get() = tryOrNull { Paper.book(LAST_FEEDS).read<Set<Feed>>(LAST_FEEDS, setOf<Feed>()) } ?: setOf<Feed>()
+	var allLastFeeds: Array<Feed>
+		get() = lastFeedsStore.read(LAST_FEEDS, Array<Feed>::class.java) ?: arrayOf<Feed>()
 		set(value) {
-			tryOrNull { Paper.book(LAST_FEEDS).write(LAST_FEEDS, value.removeEmptyFeeds()) }
+			tryOrNull { lastFeedsStore.write<Array<Feed>>(LAST_FEEDS, value.removeEmptyFeeds()) }
 		}
 
 	val allLastFeedUrls = allLastFeeds.map(Feed::url)

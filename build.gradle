@@ -1,12 +1,21 @@
 buildscript {
+    ext.APP_ID = "jlelse.readit"
+    ext.VERSION_NAME = "5.2.0"
+    ext.VERSION_CODE = 52
+    ext.TARGET_SDK = 25
+    ext.BUILD_TOOLS = "25.0.2"
+    ext.SUPPORT_LIBS = "25.2.0"
+    ext.PLAY_SERVICES = "10.2.0"
+    ext.KOTLIN = "1.1.0"
+    ext.ANKO = "0.9.1"
     repositories {
         jcenter()
         mavenCentral()
-        maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
+        // maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0-rc1'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN"
         classpath 'com.google.gms:google-services:3.0.0'
     }
 }
@@ -15,25 +24,13 @@ plugins {
     id 'com.github.ben-manes.versions' version '0.14.0'
 }
 
-ext {
-    APP_ID = "jlelse.readit"
-    VERSION_NAME = "5.2.0"
-    VERSION_CODE = 52
-    TARGET_SDK = 25
-    BUILD_TOOLS = "25.0.2"
-    SUPPORT_LIBS = "25.2.0"
-    PLAY_SERVICES = "10.2.0"
-    KOTLIN = "1.1.0"
-    ANKO = "0.9.1"
-}
-
 allprojects {
     repositories {
         jcenter()
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
+        // maven { url "http://dl.bintray.com/kotlin/kotlin-eap-1.1" }
         maven { url 'https://dl.bintray.com/jetbrains/anko' }
     }
 }

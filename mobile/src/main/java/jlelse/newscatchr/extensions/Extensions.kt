@@ -67,10 +67,6 @@ fun <T> Array<out T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
 fun <T> Collection<T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
-fun <T> Set<T>?.notNullAndEmpty() = this != null && isNotEmpty()
-
-fun Set<String?>.cleanNullable() = this.toList().cleanNullable().toSet()
-
 fun Array<out String?>.cleanNullable() = this.toList().cleanNullable().toTypedArray()
 
 fun <T> List<T?>.cleanNullable() = mutableListOf<T>().apply { this@cleanNullable.filter { it != null && (if (it is String) it != "" else true) }.forEach { add(it!!) } }.toList()

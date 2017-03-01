@@ -135,7 +135,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			}
 			clearHistoryPref -> {
 				doAsync {
-					Database.allLastFeeds = setOf<Feed>()
+					Database.allLastFeeds = arrayOf<Feed>()
 					uiThread {
 						context.sendBroadcast(Intent("last_feed_updated"))
 						Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()

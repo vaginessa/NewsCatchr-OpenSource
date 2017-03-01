@@ -48,8 +48,6 @@ fun List<Feed?>.removeEmptyFeeds(): List<Feed> {
 
 fun Array<out Feed?>.removeEmptyFeeds() = this.toList().removeEmptyFeeds().toTypedArray()
 
-fun Set<Feed?>.removeEmptyFeeds() = this.toList().removeEmptyFeeds().toSet()
-
 fun Array<Feed>.onlySaved(): Array<Feed> = toMutableList().filter(Feed::saved).toTypedArray()
 
 fun Feed?.notNullOrEmpty(): Boolean = this?.url().notNullOrBlank()

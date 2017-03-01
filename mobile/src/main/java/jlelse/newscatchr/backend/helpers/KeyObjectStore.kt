@@ -36,19 +36,11 @@ class KeyObjectStore(name: String = "default") {
 		}
 	}
 
-	fun <T> write(key: String?, item: T?): KeyObjectStore {
+	fun <T> write(key: String?, item: Any?): KeyObjectStore {
 		if (item == null) delete(key)
 		else if (key != null && key.isNotBlank()) {
-			tryOrNull { ason.put(key, Ason.serialize(item)) }
-			tryOrNull { file.writeText(ason.toString()) }
-		}
-		return this
-	}
-
-	fun <T> write(key: String?, item: Array<T?>?): KeyObjectStore {
-		if (item == null) delete(key)
-		else if (key != null && key.isNotBlank()) {
-			tryOrNull { ason.put(key, Ason.serializeArray<T>(item)) }
+			if (item.javaClass.isArray) tryOrNull { ason.put(key, Ason.serializeArray<T>(item)) }
+			else tryOrNull { ason.put(key, Ason.serialize(item)) }
 			tryOrNull { file.writeText(ason.toString()) }
 		}
 		return this
@@ -62,10 +54,10 @@ class KeyObjectStore(name: String = "default") {
 		return this
 	}
 
-	fun <T> read(key: String?, type: Class<T>): T? = if (key != null) tryOrNull {
-		if (type.isArray) ason.get<AsonArray<T>>(key)?.deserialize(type)
-		else ason.get<Ason>(key)?.deserialize(type)
-	} else null
+	fun <T> read(key: String?, type: Class<T>, defaultValue: T? = null): T? = if (key != null) tryOrNull {
+		if (type.isArray) Ason.deserialize(ason.get(key, AsonArray::class.java), type)
+		else Ason.deserialize(ason.get(key, Ason::class.java), type)
+	} ?: defaultValue else defaultValue
 
 	fun destroy() {
 		tryOrNull { file.writeText("") }

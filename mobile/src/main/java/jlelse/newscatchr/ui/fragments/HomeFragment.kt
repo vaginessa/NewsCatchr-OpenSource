@@ -170,7 +170,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	}
 
 	private fun loadLastFeeds(first: Boolean = false) = async {
-		val lastFeeds = await { Database.allLastFeeds.toTypedArray().takeLast(5).reversed() }
+		val lastFeeds = await { Database.allLastFeeds.takeLast(5).reversed() }
 		fastAdapterOne.clear()
 		moreAdapterOne.clear()
 		if (lastFeeds.notNullAndEmpty()) {
