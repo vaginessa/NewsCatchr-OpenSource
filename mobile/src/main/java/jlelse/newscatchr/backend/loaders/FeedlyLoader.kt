@@ -43,7 +43,7 @@ class FeedlyLoader {
 			var ids: Ids? = if (cache) readFromCache("MixIds$feedUrl" + when (ranked) {
 				Ranked.OLDEST -> "oldest"
 				else -> ""
-			}) else null
+			}, Ids::class.java) else null
 			if (ids == null) {
 				ids = Feedly().mixIds(feedUrl, count).apply {
 					saveToCache("MixIds$feedUrl" + when (ranked) {
@@ -58,7 +58,7 @@ class FeedlyLoader {
 			var ids: Ids? = if (cache) readFromCache("StreamIds$feedUrl" + when (ranked) {
 				Ranked.OLDEST -> "oldest"
 				else -> ""
-			}) else null
+			}, Ids::class.java) else null
 			if (ids == null) {
 				ids = Feedly().streamIds(feedUrl, count, null, when (ranked) {
 					Ranked.NEWEST -> "newest"

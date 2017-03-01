@@ -304,7 +304,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.negativeText(android.R.string.cancel)
 						.show()
 			}
-		//issuePref ->
+			issuePref -> UrlOpenener().openUrl("https://github.com/jlelse/NewsCatchr-OpenSource/issues", activity)
 		}
 		return true
 	}

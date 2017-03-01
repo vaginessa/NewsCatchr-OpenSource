@@ -18,8 +18,6 @@
 
 package jlelse.newscatchr.backend.helpers
 
-import com.afollestad.ason.Ason
-import io.paperdb.Paper
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
@@ -27,13 +25,13 @@ import jlelse.newscatchr.extensions.tryOrNull
 class ArticleCache {
 
 	private val sessionCache = mutableMapOf<String, Article>()
-	private val book by lazy { Paper.book("article_cache") }
+	private val store by lazy { KeyObjectStore("article_cache") }
 
-	fun isCached(id: String): Boolean = book?.exist(id.formatForCache()) ?: false
+	fun isCached(id: String): Boolean = store.exists(id.formatForCache())
 
 	fun getById(id: String): Article? = tryOrNull {
 		if (sessionCache.contains(id)) sessionCache[id]
-		else if (isCached(id)) Ason.deserialize(book?.read<String>(id.formatForCache()), Article::class.java)
+		else if (isCached(id)) store.read(id.formatForCache(), Article::class.java)
 		else null
 	}
 
@@ -41,7 +39,7 @@ class ArticleCache {
 		article.process()
 		if (article.originalId.notNullOrBlank() && article.originalId.notNullOrBlank()) {
 			sessionCache.put(article.originalId!!, article)
-			book?.write(article.originalId!!.formatForCache(), Ason.serialize(article).toString())
+			store.write(article.originalId!!.formatForCache(), article)
 		}
 	}
 

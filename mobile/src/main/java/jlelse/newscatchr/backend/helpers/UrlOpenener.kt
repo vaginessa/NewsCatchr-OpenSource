@@ -26,19 +26,11 @@ import android.net.Uri
 import android.support.customtabs.CustomTabsIntent
 import co.metalab.asyncawait.async
 import jlelse.newscatchr.backend.apis.AmpApi
-import jlelse.newscatchr.customTabsHelperFragment
 import jlelse.newscatchr.extensions.resClr
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
 class UrlOpenener {
-
-	fun mayOpenUrl(url: String) = async {
-		await {
-			val finalUrl = if (Preferences.amp) AmpApi().getAmpUrl(url) ?: url else url
-			if (Preferences.customTabs) customTabsHelperFragment?.mayLaunchUrl(Uri.parse(finalUrl), null, null)
-		}
-	}
 
 	fun openUrl(url: String, activity: Activity) = async {
 		val finalUrl = await { if (Preferences.amp) AmpApi().getAmpUrl(url) ?: url else url }

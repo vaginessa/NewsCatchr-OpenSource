@@ -45,9 +45,7 @@ import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
-import org.jetbrains.anko.support.v4.onUiThread
 
 class FeedFragment : BaseFragment() {
 	private var fragmentView: View? = null
@@ -104,15 +102,11 @@ class FeedFragment : BaseFragment() {
 			})
 			recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
 				override fun onLoadMore(currentPage: Int) {
-					doAsync {
-						val newArticles = feedlyLoader?.moreItems()
+					async {
+						val newArticles = await { feedlyLoader?.moreItems() }
 						addString("continuation", feedlyLoader?.continuation)
 						if (newArticles != null) articles.addAll(newArticles)
-						onUiThread {
-							newArticles?.forEach {
-								fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment))
-							}
-						}
+						newArticles?.forEach { fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment)) }
 					}
 				}
 			})

@@ -72,8 +72,8 @@ class Feedly {
 	}
 
 	fun recommendedFeeds(locale: String?, cache: Boolean, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
-		var feeds: Array<Feed>? = if (cache) readFromCache("recFeeds$locale") else null
-		var related: Array<String>? = if (cache) readFromCache("recFeedsRelated$locale") else null
+		var feeds: Array<Feed>? = if (cache) readFromCache("recFeeds$locale", Array<Feed>::class.java) else null
+		var related: Array<String>? = if (cache) readFromCache("recFeedsRelated$locale", Array<String>::class.java) else null
 		if (!cache || feeds == null) {
 			tryOrNull {
 				feedSearch("news", 30, locale, true) { feedsTemp, relatedTemp ->

@@ -26,17 +26,18 @@ import com.bumptech.glide.Glide
 import io.paperdb.Paper
 import jlelse.newscatchr.extensions.tryOrNull
 
-fun Any?.saveToCache(key: String?) {
-	if (this != null) Paper.book("cache").write(key?.formatForCache(), this)
-}
+fun Any?.saveToCache(key: String?) = KeyObjectStore("cache").write(key?.formatForCache(), this)
 
-fun <T> readFromCache(key: String?): T = Paper.book("cache").read<T>(key?.formatForCache())
+fun Array<out Any?>?.saveToCache(key: String?) = KeyObjectStore("cache").write(key?.formatForCache(), this)
+
+fun <T> readFromCache(key: String?, type: Class<T>): T? = KeyObjectStore("cache").read(key?.formatForCache(), type)
 
 fun String.formatForCache(): String = tryOrNull { replace("[^0-9a-zA-Z]".toRegex(), "") } ?: this
 
 fun Context.clearCache(finished: () -> Unit) {
 	async {
 		await {
+			KeyObjectStore("cache").destroy()
 			Paper.book("cache").destroy()
 			Paper.book("article_cache").destroy()
 			Glide.get(this@clearCache).clearDiskCache()
