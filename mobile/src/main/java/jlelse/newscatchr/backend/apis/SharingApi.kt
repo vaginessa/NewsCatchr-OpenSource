@@ -16,12 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.backend.apis
 
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.design.widget.Snackbar
+import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudrail.si.interfaces.Social
 import com.cloudrail.si.services.Facebook
@@ -29,7 +32,6 @@ import com.cloudrail.si.services.Twitter
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
-import org.jetbrains.anko.doAsync
 
 class SharingApi(val context: Activity, network: SocialNetwork) {
 	private var social: Social? = when (network) {
@@ -42,19 +44,19 @@ class SharingApi(val context: Activity, network: SocialNetwork) {
 	fun share(title: String, text: String): SharingApi {
 		var errorMsg = ""
 		if (social != null) {
-			context.doAsync {
-				val success = try {
-					social?.postUpdate(text)
-					true
-				} catch (e: Exception) {
-					e.printStackTrace()
-					errorMsg += e.message
-					false
+			context.async {
+				val success = await {
+					try {
+						social?.postUpdate(text)
+						true
+					} catch (e: Exception) {
+						e.printStackTrace()
+						errorMsg += e.message
+						false
+					}
 				}
-				context.runOnUiThread {
-					progressDialog.dismiss()
-					Snackbar.make(context.findViewById(R.id.mainactivity_container), if (success) R.string.suc_share.resStr() + "" else (R.string.share_failed.resStr() + ": $errorMsg"), Snackbar.LENGTH_SHORT).show()
-				}
+				progressDialog.dismiss()
+				Snackbar.make(context.findViewById(R.id.mainactivity_container), if (success) R.string.suc_share.resStr() + "" else (R.string.share_failed.resStr() + ": $errorMsg"), Snackbar.LENGTH_SHORT).show()
 			}
 		} else {
 			context.startActivity(Intent.createChooser(Intent().apply {

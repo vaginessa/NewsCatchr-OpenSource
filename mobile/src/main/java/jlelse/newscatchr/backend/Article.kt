@@ -16,9 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.backend
 
 import android.app.Activity
+import co.metalab.asyncawait.async
 import com.afollestad.ason.AsonName
 import com.afollestad.bridge.annotations.ContentType
 import jlelse.newscatchr.backend.apis.SharingApi
@@ -27,18 +30,13 @@ import jlelse.newscatchr.backend.apis.askForSharingService
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.*
 import jlelse.readit.R
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 @ContentType("application/json")
 class Article(
 		@AsonName(name = "id")
 		var originalId: String? = null,
-		@AsonName(name = "published")
 		var published: Long = 0,
-		@AsonName(name = "author")
 		var author: String? = null,
-		@AsonName(name = "title")
 		var title: String? = null,
 		@AsonName(name = "cannonical.$0.href")
 		var canonical: String? = null,
@@ -46,7 +44,6 @@ class Article(
 		var alternateHref: String? = null,
 		@AsonName(name = "enclosure.$0.href")
 		var enclosureHref: String? = null,
-		@AsonName(name = "keywords")
 		var keywords: Array<String>? = null,
 		@AsonName(name = "visual.url")
 		var visualUrl: String? = null,
@@ -89,14 +86,12 @@ class Article(
 
 	fun share(context: Activity) {
 		askForSharingService(context, { network ->
-			doAsync {
-				val newUrl = if (Preferences.urlShortener) UrlShortenerApi().getShortUrl(url) ?: url else url
-				uiThread {
-					SharingApi(context, network).share("\"$title\"", when (network) {
-						SharingApi.SocialNetwork.Twitter -> "${title?.take(136 - (newUrl?.length ?: 0))}... $newUrl"
-						SharingApi.SocialNetwork.Native, SharingApi.SocialNetwork.Facebook -> "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}"
-					})
-				}
+			async {
+				val newUrl = await { if (Preferences.urlShortener) UrlShortenerApi().getShortUrl(url) ?: url else url }
+				SharingApi(context, network).share("\"$title\"", when (network) {
+					SharingApi.SocialNetwork.Twitter -> "${title?.take(136 - (newUrl?.length ?: 0))}... $newUrl"
+					SharingApi.SocialNetwork.Native, SharingApi.SocialNetwork.Facebook -> "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}"
+				})
 			}
 		})
 	}

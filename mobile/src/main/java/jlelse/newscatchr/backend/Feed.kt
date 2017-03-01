@@ -23,13 +23,10 @@ import com.afollestad.bridge.annotations.ContentType
 
 @ContentType("application/json")
 class Feed(
-		@AsonName(name = "title")
 		var title: String? = null,
 		@AsonName(name = "id")
 		var feedIdA: String? = null,
-		@AsonName(name = "feedId")
 		var feedId: String? = null,
-		@AsonName(name = "website")
 		var website: String? = null,
 		var saved: Boolean = false
 ) {

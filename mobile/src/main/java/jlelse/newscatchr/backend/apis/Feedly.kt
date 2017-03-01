@@ -20,7 +20,6 @@ package jlelse.newscatchr.backend.apis
 
 import com.afollestad.ason.Ason
 import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.ContentType
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.readFromCache
@@ -93,19 +92,16 @@ class Feedly {
 
 }
 
-@ContentType("application/json")
 class Ids(
 		var ids: Array<String>? = null,
 		var continuation: String? = null
 )
 
-@ContentType("application/json")
 class FeedSearch(
 		var results: Array<Feed>? = null,
 		var related: Array<String>? = null
 )
 
-@ContentType("application/json")
 class ArticleSearch(
 		var id: String? = null,
 		var title: String? = null,
