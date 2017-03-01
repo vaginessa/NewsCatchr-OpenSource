@@ -32,23 +32,23 @@ import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-fun Array<out Article?>.removeEmptyArticles(): Array<Article> {
+fun List<Article?>.removeEmptyArticles(): List<Article> {
 	return mutableListOf<Article>().apply {
 		this@removeEmptyArticles.forEach { if (it.notNullOrEmpty()) add(it!!) }
-	}.toTypedArray()
+	}
 }
 
-fun Array<out Feed?>.removeEmptyFeeds(): Array<Feed> {
+fun Array<out Article?>.removeEmptyArticles() = this.toList().removeEmptyArticles().toTypedArray()
+
+fun List<Feed?>.removeEmptyFeeds(): List<Feed> {
 	return mutableListOf<Feed>().apply {
 		this@removeEmptyFeeds.forEach { if (it.notNullOrEmpty()) add(it!!) }
-	}.toTypedArray()
+	}
 }
 
-fun Set<Feed?>.removeEmptyFeeds(): Set<Feed> {
-	return mutableSetOf<Feed>().apply {
-		this@removeEmptyFeeds.forEach { if (it.notNullOrEmpty()) add(it!!) }
-	}.toSet()
-}
+fun Array<out Feed?>.removeEmptyFeeds() = this.toList().removeEmptyFeeds().toTypedArray()
+
+fun Set<Feed?>.removeEmptyFeeds() = this.toList().removeEmptyFeeds().toSet()
 
 fun Array<Feed>.onlySaved(): Array<Feed> = toMutableList().filter(Feed::saved).toTypedArray()
 

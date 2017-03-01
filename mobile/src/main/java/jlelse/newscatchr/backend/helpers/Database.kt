@@ -104,7 +104,7 @@ object Database {
 	var allReadUrls: Set<String>
 		get() = tryOrNull { Paper.book(READ_URLS).read<Set<String>>(READ_URLS, setOf<String>()) } ?: setOf<String>()
 		set(value) {
-			tryOrNull { Paper.book(READ_URLS).write(READ_URLS, value.removeBlankStrings()) }
+			tryOrNull { Paper.book(READ_URLS).write(READ_URLS, value.cleanNullable()) }
 		}
 
 	fun addReadUrl(url: String?) {

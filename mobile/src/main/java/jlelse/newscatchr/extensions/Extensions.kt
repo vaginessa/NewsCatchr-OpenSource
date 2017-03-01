@@ -28,8 +28,6 @@ import android.text.Html
 import android.text.Spanned
 import jlelse.newscatchr.appContext
 import jlelse.newscatchr.backend.Feed
-import org.json.JSONArray
-import org.json.JSONObject
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
 import org.xml.sax.Attributes
@@ -60,9 +58,6 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 	}.toTypedArray()
 }
 
-fun String.jsonArray(): JSONArray? = tryOrNull { JSONArray(this) }
-
-fun String.jsonObject(): JSONObject? = tryOrNull { JSONObject(this) }
 
 fun String.buildExcerpt(words: Int) = split(" ").toMutableList().filter { it.notNullOrBlank() && it != "\n" }.take(words).joinToString(separator = " ", postfix = "...").trim()
 
@@ -74,9 +69,11 @@ fun <T> Collection<T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
 fun <T> Set<T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
-fun Array<out String?>.removeBlankStrings() = mutableListOf<String>().apply { this@removeBlankStrings.filter { it.notNullOrBlank() }.forEach { add(it!!) } }.toTypedArray()
+fun Set<String?>.cleanNullable() = this.toList().cleanNullable().toSet()
 
-fun Set<String?>.removeBlankStrings() = mutableSetOf<String>().apply { this@removeBlankStrings.filter { it.notNullOrBlank() }.forEach { add(it!!) } }.toSet()
+fun Array<out String?>.cleanNullable() = this.toList().cleanNullable().toTypedArray()
+
+fun <T> List<T?>.cleanNullable() = mutableListOf<T>().apply { this@cleanNullable.filter { it != null && (if (it is String) it != "" else true) }.forEach { add(it!!) } }.toList()
 
 fun String.cleanHtml(): String? = if (notNullOrBlank()) Jsoup.clean(this, Whitelist.basic().addTags("h2", "h3", "h4", "h5", "h6")) else this
 
@@ -90,7 +87,7 @@ fun String.toHtml(): Spanned = if (android.os.Build.VERSION.SDK_INT < 24) {
 fun <T> tryOrNull(print: Boolean = false, execute: Boolean = true, code: () -> T): T? = try {
 	if (execute) code() else null
 } catch(e: Exception) {
-	if (print) e.printStackTrace()
+	if (true) e.printStackTrace()
 	null
 }
 

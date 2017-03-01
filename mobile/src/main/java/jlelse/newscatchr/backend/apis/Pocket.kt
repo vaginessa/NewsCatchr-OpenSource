@@ -18,16 +18,12 @@
 
 package jlelse.newscatchr.backend.apis
 
-import android.support.annotation.Keep
+import com.afollestad.ason.Ason
+import com.afollestad.ason.AsonName
 import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.Body
-import com.afollestad.bridge.annotations.ContentType
-import com.afollestad.json.Ason
 import jlelse.newscatchr.backend.helpers.Preferences
-import jlelse.newscatchr.extensions.jsonObject
 import jlelse.newscatchr.extensions.tryOrNull
 import org.jetbrains.anko.doAsync
-import org.json.JSONObject
 
 /**
  * Everything has to be called from async thread
@@ -40,7 +36,7 @@ class Pocket {
 				.header("Content-Type", "application/json; charset=UTF-8")
 				.header("X-Accept", "application/json")
 				.body(Ason().put("url", url).put("consumer_key", PocketApiKey).put("access_token", Preferences.pocketAccessToken).toStockJson())
-				.asJsonObject()?.optString("item_id")
+				.asAsonObject()?.getString("item_id")
 	}
 
 	fun archive(itemId: String) {
@@ -49,36 +45,33 @@ class Pocket {
 					.header("Host", "getpocket.com")
 					.header("Content-Type", "application/json; charset=UTF-8")
 					.header("X-Accept", "application/json")
-					.body(ArchiveItem().apply {
-						consumer_key = PocketApiKey
-						access_token = Preferences.pocketAccessToken
-						actions = arrayOf(ArchiveActionItem().apply {
-							item_id = itemId
-						})
+					.body(Ason().apply {
+						put("consumer_key", PocketApiKey)
+						put("access_token", Preferences.pocketAccessToken)
+						put("actions.$0.item_id", itemId)
+						put("actions.$0.action", "archive")
 					})
-					.response()
+					.request()
 		}
 	}
 
-	fun get(): Array<GetResponseItemNew>? = tryOrNull {
-		mutableListOf<GetResponseItemNew>().apply {
+	fun get(): Array<GetResponseItem>? = tryOrNull {
+		mutableListOf<GetResponseItem>().apply {
 			Bridge.post("https://getpocket.com/v3/get")
 					.header("Host", "getpocket.com")
 					.header("Content-Type", "application/json; charset=UTF-8")
 					.header("X-Accept", "application/json")
-					.body(GetRequest().apply {
-						consumer_key = PocketApiKey
-						access_token = Preferences.pocketAccessToken
+					.body(Ason().apply {
+						put("consumer_key", PocketApiKey)
+						put("access_token", Preferences.pocketAccessToken)
+						put("detailType", "complete")
 					})
-					.response()
 					?.asJsonObject()
 					?.optJSONObject("list")
 					?.let {
 						for (i in 0..(it.names()?.length() ?: 1) - 1) {
 							(it.get(it.names().getString(i))?.toString() ?: "").let {
-								add(GetResponseItemNew(it).apply {
-									author = it.jsonObject()?.optJSONObject("authors")?.names()?.getString(0)
-								})
+								add(Ason.deserialize(it, GetResponseItem::class.java))
 							}
 						}
 					}
@@ -86,75 +79,14 @@ class Pocket {
 	}
 }
 
-@Keep
-@ContentType("application/json")
-class ArchiveItem {
-	@Body
-	var actions: Array<ArchiveActionItem>? = null
-	@Body
-	var consumer_key: String? = null
-	@Body
-	var access_token: String? = null
-}
-
-@Keep
-@ContentType("application/json")
-class ArchiveActionItem {
-	@Body
-	val action = "archive"
-	@Body
-	var item_id: String? = null
-}
-
-@Keep
-@ContentType("application/json")
-class GetRequest {
-	@Body
-	var detailType = "complete"
-	@Body
-	var consumer_key: String? = null
-	@Body
-	var access_token: String? = null
-}
-
-@Keep
-class GetResponseItemNew(val json: String?) {
-	var item_id: String? = null
-	var given_url: String? = null
-	var resolved_title: String? = null
-	var excerpt: String? = null
-	var images: GetResponseItemImagesNew? = null
-	var author: String? = null
-
-	init {
-		json?.jsonObject()?.let {
-			item_id = it.optString("item_id")
-			given_url = it.optString("given_url")
-			resolved_title = it.optString("resolved_title")
-			excerpt = it.optString("excerpt")
-			images = GetResponseItemImagesNew(it.optJSONObject("images"))
-			author = it.optString("author")
-		}
-	}
-}
-
-@Keep
-class GetResponseItemImagesNew(jsonObject: JSONObject?) {
-	var one: GetResponseItemImageNew? = null
-
-	init {
-		one = GetResponseItemImageNew(jsonObject?.optJSONObject("1"))
-	}
-}
-
-@Keep
-class GetResponseItemImageNew(jsonObject: JSONObject?) {
-	var src: String? = null
-
-	init {
-		src = jsonObject?.optString("src")
-	}
-}
+class GetResponseItem(
+		var item_id: String? = null,
+		var given_url: String? = null,
+		var resolved_title: String? = null,
+		var excerpt: String? = null,
+		@AsonName(name = "images.1.src")
+		var image: String? = null
+)
 
 /**
  * Everything can be called from UI thread
@@ -171,15 +103,15 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 						.header("Host", "getpocket.com")
 						.header("Content-Type", "application/json; charset=UTF-8")
 						.header("X-Accept", "application/json")
-						.body(FirstRequest().apply {
-							consumer_key = PocketApiKey
-							redirect_uri = pocketRedirectUri
+						.body(Ason().apply {
+							put("consumer_key", PocketApiKey)
+							put("redirect_uri", pocketRedirectUri)
 						})
 						.response()
 						?.let {
 							when (it.header("X-Error-Code")) {
 								"138", "140", "152", "199" -> pocketCallback.failed()
-								else -> authorize(it.asClass(FirstResponse::class.java)?.code ?: "")
+								else -> authorize(it.asAsonObject()?.getString("code") ?: "")
 							}
 						}
 			} catch(exception: Exception) {
@@ -204,17 +136,17 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 							.header("Host", "getpocket.com")
 							.header("Content-Type", "application/json; charset=UTF-8")
 							.header("X-Accept", "application/json")
-							.body(SecondRequest().apply {
-								consumer_key = PocketApiKey
-								code = pocketCode
+							.body(Ason().apply {
+								put("consumer_key", PocketApiKey)
+								put("code", pocketCode)
 							})
 							.response()
 							?.let {
 								when (it.header("X-Error-Code")) {
 									"138", "152", "181", "182", "185", "158", "159", "199" -> pocketCallback.failed()
 									else -> {
-										it.asClass(SecondResponse::class.java)?.let {
-											authenticated(it.access_token ?: "", it.username ?: "")
+										it.asAsonObject()?.let {
+											authenticated(it.getString("access_token") ?: "", it.getString("username") ?: "")
 										}
 									}
 								}
@@ -237,40 +169,6 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 		fun failed()
 		fun authorize(url: String)
 		fun authenticated(accessToken: String, userName: String)
-	}
-
-	@Keep
-	@ContentType("application/json")
-	class FirstRequest {
-		@Body
-		var consumer_key: String? = null
-		@Body
-		var redirect_uri: String? = null
-	}
-
-	@Keep
-	@ContentType("application/json")
-	class FirstResponse {
-		@Body
-		var code: String? = null
-	}
-
-	@Keep
-	@ContentType("application/json")
-	class SecondRequest {
-		@Body
-		var consumer_key: String? = null
-		@Body
-		var code: String? = null
-	}
-
-	@Keep
-	@ContentType("application/json")
-	class SecondResponse {
-		@Body
-		var access_token: String? = null
-		@Body
-		var username: String? = null
 	}
 
 }

@@ -84,10 +84,6 @@
 					android:resource="@xml/shortcuts"/>
 		</activity>
 
-		<activity
-				android:name="jlelse.newscatchr.ui.activities.IssueActivity"
-				android:theme="@style/IssueTheme"/>
-
 	</application>
 
 </manifest>

@@ -19,7 +19,6 @@
 package jlelse.newscatchr.ui.recycleritems
 
 import android.graphics.Typeface
-import android.support.annotation.Keep
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.view.View
@@ -38,7 +37,6 @@ import jlelse.readit.R
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
 
-@Keep
 class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleListRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
 

@@ -19,11 +19,8 @@
 package jlelse.newscatchr.backend
 
 import android.app.Activity
-import android.support.annotation.Keep
-import com.afollestad.bridge.annotations.Body
+import com.afollestad.ason.AsonName
 import com.afollestad.bridge.annotations.ContentType
-import com.afollestad.json.Ason
-import com.afollestad.json.AsonIgnore
 import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.UrlShortenerApi
 import jlelse.newscatchr.backend.apis.askForSharingService
@@ -33,38 +30,31 @@ import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-@Keep
 @ContentType("application/json")
 class Article(
-		@Body(name = "id")
+		@AsonName(name = "id")
 		var originalId: String? = null,
-		@Body
+		@AsonName(name = "published")
 		var published: Long = 0,
-		@Body
+		@AsonName(name = "author")
 		var author: String? = null,
-		@Body
+		@AsonName(name = "title")
 		var title: String? = null,
-		@Body
-		@AsonIgnore
-		var canonical: Array<Alternate>? = null,
-		var canonicalHref: String? = null,
-		@Body
-		@AsonIgnore
-		var alternate: Array<Alternate>? = null,
+		@AsonName(name = "cannonical.$0.href")
+		var canonical: String? = null,
+		@AsonName(name = "alternate.$0.href")
 		var alternateHref: String? = null,
-		@Body
-		@AsonIgnore
-		var enclosure: Array<Alternate>? = null,
+		@AsonName(name = "enclosure.$0.href")
 		var enclosureHref: String? = null,
-		@Body
+		@AsonName(name = "keywords")
 		var keywords: Array<String>? = null,
-		@Body(name = "visual.url")
+		@AsonName(name = "visual.url")
 		var visualUrl: String? = null,
-		@Body(name = "origin.title")
+		@AsonName(name = "origin.title")
 		var originTitle: String? = null,
-		@Body(name = "summary.content")
+		@AsonName(name = "summary.content")
 		var content: String? = null,
-		@Body(name = "content.content")
+		@AsonName(name = "content.content")
 		var contentB: String? = null,
 		var excerpt: String? = null,
 		var url: String? = null,
@@ -73,16 +63,7 @@ class Article(
 		var cleanedContent: Boolean = false,
 		var checkedUrl: Boolean = false,
 		var checkedImageUrl: Boolean = false
-) : Jsonizable<Article> {
-	fun fix() {
-		canonicalHref = canonical?.firstOrNull()?.href
-		canonical = null
-		alternateHref = alternate?.firstOrNull()?.href
-		alternate = null
-		enclosureHref = enclosure?.firstOrNull()?.href
-		enclosure = null
-	}
-
+) {
 	fun process(force: Boolean = false): Article {
 		if (force) {
 			cleanedContent = false
@@ -95,7 +76,7 @@ class Article(
 			cleanedContent = true
 		}
 		if (!checkedUrl) {
-			if (canonicalHref.notNullOrBlank()) url = canonicalHref
+			if (canonical.notNullOrBlank()) url = canonical
 			else if (alternateHref.notNullOrBlank()) url = alternateHref
 			checkedUrl = true
 		}
@@ -119,57 +100,4 @@ class Article(
 			}
 		})
 	}
-
-	override fun toAson() = Ason().apply {
-		put("originalId", originalId)
-		put("published", published)
-		put("author", author)
-		put("title", title)
-		put("canonicalHref", canonicalHref)
-		put("alternateHref", alternateHref)
-		put("enclosureHref", enclosureHref)
-		put("keywords", keywords?.joinToString(separator = arraySeparator))
-		put("visualUrl", visualUrl)
-		put("originTitle", originTitle)
-		put("content", content)
-		put("contentB", contentB)
-		put("excerpt", excerpt)
-		put("url", url)
-		put("pocketId", pocketId)
-		put("fromPocket", fromPocket)
-		put("cleanedContent", cleanedContent)
-		put("checkedUrl", checkedUrl)
-		put("checkedImageUrl", checkedImageUrl)
-	}
-
-	override fun fromJson(json: String?): Article {
-		tryOrNull { Ason(json) }?.apply {
-			originalId = get("originalId", originalId)
-			published = get("published", published)
-			author = get("author", author)
-			title = get("title", title)
-			canonicalHref = get("canonicalHref", canonicalHref)
-			alternateHref = get("alternateHref", alternateHref)
-			enclosureHref = get("enclosureHref", enclosureHref)
-			keywords = tryOrNull { getString("keywords").split(arraySeparator).toTypedArray() } ?: keywords
-			visualUrl = get("visualUrl", visualUrl)
-			originTitle = get("originTitle", originTitle)
-			content = get("content", content)
-			contentB = get("contentB", contentB)
-			excerpt = get("excerpt", excerpt)
-			url = get("url", url)
-			pocketId = get("pocketId", pocketId)
-			fromPocket = get("fromPocket", fromPocket)
-			cleanedContent = get("cleanedContent", cleanedContent)
-			checkedUrl = get("checkedUrl", checkedUrl)
-			checkedImageUrl = get("checkedImageUrl", checkedImageUrl)
-		}
-		return this
-	}
 }
-
-@Keep
-@ContentType("application/json")
-class Alternate(
-		@Body var href: String? = null
-)

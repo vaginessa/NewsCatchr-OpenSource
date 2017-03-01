@@ -22,7 +22,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.design.widget.Snackbar
-import com.afollestad.json.Ason
+import com.afollestad.ason.Ason
 import com.afollestad.materialdialogs.MaterialDialog
 import com.cloudrail.si.CloudRail
 import com.cloudrail.si.interfaces.CloudStorage

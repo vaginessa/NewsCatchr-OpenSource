@@ -20,12 +20,6 @@
 
 	<style name="ToolbarPopupTheme" parent="ThemeOverlay.AppCompat.Dark"/>
 
-	<style name="IssueTheme" parent="Theme.IssueReporter">
-		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
-	</style>
-
 	<color name="bb_background">#212121</color>
 
 </resources>

@@ -18,11 +18,9 @@
 
 package jlelse.newscatchr.backend.apis
 
-import android.support.annotation.Keep
+import com.afollestad.ason.Ason
 import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.Body
 import com.afollestad.bridge.annotations.ContentType
-import com.afollestad.json.Ason
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.readFromCache
@@ -55,7 +53,7 @@ class Feedly {
 
 	fun entries(ids: Array<String>): Array<Article>? = tryOrNull {
 		if (ids.isNotEmpty()) {
-			Bridge.post("$BASE_URL/entries/.mget").body(Ason.serializeArray<String>(ids).toStockJson()).asClassArray(Article::class.java)?.apply { forEach { it.fix() } }
+			Bridge.post("$BASE_URL/entries/.mget").body(Ason.serializeArray<String>(ids)).asClassList(Article::class.java)?.toTypedArray()
 		} else null
 	}
 
@@ -95,37 +93,21 @@ class Feedly {
 
 }
 
-@Keep
 @ContentType("application/json")
-class Ids {
+class Ids(
+		var ids: Array<String>? = null,
+		var continuation: String? = null
+)
 
-	@Body
-	var ids: Array<String>? = null
-	@Body
-	var continuation: String? = null
-
-}
-
-@Keep
 @ContentType("application/json")
-class FeedSearch {
+class FeedSearch(
+		var results: Array<Feed>? = null,
+		var related: Array<String>? = null
+)
 
-	@Body
-	var results: Array<Feed>? = null
-	@Body
-	var related: Array<String>? = null
-
-}
-
-@Keep
 @ContentType("application/json")
-class ArticleSearch {
-
-	@Body
-	var id: String? = null
-	@Body
-	var title: String? = null
-	@Body
-	var items: Array<Article>? = null
-
-}
+class ArticleSearch(
+		var id: String? = null,
+		var title: String? = null,
+		var items: Array<Article>? = null
+)

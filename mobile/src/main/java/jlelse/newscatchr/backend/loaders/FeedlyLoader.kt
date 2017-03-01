@@ -24,8 +24,8 @@ import jlelse.newscatchr.backend.apis.Ids
 import jlelse.newscatchr.backend.helpers.ArticleCache
 import jlelse.newscatchr.backend.helpers.readFromCache
 import jlelse.newscatchr.backend.helpers.saveToCache
+import jlelse.newscatchr.extensions.cleanNullable
 import jlelse.newscatchr.extensions.notNullAndEmpty
-import jlelse.newscatchr.extensions.removeBlankStrings
 import jlelse.newscatchr.extensions.removeEmptyArticles
 
 class FeedlyLoader {
@@ -97,13 +97,13 @@ class FeedlyLoader {
 	}
 
 	private fun itemsByIds(ids: Array<String>?, cache: Boolean): Array<Article>? = if (ids.notNullAndEmpty()) {
-		ids!!.removeBlankStrings().filter { if (cache) !articleCache.isCached(it) else true }.let {
-			if (it.notNullAndEmpty()) Feedly().entries(it.toTypedArray())?.forEach {
+		ids!!.cleanNullable().filter { if (cache) !articleCache.isCached(it) else true }.toTypedArray().let {
+			if (it.notNullAndEmpty()) Feedly().entries(it)?.forEach {
 				articleCache.save(it)
 			}
 		}
 		mutableListOf<Article>().apply {
-			ids.removeBlankStrings().forEach {
+			ids.cleanNullable().forEach {
 				articleCache.getById(it)?.let { add(it) }
 			}
 		}.toTypedArray()

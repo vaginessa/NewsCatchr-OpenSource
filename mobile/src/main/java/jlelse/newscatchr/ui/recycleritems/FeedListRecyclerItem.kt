@@ -20,7 +20,6 @@ package jlelse.newscatchr.ui.recycleritems
 
 import android.content.Intent
 import android.net.Uri
-import android.support.annotation.Keep
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
@@ -40,7 +39,6 @@ import jlelse.readit.R
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
 
-@Keep
 class FeedListRecyclerItem : AbstractItem<FeedListRecyclerItem, FeedListRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
 

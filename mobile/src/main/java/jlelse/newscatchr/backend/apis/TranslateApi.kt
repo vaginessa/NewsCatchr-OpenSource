@@ -19,7 +19,6 @@
 package jlelse.newscatchr.backend.apis
 
 import com.afollestad.bridge.Bridge
-import jlelse.newscatchr.extensions.jsonObject
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
 
@@ -38,8 +37,7 @@ class TranslateApi {
 
 	private fun translateShort(targetLanguage: String, query: String): Map<String, String?> {
 		val response = mutableMapOf<String, String?>("translation" to "")
-		Bridge.get("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&dt=t&ie=UTF-8&oe=UTF-8&dj=1&tl=%s&q=%s", targetLanguage, query).asString()
-				?.jsonObject()
+		Bridge.get("https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&dt=t&ie=UTF-8&oe=UTF-8&dj=1&tl=%s&q=%s", targetLanguage, query).asJsonObject()
 				?.let {
 					it.optJSONArray("sentences").let {
 						for (i in 0..it.length()) response["translation"] = response["translation"] + (it.optJSONObject(i)?.optString("trans") ?: "")

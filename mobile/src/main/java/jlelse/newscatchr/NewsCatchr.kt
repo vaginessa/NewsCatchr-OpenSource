@@ -53,10 +53,10 @@ class NewsCatchr : Application() {
 		if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
 		Paper.book("hosts").destroy()
 		CloudRail.setAppKey(CloudRailApiKey)
-		// CloudRail.setAdvancedAuthenticationMode(true)
 	}
 }
 
 var appContext: Context? = null
 var customTabsHelperFragment: CustomTabsHelperFragment? = null
 var lastTab = 0
+var masterValueMap = mutableMapOf<String, MutableMap<String, Any?>?>()

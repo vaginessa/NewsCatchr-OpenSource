@@ -18,10 +18,8 @@
 
 package jlelse.newscatchr.backend.apis
 
-import android.support.annotation.Keep
+import com.afollestad.ason.Ason
 import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.Body
-import com.afollestad.bridge.annotations.ContentType
 import jlelse.newscatchr.extensions.notNullOrBlank
 
 class AmpApi {
@@ -32,13 +30,11 @@ class AmpApi {
 		if (cachedUrls.contains(url)) return cachedUrls[url]
 		if (url.notNullOrBlank()) {
 			Bridge.post("https://acceleratedmobilepageurl.googleapis.com/v1/ampUrls:batchGet?fields=ampUrls%2FcdnAmpUrl&key=$GoogleApiKey")
-					.body("{\"urls\":[\"$url\"]}")
-					.connectTimeout(2500)
-					.readTimeout(2500)
-					.asClass(Response::class.java)
-					?.ampUrls?.firstOrNull()?.cdnAmpUrl
+					.body(Ason().put("urls", arrayOf(url)))
+					.asAsonObject()
 					?.let {
-						if (it.notNullOrBlank()) return cacheAndReturn(url, it)
+						val returnedUrl = it.getString("ampUrls.$0.cdnAmpUrl")
+						if (returnedUrl.notNullOrBlank()) return cacheAndReturn(url, returnedUrl)
 					}
 			return cacheAndReturn(url, "https://googleweblight.com/?lite_url=$url")
 		}
@@ -48,20 +44,6 @@ class AmpApi {
 	private fun cacheAndReturn(url: String?, response: String?): String? {
 		if (url.notNullOrBlank() && response.notNullOrBlank()) cachedUrls.put(url!!, response!!)
 		return response
-	}
-
-	@Keep
-	@ContentType("application/json")
-	private class Response {
-		@Body
-		var ampUrls: Array<AmpUrlObject>? = null
-	}
-
-	@Keep
-	@ContentType("application/json")
-	private class AmpUrlObject {
-		@Body
-		var cdnAmpUrl: String? = null
 	}
 
 }

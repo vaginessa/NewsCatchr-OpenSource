@@ -37,7 +37,6 @@ import jlelse.newscatchr.backend.apis.PocketAuth
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
-import jlelse.newscatchr.ui.activities.IssueActivity
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FragmentValues
 import jlelse.newscatchr.ui.objects.Library
@@ -45,7 +44,6 @@ import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
 import java.util.*
@@ -84,6 +82,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	}
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+		restoreValues(savedInstanceState)
 		if (activity is MainActivity) (activity as MainActivity).resetToolbarBackground()
 		val view = super.onCreateView(inflater, container, savedInstanceState)
 		if (!purchaseReceiverRegistered) {
@@ -305,7 +304,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.negativeText(android.R.string.cancel)
 						.show()
 			}
-			issuePref -> activity.startActivity<IssueActivity>()
+		//issuePref ->
 		}
 		return true
 	}
@@ -348,6 +347,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			it.title = (if (loggedIn) R.string.pocket_logout else R.string.pocket_login).resStr()
 			it.summary = if (loggedIn) "${R.string.logged_in_as.resStr()} ${Preferences.pocketUserName}" else null
 		}
+	}
+
+	override fun onSaveInstanceState(outState: Bundle?) {
+		super.onSaveInstanceState(outState)
+		saveValues(outState)
 	}
 
 	override fun onDestroy() {

@@ -19,37 +19,27 @@
 package jlelse.newscatchr.backend.apis
 
 import android.content.Context
-import android.support.annotation.Keep
 import android.widget.ArrayAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.Body
-import com.afollestad.bridge.annotations.ContentType
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.readit.R
 
 class AutoCompleteApi {
-
 	fun getSuggestions(query: String?): List<String?>? {
 		if (query.notNullOrBlank()) {
 			return Bridge.get("https://duckduckgo.com/ac/?q=%s", query)
-					.connectTimeout(1000)
-					.readTimeout(1000)
 					.asClassArray(ResponseItem::class.java)
 					?.map { it.phrase }
-					?.filter { it.notNullOrBlank() } ?: null
+					?.filter { it.notNullOrBlank() }
 		}
 		return null
 	}
 
-	@Keep
-	@ContentType("application/json")
 	private class ResponseItem {
-		@Body
 		var phrase: String? = null
 	}
-
 }
 
 class AutoCompleteAdapter(context: Context) : ArrayAdapter<String>(context, R.layout.support_simple_spinner_dropdown_item), Filterable {

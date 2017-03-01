@@ -18,7 +18,6 @@
 
 package jlelse.newscatchr.ui.recycleritems
 
-import android.support.annotation.Keep
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
@@ -28,8 +27,6 @@ import jlelse.readit.R
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
 
-
-@Keep
 class MoreRecyclerItem : AbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
 

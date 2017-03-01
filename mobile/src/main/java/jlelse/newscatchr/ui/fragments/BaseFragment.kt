@@ -38,6 +38,7 @@ abstract class BaseFragment : Fragment(), FragmentValues {
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		if (activity is MainActivity) (activity as MainActivity).resetToolbarBackground()
+		restoreValues(savedInstanceState)
 		return super.onCreateView(inflater, container, savedInstanceState)
 	}
 
@@ -60,6 +61,7 @@ abstract class BaseFragment : Fragment(), FragmentValues {
 	override fun onSaveInstanceState(outState: Bundle?) {
 		super.onSaveInstanceState(outState)
 		saveStateScrollViews?.forEach { tryOrNull { it?.savePosition(this) } }
+		saveValues(outState)
 	}
 
 	override fun onPause() {

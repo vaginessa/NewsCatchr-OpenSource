@@ -18,7 +18,6 @@
 
 package jlelse.newscatchr.ui.recycleritems
 
-import android.support.annotation.Keep
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
@@ -27,8 +26,6 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.readit.R
 import org.jetbrains.anko.find
 
-
-@Keep
 class HeaderRecyclerItem : AbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
 

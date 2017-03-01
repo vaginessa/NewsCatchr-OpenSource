@@ -18,9 +18,7 @@
 
 package jlelse.newscatchr.backend.apis
 
-import android.support.annotation.Keep
 import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.Body
 import jlelse.newscatchr.extensions.notNullOrBlank
 
 class UrlShortenerApi {
@@ -30,19 +28,12 @@ class UrlShortenerApi {
 			Bridge.post("https://www.googleapis.com/urlshortener/v1/url?fields=id&key=$GoogleApiKey")
 					.body("{\"longUrl\":\"$url\"}")
 					.header("Content-Type", "application/json")
-					.asClass(Response::class.java)
-					?.shortUrl
+					.asAsonObject()
 					?.let {
-						if (it.notNullOrBlank()) return it
+						if (it.getString("shortUrl").notNullOrBlank()) return it.getString("shortUrl")
 					}
 		}
 		return url
-	}
-
-	@Keep
-	private class Response {
-		@Body(name = "id")
-		var shortUrl: String? = null
 	}
 
 }

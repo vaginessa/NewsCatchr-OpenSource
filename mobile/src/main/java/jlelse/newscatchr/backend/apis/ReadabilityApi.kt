@@ -18,10 +18,7 @@
 
 package jlelse.newscatchr.backend.apis
 
-import android.support.annotation.Keep
 import com.afollestad.bridge.Bridge
-import com.afollestad.bridge.annotations.Body
-import com.afollestad.bridge.annotations.ContentType
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
@@ -48,14 +45,8 @@ class ReadabilityApi {
 		Bridge.get("https://mercury.postlight.com/parser?url=$url")
 				.header("Content-Type", "application/json")
 				.header("x-api-key", ReadabilityApiKey)
-				.asClass(Response::class.java)
-				?.let { mapOf("title" to it.title, "content" to it.content, "image" to it.lead_image_url) }
-	}
-
-	@Keep @ContentType("application/json") private open class Response {
-		@Body var title: String? = ""
-		@Body var content: String? = ""
-		@Body var lead_image_url: String? = ""
+				.asAsonObject()
+				?.let { mapOf("title" to it.getString("title"), "content" to it.getString("content"), "image" to it.getString("lead_image_url")) }
 	}
 
 }

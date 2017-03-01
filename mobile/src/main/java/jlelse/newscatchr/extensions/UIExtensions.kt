@@ -47,7 +47,7 @@ fun View.showView() {
 	visibility = View.VISIBLE
 }
 
-fun ImageView.loadImage(url: String?, crop: Boolean = true) {
+fun ImageView.loadImage(url: String?) {
 	try {
 		Glide.with(context).load(url).into(this)
 	} catch (e: Exception) {
