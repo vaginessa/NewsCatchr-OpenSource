@@ -48,7 +48,7 @@ class ArticleSearchResultFragment : BaseFragment() {
 		if (articles.notNullAndEmpty()) {
 			fastAdapter.clear()
 			articles?.forEach {
-				fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@ArticleSearchResultFragment))
+				fastAdapter.add(ArticleListRecyclerItem(article = it, fragment = this@ArticleSearchResultFragment))
 			}
 			recyclerOne?.restorePosition()
 		}

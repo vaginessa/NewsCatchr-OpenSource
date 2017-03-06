@@ -54,14 +54,14 @@ class FeedListFragment : BaseFragment() {
 		if (feeds.notNullAndEmpty()) {
 			fastAdapter.add(mutableListOf<FeedListRecyclerItem>().apply {
 				feeds?.forEachIndexed { i, feed ->
-					add(FeedListRecyclerItem().withFeed(feed).withIsLast(i == feeds?.lastIndex).withFragment(this@FeedListFragment).withAdapter(fastAdapter))
+					add(FeedListRecyclerItem(feed = feed, isLast = i == feeds?.lastIndex, fragment = this@FeedListFragment, adapter = fastAdapter))
 				}
 			})
 		}
 		tags = getAddedObject("tags")
 		tagsAdapter.clear()
 		if (tags.notNullAndEmpty()) {
-			tagsAdapter.add(TagsRecyclerItem().withTags(this, tags!!))
+			tagsAdapter.add(TagsRecyclerItem(fragment = this, tags = tags))
 		}
 		recyclerOne?.restorePosition()
 		return fragmentView

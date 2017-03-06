@@ -39,33 +39,8 @@ import jlelse.readit.R
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
 
-class FeedListRecyclerItem : AbstractItem<FeedListRecyclerItem, FeedListRecyclerItem.ViewHolder>() {
+class FeedListRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: BaseFragment? = null, val adapter: FastItemAdapter<FeedListRecyclerItem>? = null) : AbstractItem<FeedListRecyclerItem, FeedListRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
-
-	private var feed: Feed? = null
-	private var isLast = false
-	private var fragment: BaseFragment? = null
-	private var adapter: FastItemAdapter<FeedListRecyclerItem>? = null
-
-	fun withFeed(feed: Feed): FeedListRecyclerItem {
-		this.feed = feed
-		return this
-	}
-
-	fun withFragment(fragment: BaseFragment): FeedListRecyclerItem {
-		this.fragment = fragment
-		return this
-	}
-
-	fun withAdapter(adapter: FastItemAdapter<FeedListRecyclerItem>): FeedListRecyclerItem {
-		this.adapter = adapter
-		return this
-	}
-
-	fun withIsLast(isLast: Boolean): FeedListRecyclerItem {
-		this.isLast = isLast
-		return this
-	}
 
 	override fun getType(): Int {
 		return R.id.feedlist_item_id
@@ -79,21 +54,21 @@ class FeedListRecyclerItem : AbstractItem<FeedListRecyclerItem, FeedListRecycler
 		super.bindView(viewHolder, payloads)
 		val context = viewHolder.itemView.context
 		if (feed != null) {
-			setTitleText(feed?.title, viewHolder.title)
-			viewHolder.website.text = Uri.parse(feed?.website ?: feed?.url()).host
+			setTitleText(feed.title, viewHolder.title)
+			viewHolder.website.text = Uri.parse(feed.website ?: feed.url()).host
 			viewHolder.itemView.onClick {
 				fragment?.fragmentNavigation?.pushFragment(FeedFragment().apply {
 					addObject("feed", feed)
-				}, feed?.title)
+				}, feed.title)
 			}
-			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed?.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
+			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
 			viewHolder.favorite.onClick {
-				if (Database.isSavedFavorite(feed?.url())) {
-					feed?.saved = false
-					Database.deleteFavorite(feed?.url())
+				if (Database.isSavedFavorite(feed.url())) {
+					feed.saved = false
+					Database.deleteFavorite(feed.url())
 					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_border_universal.resDrw(context, context.getPrimaryTextColor()))
 				} else {
-					feed?.saved = true
+					feed.saved = true
 					Database.addFavorite(feed)
 					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_universal.resDrw(context, context.getPrimaryTextColor()))
 				}
@@ -116,16 +91,9 @@ class FeedListRecyclerItem : AbstractItem<FeedListRecyclerItem, FeedListRecycler
 	}
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var title: TextView
-		var website: TextView
-		var favorite: ImageView
-		var divider: View
-
-		init {
-			this.title = view.find<TextView>(R.id.title)
-			this.website = view.find<TextView>(R.id.website)
-			this.favorite = view.find<ImageView>(R.id.favorite)
-			this.divider = view.find<View>(R.id.divider)
-		}
+		var title: TextView = view.find<TextView>(R.id.title)
+		var website: TextView = view.find<TextView>(R.id.website)
+		var favorite: ImageView = view.find<ImageView>(R.id.favorite)
+		var divider: View = view.find<View>(R.id.divider)
 	}
 }

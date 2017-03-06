@@ -38,6 +38,8 @@ android {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix ' debug'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
     packagingOptions {
@@ -68,7 +70,7 @@ dependencies {
         exclude group: 'org.json', module: 'json'
         exclude group: 'com.intellij', module: 'annotations'
     }
-    compile('com.afollestad:ason:1.4.5') {
+    compile('com.afollestad:ason:1.4.7') {
         exclude group: 'org.json', module: 'json'
         exclude group: 'com.intellij', module: 'annotations'
     }

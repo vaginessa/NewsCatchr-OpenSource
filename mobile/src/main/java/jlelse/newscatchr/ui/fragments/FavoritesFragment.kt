@@ -70,7 +70,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		if (feeds.notNullAndEmpty()) {
 			fastAdapter.clear()
 			feeds?.forEach {
-				fastAdapter.add(FeedListRecyclerItem().withFeed(it).withFragment(this@FavoritesFragment).withAdapter(fastAdapter))
+				fastAdapter.add(FeedListRecyclerItem(feed = it, fragment = this@FavoritesFragment, adapter = fastAdapter))
 			}
 			if (first) recyclerOne?.restorePosition()
 		} else {

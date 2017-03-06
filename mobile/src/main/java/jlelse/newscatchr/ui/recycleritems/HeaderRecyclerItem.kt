@@ -26,15 +26,8 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.readit.R
 import org.jetbrains.anko.find
 
-class HeaderRecyclerItem : AbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
+class HeaderRecyclerItem(val title: String? = null) : AbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
-
-	private var title: String? = ""
-
-	fun withTitle(title: String): HeaderRecyclerItem {
-		this.title = title
-		return this
-	}
 
 	override fun getType(): Int {
 		return R.id.header_item_id
@@ -46,7 +39,7 @@ class HeaderRecyclerItem : AbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.V
 
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
 		super.bindView(viewHolder, payloads)
-		viewHolder.title.text = title
+		viewHolder.title.text = title ?: ""
 	}
 
 	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
@@ -58,10 +51,6 @@ class HeaderRecyclerItem : AbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.V
 	}
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var title: TextView
-
-		init {
-			this.title = view.find<TextView>(R.id.headerTitle)
-		}
+		var title: TextView = view.find<TextView>(R.id.headerTitle)
 	}
 }

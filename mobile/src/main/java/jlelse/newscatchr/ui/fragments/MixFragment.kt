@@ -70,7 +70,7 @@ class MixFragment : BaseFragment() {
 		if (articles.notNullAndEmpty()) {
 			fastAdapter.clear()
 			articles?.forEach {
-				fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@MixFragment))
+				fastAdapter.add(ArticleListRecyclerItem(article = it, fragment = this@MixFragment))
 			}
 			if (cache) recyclerOne?.restorePosition()
 		} else {

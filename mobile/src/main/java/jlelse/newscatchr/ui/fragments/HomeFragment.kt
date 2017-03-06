@@ -120,19 +120,19 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		if (recyclerOne?.adapter == null) {
 			moreAdapterOne.wrap(fastAdapterOne)
 			headerAdapterOne.wrap(moreAdapterOne)
-			headerAdapterOne.add(HeaderRecyclerItem().withTitle(R.string.last_feeds.resStr()!!))
+			headerAdapterOne.add(HeaderRecyclerItem(title = R.string.last_feeds.resStr()!!))
 			recyclerOne?.adapter = headerAdapterOne
 		}
 		if (recyclerTwo?.adapter == null) {
 			moreAdapterTwo.wrap(fastAdapterTwo)
 			headerAdapterTwo.wrap(moreAdapterTwo)
-			headerAdapterTwo.add(HeaderRecyclerItem().withTitle(R.string.favorites.resStr()!!))
+			headerAdapterTwo.add(HeaderRecyclerItem(title = R.string.favorites.resStr()!!))
 			recyclerTwo?.adapter = headerAdapterTwo
 		}
 		if (recyclerThree?.adapter == null) {
 			moreAdapterThree.wrap(fastAdapterThree)
 			headerAdapterThree.wrap(moreAdapterThree)
-			headerAdapterThree.add(HeaderRecyclerItem().withTitle(R.string.recommendations.resStr()!!))
+			headerAdapterThree.add(HeaderRecyclerItem(title = R.string.recommendations.resStr()!!))
 			recyclerThree?.adapter = headerAdapterThree
 		}
 		loadLastFeeds(true)
@@ -176,9 +176,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		if (lastFeeds.notNullAndEmpty()) {
 			recyclerOne?.showView()
 			lastFeeds.forEachIndexed { i, feed ->
-				fastAdapterOne.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == lastFeeds.lastIndex))
+				fastAdapterOne.add(FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == lastFeeds.lastIndex))
 			}
-			moreAdapterOne.add(MoreRecyclerItem().withCallback {
+			moreAdapterOne.add(MoreRecyclerItem {
 				fragmentNavigation.pushFragment(FeedListFragment().apply {
 					addObject("feeds", Database.allLastFeeds.reversed().toTypedArray())
 				}, R.string.last_feeds.resStr())
@@ -194,9 +194,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		if (favoriteFeeds.notNullAndEmpty()) {
 			recyclerOne?.showView()
 			favoriteFeeds.forEachIndexed { i, feed ->
-				fastAdapterTwo.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == favoriteFeeds.lastIndex))
+				fastAdapterTwo.add(FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == favoriteFeeds.lastIndex))
 			}
-			moreAdapterTwo.add(MoreRecyclerItem().withCallback {
+			moreAdapterTwo.add(MoreRecyclerItem {
 				fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
 			})
 		} else recyclerTwo?.hideView()
@@ -216,9 +216,9 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		if (recFeeds.notNullAndEmpty()) {
 			recyclerThree?.showView()
 			recFeeds?.take(15)?.forEachIndexed { i, feed ->
-				fastAdapterThree.add(FeedListRecyclerItem().withFeed(feed).withFragment(this@HomeFragment).withIsLast(i == recFeeds?.take(15)?.lastIndex))
+				fastAdapterThree.add(FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == recFeeds?.take(15)?.lastIndex))
 			}
-			moreAdapterThree.add(MoreRecyclerItem().withCallback {
+			moreAdapterThree.add(MoreRecyclerItem {
 				fragmentNavigation.pushFragment(FeedListFragment().apply {
 					addObject("feeds", recFeeds)
 					addObject("tags", recRelated)

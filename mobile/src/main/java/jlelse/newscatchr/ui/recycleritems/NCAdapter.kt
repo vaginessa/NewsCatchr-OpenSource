@@ -20,18 +20,9 @@ package jlelse.newscatchr.ui.recycleritems
 
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 
 
 class NCAdapter<Item : IItem<*, *>>(val order: Int? = null) : ItemAdapter<Item>() {
-
-	override fun getOrder(): Int {
-		return order ?: super.getOrder()
-	}
-
-}
-
-class NCFastItemAdapter<Item : IItem<*, *>>(val order: Int? = null) : FastItemAdapter<Item>() {
 
 	override fun getOrder(): Int {
 		return order ?: super.getOrder()

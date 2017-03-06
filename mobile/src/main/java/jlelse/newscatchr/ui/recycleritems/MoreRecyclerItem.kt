@@ -27,15 +27,8 @@ import jlelse.readit.R
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
 
-class MoreRecyclerItem : AbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
+class MoreRecyclerItem(val callback: () -> Unit = {}) : AbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
-
-	private var callback: () -> Unit = {}
-
-	fun withCallback(callback: () -> Unit): MoreRecyclerItem {
-		this.callback = callback
-		return this
-	}
 
 	override fun getType(): Int {
 		return R.id.more_item_id
@@ -59,10 +52,6 @@ class MoreRecyclerItem : AbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHol
 	}
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var button: Button
-
-		init {
-			this.button = view.find<Button>(R.id.moreButton)
-		}
+		var button: Button = view.find<Button>(R.id.moreButton)
 	}
 }

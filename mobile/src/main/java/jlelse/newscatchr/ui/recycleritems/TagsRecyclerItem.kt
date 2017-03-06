@@ -28,17 +28,8 @@ import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.find
 
-class TagsRecyclerItem : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHolder>() {
+class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: BaseFragment? = null) : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
-
-	private var tags: Array<String>? = null
-	private var fragment: BaseFragment? = null
-
-	fun withTags(fragment: BaseFragment, tags: Array<String>): TagsRecyclerItem {
-		this.tags = tags
-		this.fragment = fragment
-		return this
-	}
 
 	override fun getType(): Int {
 		return R.id.tags_item_id
@@ -52,7 +43,7 @@ class TagsRecyclerItem : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHol
 		super.bindView(viewHolder, payloads)
 		viewHolder.tagsBox.removeAllViews()
 		if (fragment != null) tags?.forEach {
-			viewHolder.tagsBox.addTagView(fragment!!, it)
+			viewHolder.tagsBox.addTagView(fragment, it)
 		}
 	}
 
@@ -65,10 +56,6 @@ class TagsRecyclerItem : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHol
 	}
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var tagsBox: FlexboxLayout
-
-		init {
-			this.tagsBox = view.find<FlexboxLayout>(R.id.tagsBox)
-		}
+		var tagsBox: FlexboxLayout = view.find<FlexboxLayout>(R.id.tagsBox)
 	}
 }

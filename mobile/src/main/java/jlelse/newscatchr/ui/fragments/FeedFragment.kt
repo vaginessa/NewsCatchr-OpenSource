@@ -98,7 +98,7 @@ class FeedFragment : BaseFragment() {
 			recyclerOne?.clearOnScrollListeners()
 			fastAdapter.clear()
 			fastAdapter.add(mutableListOf<ArticleListRecyclerItem>().apply {
-				articles.forEach { add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment)) }
+				articles.forEach { add(ArticleListRecyclerItem(article = it, fragment = this@FeedFragment)) }
 			})
 			recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
 				override fun onLoadMore(currentPage: Int) {
@@ -106,7 +106,7 @@ class FeedFragment : BaseFragment() {
 						val newArticles = await { feedlyLoader?.moreItems() }
 						addString("continuation", feedlyLoader?.continuation)
 						if (newArticles != null) articles.addAll(newArticles)
-						newArticles?.forEach { fastAdapter.add(ArticleListRecyclerItem().withArticle(it).withFragment(this@FeedFragment)) }
+						newArticles?.forEach { fastAdapter.add(ArticleListRecyclerItem(article = it, fragment = this@FeedFragment)) }
 					}
 				}
 			})

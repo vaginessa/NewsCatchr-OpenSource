@@ -37,21 +37,8 @@ import jlelse.readit.R
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
 
-class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleListRecyclerItem.ViewHolder>() {
+class ArticleListRecyclerItem(val article: Article? = null, val fragment: BaseFragment? = null) : AbstractItem<ArticleListRecyclerItem, ArticleListRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
-
-	private var article: Article? = null
-	private var fragment: BaseFragment? = null
-
-	fun withArticle(article: Article): ArticleListRecyclerItem {
-		this.article = article
-		return this
-	}
-
-	fun withFragment(fragment: BaseFragment): ArticleListRecyclerItem {
-		this.fragment = fragment
-		return this
-	}
 
 	override fun getType(): Int {
 		return R.id.articlelist_item_id
@@ -60,7 +47,6 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 	override fun getLayoutRes(): Int {
 		return R.layout.articlelistrecycleritem
 	}
-
 
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
 		super.bindView(viewHolder, payloads)
@@ -101,13 +87,13 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 		viewHolder.itemView.onClick {
 			if (article != null) fragment?.fragmentNavigation?.pushFragment(ArticleFragment().apply {
 				addObject("article", article)
-			}, article?.originTitle)
+			}, article.originTitle)
 		}
 		viewHolder.bookmark.setImageDrawable((if (Database.isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
 		viewHolder.bookmark.onClick {
 			if (article != null) {
-				if (Database.isSavedBookmark(article?.url)) {
-					Database.deleteBookmark(article?.url)
+				if (Database.isSavedBookmark(article.url)) {
+					Database.deleteBookmark(article.url)
 					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_border_universal.resDrw(context, context.getPrimaryTextColor()))
 				} else {
 					Database.addBookmark(article)
@@ -117,7 +103,7 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 		}
 		viewHolder.share.setImageDrawable(R.drawable.ic_share_universal.resDrw(context, context.getPrimaryTextColor()))
 		viewHolder.share.onClick {
-			if (fragment != null) article?.share(fragment!!.activity)
+			if (fragment != null) article?.share(fragment.activity)
 		}
 	}
 
@@ -130,22 +116,12 @@ class ArticleListRecyclerItem : AbstractItem<ArticleListRecyclerItem, ArticleLis
 	}
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var bookmark: ImageView
-		var share: ImageView
-		var title: TextView
-		var details: TextView
-		var content: TextView
-		var visual: ImageView
-		var tagsBox: FlexboxLayout
-
-		init {
-			this.bookmark = view.find<ImageView>(R.id.bookmark)
-			this.share = view.find<ImageView>(R.id.share)
-			this.title = view.find<TextView>(R.id.title)
-			this.details = view.find<TextView>(R.id.details)
-			this.content = view.find<TextView>(R.id.content)
-			this.visual = view.find<ImageView>(R.id.visual)
-			this.tagsBox = view.find<FlexboxLayout>(R.id.tagsBox)
-		}
+		var bookmark: ImageView = view.find<ImageView>(R.id.bookmark)
+		var share: ImageView = view.find<ImageView>(R.id.share)
+		var title: TextView = view.find<TextView>(R.id.title)
+		var details: TextView = view.find<TextView>(R.id.details)
+		var content: TextView = view.find<TextView>(R.id.content)
+		var visual: ImageView = view.find<ImageView>(R.id.visual)
+		var tagsBox: FlexboxLayout = view.find<FlexboxLayout>(R.id.tagsBox)
 	}
 }
