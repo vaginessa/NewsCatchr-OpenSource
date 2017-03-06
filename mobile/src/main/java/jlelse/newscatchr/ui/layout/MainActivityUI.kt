@@ -54,7 +54,7 @@ class MainActivityUI : AnkoComponent<MainActivity> {
 				ellipsize = TextUtils.TruncateAt.END
 				maxLines = 2
 				textColor = Color.parseColor("#B3FFFFFF")
-				setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.toFloat())
+				setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
 			}
 		}
 	}

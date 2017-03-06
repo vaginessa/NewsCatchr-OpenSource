@@ -76,7 +76,7 @@ class ArticleFragmentUI : AnkoComponent<ArticleFragment> {
 						id = R.id.articlefragment_content
 						setTextStyle(context, R.style.TextAppearance_AppCompat_Body1)
 						setTextIsSelectable(true)
-						setTextSize(TypedValue.COMPLEX_UNIT_SP, 16.toFloat())
+						setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
 					}
 					flexboxLayout {
 						lparams(width = matchParent, height = wrapContent) {

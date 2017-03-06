@@ -45,5 +45,7 @@
 	<item name="refreshrecyclerview_recycler" type="id"/>
 	<item name="refreshrecyclerview_refresh" type="id"/>
 	<item name="refreshrecyclerview_scrollview" type="id"/>
+	<item name="headerrecycleritem_textview" type="id"/>
+	<item name="morerecycleritem_button" type="id"/>
 
 </resources>

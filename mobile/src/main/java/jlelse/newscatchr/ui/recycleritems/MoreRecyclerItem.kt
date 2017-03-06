@@ -18,24 +18,26 @@
 
 package jlelse.newscatchr.ui.recycleritems
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
-import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
+import jlelse.newscatchr.ui.layout.MoreRecyclerItemUI
 import jlelse.readit.R
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 import org.jetbrains.anko.onClick
 
-class MoreRecyclerItem(val callback: () -> Unit = {}) : AbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
+class MoreRecyclerItem(val ctx: Context, val callback: () -> Unit = {}) : NCAbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
 
 	override fun getType(): Int {
 		return R.id.more_item_id
 	}
 
-	override fun getLayoutRes(): Int {
-		return R.layout.recyclershowmoreitem
+	override fun getItemView(): View {
+		return MoreRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
@@ -52,6 +54,6 @@ class MoreRecyclerItem(val callback: () -> Unit = {}) : AbstractItem<MoreRecycle
 	}
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var button: Button = view.find<Button>(R.id.moreButton)
+		var button: Button = view.find<Button>(R.id.morerecycleritem_button)
 	}
 }

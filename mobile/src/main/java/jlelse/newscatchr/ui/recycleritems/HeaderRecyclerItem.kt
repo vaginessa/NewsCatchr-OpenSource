@@ -18,23 +18,25 @@
 
 package jlelse.newscatchr.ui.recycleritems
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
-import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.utils.ViewHolderFactory
+import jlelse.newscatchr.ui.layout.HeaderRecyclerItemUI
 import jlelse.readit.R
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class HeaderRecyclerItem(val title: String? = null) : AbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
+class HeaderRecyclerItem(val ctx: Context, val title: String? = null) : NCAbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
 	private val FACTORY = ItemFactory()
 
 	override fun getType(): Int {
 		return R.id.header_item_id
 	}
 
-	override fun getLayoutRes(): Int {
-		return R.layout.recyclerheaderitem
+	override fun getItemView(): View {
+		return HeaderRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
@@ -51,6 +53,6 @@ class HeaderRecyclerItem(val title: String? = null) : AbstractItem<HeaderRecycle
 	}
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var title: TextView = view.find<TextView>(R.id.headerTitle)
+		var title: TextView = view.find<TextView>(R.id.headerrecycleritem_textview)
 	}
 }

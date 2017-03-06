@@ -66,7 +66,7 @@ class HomeFragmentUI : AnkoComponent<HomeFragment> {
 						id = R.id.homefragment_tagstitle
 						textColor = R.color.colorAccent.resClr(context)!!
 						setTypeface(typeface, Typeface.BOLD)
-						setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.toFloat())
+						setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
 					}
 					flexboxLayout {
 						lparams(width = matchParent, height = wrapContent) {
