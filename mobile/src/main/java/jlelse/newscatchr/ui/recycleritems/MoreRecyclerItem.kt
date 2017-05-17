@@ -22,15 +22,12 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Button
-import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.ui.layout.MoreRecyclerItemUI
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
-import org.jetbrains.anko.onClick
 
 class MoreRecyclerItem(val ctx: Context, val callback: () -> Unit = {}) : NCAbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
-	private val FACTORY = ItemFactory()
 
 	override fun getType(): Int {
 		return R.id.more_item_id
@@ -42,16 +39,10 @@ class MoreRecyclerItem(val ctx: Context, val callback: () -> Unit = {}) : NCAbst
 
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
 		super.bindView(viewHolder, payloads)
-		viewHolder.button.onClick { callback() }
+		viewHolder.button.setOnClickListener { callback() }
 	}
 
-	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
-
-	class ItemFactory : ViewHolderFactory<ViewHolder> {
-		override fun create(v: View): ViewHolder {
-			return ViewHolder(v)
-		}
-	}
+	override fun getViewHolder(p0: View) = ViewHolder(p0)
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 		var button: Button = view.find<Button>(R.id.morerecycleritem_button)

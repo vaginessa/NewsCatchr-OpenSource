@@ -26,7 +26,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
 import com.mikepenz.fastadapter.items.AbstractItem
-import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.*
@@ -35,10 +34,8 @@ import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.find
-import org.jetbrains.anko.onClick
 
 class ArticleListRecyclerItem(val article: Article? = null, val fragment: BaseFragment? = null) : AbstractItem<ArticleListRecyclerItem, ArticleListRecyclerItem.ViewHolder>() {
-	private val FACTORY = ItemFactory()
 
 	override fun getType(): Int {
 		return R.id.articlelist_item_id
@@ -84,13 +81,13 @@ class ArticleListRecyclerItem(val article: Article? = null, val fragment: BaseFr
 		} else {
 			viewHolder.visual.hideView()
 		}
-		viewHolder.itemView.onClick {
+		viewHolder.itemView.setOnClickListener {
 			if (article != null) fragment?.fragmentNavigation?.pushFragment(ArticleFragment().apply {
 				addObject("article", article)
 			}, article.originTitle)
 		}
 		viewHolder.bookmark.setImageDrawable((if (Database.isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
-		viewHolder.bookmark.onClick {
+		viewHolder.bookmark.setOnClickListener {
 			if (article != null) {
 				if (Database.isSavedBookmark(article.url)) {
 					Database.deleteBookmark(article.url)
@@ -102,18 +99,12 @@ class ArticleListRecyclerItem(val article: Article? = null, val fragment: BaseFr
 			}
 		}
 		viewHolder.share.setImageDrawable(R.drawable.ic_share_universal.resDrw(context, context.getPrimaryTextColor()))
-		viewHolder.share.onClick {
+		viewHolder.share.setOnClickListener {
 			if (fragment != null) article?.share(fragment.activity)
 		}
 	}
 
-	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
-
-	class ItemFactory : ViewHolderFactory<ViewHolder> {
-		override fun create(v: View): ViewHolder {
-			return ViewHolder(v)
-		}
-	}
+	override fun getViewHolder(p0: View) = ViewHolder(p0)
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 		var bookmark: ImageView = view.find<ImageView>(R.id.bookmark)

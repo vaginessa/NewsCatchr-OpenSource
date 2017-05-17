@@ -26,7 +26,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
-import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.getPrimaryTextColor
@@ -37,10 +36,8 @@ import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.fragments.FeedFragment
 import jlelse.readit.R
 import org.jetbrains.anko.find
-import org.jetbrains.anko.onClick
 
 class FeedListRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: BaseFragment? = null, val adapter: FastItemAdapter<FeedListRecyclerItem>? = null) : AbstractItem<FeedListRecyclerItem, FeedListRecyclerItem.ViewHolder>() {
-	private val FACTORY = ItemFactory()
 
 	override fun getType(): Int {
 		return R.id.feedlist_item_id
@@ -56,13 +53,13 @@ class FeedListRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, 
 		if (feed != null) {
 			setTitleText(feed.title, viewHolder.title)
 			viewHolder.website.text = Uri.parse(feed.website ?: feed.url()).host
-			viewHolder.itemView.onClick {
+			viewHolder.itemView.setOnClickListener {
 				fragment?.fragmentNavigation?.pushFragment(FeedFragment().apply {
 					addObject("feed", feed)
 				}, feed.title)
 			}
 			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
-			viewHolder.favorite.onClick {
+			viewHolder.favorite.setOnClickListener {
 				if (Database.isSavedFavorite(feed.url())) {
 					feed.saved = false
 					Database.deleteFavorite(feed.url())
@@ -82,13 +79,7 @@ class FeedListRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, 
 		textView.text = "$title"
 	}
 
-	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
-
-	class ItemFactory : ViewHolderFactory<ViewHolder> {
-		override fun create(v: View): ViewHolder {
-			return ViewHolder(v)
-		}
-	}
+	override fun getViewHolder(p0: View) = ViewHolder(p0)
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 		var title: TextView = view.find<TextView>(R.id.title)

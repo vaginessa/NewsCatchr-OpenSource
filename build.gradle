@@ -4,10 +4,10 @@ buildscript {
     ext.VERSION_CODE = 52
     ext.TARGET_SDK = 25
     ext.BUILD_TOOLS = "25.0.2"
-    ext.SUPPORT_LIBS = "25.2.0"
-    ext.PLAY_SERVICES = "10.2.0"
-    ext.KOTLIN = "1.1.0"
-    ext.ANKO = "0.9.1"
+    ext.SUPPORT_LIBS = "25.3.1"
+    ext.PLAY_SERVICES = "10.2.6"
+    ext.KOTLIN = "1.1.2-4"
+    ext.ANKO = "0.10.0"
     repositories {
         jcenter()
         mavenCentral()
@@ -15,7 +15,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN"
-        classpath 'com.google.gms:google-services:3.0.0'
+        classpath 'com.google.gms:google-services:3.1.0'
     }
 }
 
@@ -30,5 +30,6 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url 'https://dl.bintray.com/jetbrains/anko' }
+        maven { url "https://maven.google.com" }
     }
 }

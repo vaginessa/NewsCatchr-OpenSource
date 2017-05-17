@@ -22,14 +22,12 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
-import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.ui.layout.HeaderRecyclerItemUI
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
 class HeaderRecyclerItem(val ctx: Context, val title: String? = null) : NCAbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
-	private val FACTORY = ItemFactory()
 
 	override fun getType(): Int {
 		return R.id.header_item_id
@@ -44,13 +42,7 @@ class HeaderRecyclerItem(val ctx: Context, val title: String? = null) : NCAbstra
 		viewHolder.title.text = title ?: ""
 	}
 
-	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
-
-	class ItemFactory : ViewHolderFactory<ViewHolder> {
-		override fun create(v: View): ViewHolder {
-			return ViewHolder(v)
-		}
-	}
+	override fun getViewHolder(p0: View) = ViewHolder(p0)
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 		var title: TextView = view.find<TextView>(R.id.headerrecycleritem_textview)

@@ -26,13 +26,12 @@ import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.fragments.MixFragment
 import jlelse.readit.R
 import org.jetbrains.anko.find
-import org.jetbrains.anko.onClick
 
 fun FlexboxLayout.addTagView(fragment: BaseFragment, tagString: String?) = tryOrNull {
 	addView(LayoutInflater.from(fragment.context).inflate(R.layout.tagitem, null)?.apply {
 		find<TextView>(R.id.tagView).apply {
 			text = "#$tagString"
-			onClick {
+			setOnClickListener {
 				fragment.fragmentNavigation.pushFragment(MixFragment().apply {
 					addObject("feedId", "topic/$tagString")
 				}, "#$tagString")

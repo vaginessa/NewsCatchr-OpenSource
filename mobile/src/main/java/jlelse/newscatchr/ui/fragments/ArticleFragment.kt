@@ -95,7 +95,6 @@ class ArticleFragment : BaseFragment(), FAB {
 			details(article?.author, article?.originTitle, article?.published)
 			content(article?.content)
 			keywords(article?.keywords)
-			showWearNotification()
 		}
 		refreshOne?.hideIndicator()
 	}
@@ -171,8 +170,6 @@ class ArticleFragment : BaseFragment(), FAB {
 			zoomInit = true
 		}
 	}
-
-	private fun showWearNotification() = tryOrNull(execute = activity != null) { (activity as MainActivity).buildWearNotification(article?.title ?: "", (article?.content ?: "").toHtml().toString()) }
 
 	private fun shareArticle() = article?.share(activity)
 

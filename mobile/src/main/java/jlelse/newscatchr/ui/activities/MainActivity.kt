@@ -33,12 +33,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import co.metalab.asyncawait.async
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import com.bumptech.glide.Glide
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.wearable.Wearable
 import com.ncapdevi.fragnav.FragNavController
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.SharingApi
@@ -59,14 +56,13 @@ import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 import org.jetbrains.anko.*
 
 class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
-	private lateinit var fragNavController: FragNavController
+	private var fragNavController: FragNavController? = null
 	private val toolbar: Toolbar? by lazy { find<Toolbar>(R.id.mainactivity_toolbar) }
 	private val appbar: AppBarLayout? by lazy { find<AppBarLayout>(R.id.mainactivity_appbar) }
 	private val fab: FloatingActionButton? by lazy { find<FloatingActionButton>(R.id.mainactivity_fab) }
 	private val subtitle: TextView? by lazy { find<TextView>(R.id.mainactivity_toolbarsubtitle) }
 	private val toolbarBackground: ImageView? by lazy { find<ImageView>(R.id.mainactivity_toolbarbackground) }
 	private val bottomNavigationView: BottomNavigationView? by lazy { find<BottomNavigationView>(R.id.mainactivity_navigationview) }
-	private var googleApiClient: GoogleApiClient? = null
 	private var billingProcessor: BillingProcessor? = null
 
 	var IABReady = false
@@ -82,19 +78,6 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 			Tracking.init(this@MainActivity)
 			// Init Custom Tabs
 			customTabsHelperFragment = CustomTabsHelperFragment.attachTo(this@MainActivity)
-			// Init Google Api Client for Android Wear
-			googleApiClient = GoogleApiClient.Builder(this@MainActivity)
-					.addApiIfAvailable(Wearable.API)
-					.addConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
-						override fun onConnected(p0: Bundle?) {
-						}
-
-						override fun onConnectionSuspended(p0: Int) {
-						}
-					})
-					.addOnConnectionFailedListener {}
-					.build()
-					.apply { connect() }
 			// Check purchases
 			if (BillingProcessor.isIabServiceAvailable(this@MainActivity)) {
 				billingProcessor = BillingProcessor(this@MainActivity, licenceKey, object : BillingProcessor.IBillingHandler {
@@ -115,15 +98,18 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 
 		setSupportActionBar(toolbar)
 
-		fragNavController = FragNavController(savedInstanceState, supportFragmentManager, R.id.mainactivity_container, listOf(
-				HomeFragment().apply { addTitle(R.string.news.resStr()) },
-				BookmarksFragment().apply { addTitle(R.string.bookmarks.resStr()) },
-				SettingsFragment().apply { addTitle(R.string.settings.resStr()) }
-		), 0)
-		fragNavController.setTransactionListener(object : FragNavController.TransactionListener {
-			override fun onFragmentTransaction(fragment: Fragment?) = checkFragmentDependingThings()
-			override fun onTabTransaction(fragment: Fragment?, index: Int) = checkFragmentDependingThings()
-		})
+		fragNavController = FragNavController.Builder(savedInstanceState, supportFragmentManager, R.id.mainactivity_container)
+				.rootFragments(listOf(
+						HomeFragment().apply { addTitle(R.string.news.resStr()) },
+						BookmarksFragment().apply { addTitle(R.string.bookmarks.resStr()) },
+						SettingsFragment().apply { addTitle(R.string.settings.resStr()) }
+				))
+				.transactionListener(object : FragNavController.TransactionListener {
+					override fun onFragmentTransaction(p0: Fragment?, p1: FragNavController.TransactionType?) = checkFragmentDependingThings()
+					override fun onTabTransaction(p0: Fragment?, p1: Int) = checkFragmentDependingThings()
+				})
+				.selectedTabIndex(0)
+				.build()
 
 		var firstLaunch = true
 		bottomNavigationView?.apply {
@@ -134,14 +120,14 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 					R.id.bb_settings -> 2
 					else -> 0
 				}
-				if (itemNumber == lastTab && !firstLaunch) fragNavController.clearStack()
-				else fragNavController.switchTab(itemNumber)
+				if (itemNumber == lastTab && !firstLaunch) fragNavController?.clearStack()
+				else fragNavController?.switchTab(itemNumber)
 				lastTab = itemNumber
 				firstLaunch = false
 				true
 			}
 		}
-		fragNavController.switchTab(lastTab)
+		fragNavController?.switchTab(lastTab)
 		findViewById(when (lastTab) {
 			0 -> R.id.bb_news
 			1 -> R.id.bb_bookmarks
@@ -160,7 +146,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		if (intent != null) {
 			// Shortcut
 			intent.getStringExtra("feedid")?.let {
-				fragNavController.clearStack()
+				fragNavController?.clearStack()
 				val feedTitle = intent.getStringExtra("feedtitle")
 				if (it.notNullOrBlank()) pushFragment(FeedFragment().apply {
 					addObject("feed", Feed(feedId = it, title = feedTitle))
@@ -179,17 +165,11 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				}
 			}
 			// Pocket
-			val currentFrag = fragNavController.currentFrag
+			val currentFrag = fragNavController?.currentFrag
 			if (currentFrag is SettingsFragment && intent.scheme == "pocketapp45699") {
 				currentFrag.progressDialog?.show()
 				currentFrag.pocketAuth?.authenticate()
 			}
-		}
-	}
-
-	fun buildWearNotification(title: String, content: String) = async {
-		if (googleApiClient?.isConnected ?: false) Wearable.NodeApi.getConnectedNodes(googleApiClient).await().nodes.forEach {
-			Wearable.MessageApi.sendMessage(googleApiClient, it.id, "/newscatchr", (title + "x_x_x" + content).toByteArray()).await()
 		}
 	}
 
@@ -215,29 +195,31 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	fun loadToolbarBackground(url: String?) = toolbarBackground?.loadImage(url)
 
 	private fun checkFragmentDependingThings() {
-		val currentFragment = fragNavController.currentFrag
-		// Check Back Arrow
-		if (fragNavController.isRootFragment) {
-			supportActionBar?.setDisplayHomeAsUpEnabled(false)
-			appbar?.setExpanded(if (currentFragment is FragmentManipulation) currentFragment.expanded ?: false else false)
-		} else {
-			supportActionBar?.setDisplayHomeAsUpEnabled(true)
-			appbar?.setExpanded(if (currentFragment is FragmentManipulation) currentFragment.expanded ?: true else true)
-		}
-		// Check Title
-		refreshFragmentDependingTitle(currentFragment)
-		// Check Help Menu Item
-		invalidateOptionsMenu()
-		// Check FAB
-		if (currentFragment is FAB) {
-			fab?.let {
-				if (currentFragment.fabDrawable != null) it.setImageDrawable(currentFragment.fabDrawable?.resDrw(this, Color.WHITE))
-				it.onClick { currentFragment.fabClick() }
-				it.showView()
-				it.show()
+		if (fragNavController != null) {
+			val currentFragment = fragNavController!!.currentFrag
+			// Check Back Arrow
+			if (fragNavController!!.isRootFragment) {
+				supportActionBar?.setDisplayHomeAsUpEnabled(false)
+				appbar?.setExpanded(if (currentFragment is FragmentManipulation) currentFragment.expanded ?: false else false)
+			} else {
+				supportActionBar?.setDisplayHomeAsUpEnabled(true)
+				appbar?.setExpanded(if (currentFragment is FragmentManipulation) currentFragment.expanded ?: true else true)
 			}
-		} else {
-			fab?.makeInvisible()
+			// Check Title
+			refreshFragmentDependingTitle(currentFragment)
+			// Check Help Menu Item
+			invalidateOptionsMenu()
+			// Check FAB
+			if (currentFragment is FAB) {
+				fab?.let {
+					if (currentFragment.fabDrawable != null) it.setImageDrawable(currentFragment.fabDrawable?.resDrw(this, Color.WHITE))
+					it.setOnClickListener { currentFragment.fabClick() }
+					it.showView()
+					it.show()
+				}
+			} else {
+				fab?.makeInvisible()
+			}
 		}
 	}
 
@@ -247,12 +229,14 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 	}
 
 	override fun pushFragment(fragment: Fragment, title: String?) {
-		val currentFrag = fragNavController.currentFrag
+		val currentFrag = fragNavController?.currentFrag
 		if (fragment is FragmentValues) fragment.addTitle(title ?: if (currentFrag is FragmentValues) currentFrag.getAddedTitle() ?: "" else "")
-		fragNavController.pushFragment(fragment)
+		fragNavController?.pushFragment(fragment)
 	}
 
-	override fun popFragment() = fragNavController.popFragment()
+	override fun popFragment() {
+		fragNavController?.popFragment()
+	}
 
 	private fun checkProStatus() {
 		Preferences.supportUser = billingProcessor?.isSubscribed(PRO_SKU) == true
@@ -296,10 +280,10 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 		else -> super.onOptionsItemSelected(item)
 	}
 
-	override fun onBackPressed() = if (fragNavController.currentStack.size > 1) fragNavController.popFragment() else super.onBackPressed()
+	override fun onBackPressed() = if (fragNavController!!.currentStack!!.size > 1) fragNavController!!.popFragment() else super.onBackPressed()
 
 	override fun onSaveInstanceState(outState: Bundle) {
-		fragNavController.onSaveInstanceState(outState)
+		fragNavController?.onSaveInstanceState(outState)
 		super.onSaveInstanceState(outState)
 	}
 }

@@ -22,14 +22,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
 import com.mikepenz.fastadapter.items.AbstractItem
-import com.mikepenz.fastadapter.utils.ViewHolderFactory
 import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.find
 
 class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: BaseFragment? = null) : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHolder>() {
-	private val FACTORY = ItemFactory()
 
 	override fun getType(): Int {
 		return R.id.tags_item_id
@@ -47,13 +45,7 @@ class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: BaseFragme
 		}
 	}
 
-	override fun getFactory(): ViewHolderFactory<out ViewHolder> = FACTORY
-
-	class ItemFactory : ViewHolderFactory<ViewHolder> {
-		override fun create(v: View): ViewHolder {
-			return ViewHolder(v)
-		}
-	}
+	override fun getViewHolder(p0: View) = ViewHolder(p0)
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 		var tagsBox: FlexboxLayout = view.find<FlexboxLayout>(R.id.tagsBox)

@@ -60,28 +60,28 @@ kotlin {
 }
 
 dependencies {
-    compile('com.mikepenz:fastadapter:2.1.7@aar') {
+    compile('com.mikepenz:fastadapter:2.5.2@aar') {
         transitive = true
     }
-    compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
-    compile 'com.mikepenz:fastadapter-extensions:2.1.7@aar'
-    compile 'com.afollestad.material-dialogs:core:0.9.3.0'
-    compile('com.afollestad:bridge:5.1.1') {
+    compile 'com.mikepenz:fastadapter-commons:2.5.2@aar'
+    compile 'com.mikepenz:fastadapter-extensions:2.5.2@aar'
+    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
+    compile('com.afollestad:bridge:5.1.2') {
         exclude group: 'org.json', module: 'json'
         exclude group: 'com.intellij', module: 'annotations'
     }
-    compile('com.afollestad:ason:1.4.7') {
+    compile('com.afollestad:ason:1.4.13') {
         exclude group: 'org.json', module: 'json'
         exclude group: 'com.intellij', module: 'annotations'
     }
-    compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.google.android:flexbox:0.2.5'
-    compile 'com.evernote:android-job:1.1.7'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
+    compile 'com.google.android:flexbox:0.2.6'
+    compile 'com.evernote:android-job:1.1.10'
     compile 'org.jsoup:jsoup:1.10.2'
-    compile 'com.cloudrail:cloudrail-si-android:2.15.0'
-    compile 'com.anjlab.android.iab.v3:library:1.0.38'
+    compile 'com.cloudrail:cloudrail-si-android:2.17.1'
+    compile 'com.anjlab.android.iab.v3:library:1.0.39'
     compile 'me.zhanghai.android.customtabshelper:library:1.0.3'
-    compile 'com.ncapdevi:frag-nav:1.4.0'
+    compile 'com.ncapdevi:frag-nav:2.0.1'
     // Firebase
     compile "com.google.firebase:firebase-core:$PLAY_SERVICES"
     compile "com.google.firebase:firebase-messaging:$PLAY_SERVICES"
@@ -93,10 +93,7 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBS"
     compile "com.android.support:preference-v7:$SUPPORT_LIBS"
     compile "com.android.support:preference-v14:$SUPPORT_LIBS"
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
-    // Wear
-    wearApp project(':wear')
-    compile "com.google.android.gms:play-services-wearable:$PLAY_SERVICES"
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN"
     compile 'co.metalab.asyncawait:asyncawait:1.0.0'
