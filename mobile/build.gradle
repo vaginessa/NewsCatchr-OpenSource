@@ -93,7 +93,6 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBS"
     compile "com.android.support:preference-v7:$SUPPORT_LIBS"
     compile "com.android.support:preference-v14:$SUPPORT_LIBS"
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN"
     compile 'co.metalab.asyncawait:asyncawait:1.0.0'
