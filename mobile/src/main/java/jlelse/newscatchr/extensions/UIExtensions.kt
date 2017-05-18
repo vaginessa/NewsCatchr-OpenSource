@@ -18,7 +18,6 @@
 
 package jlelse.newscatchr.extensions
 
-import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
@@ -33,7 +32,6 @@ import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.ui.interfaces.FragmentValues
 import jlelse.readit.R
-import java.util.*
 
 fun View.hideView() {
 	visibility = View.GONE
@@ -79,19 +77,6 @@ fun setNightMode() {
 	}
 }
 
-fun Context.setLocale() {
-	resources.updateConfiguration(resources.configuration.apply {
-		val prefLocale = Locale(Preferences.language)
-		if (Build.VERSION.SDK_INT >= 17) {
-			setLocale(prefLocale)
-		} else {
-			@Suppress("DEPRECATION")
-			locale = prefLocale
-		}
-		if (this@setLocale is Activity) this@setLocale.recreate()
-	}, resources.displayMetrics)
-}
-
 fun NestedScrollView.savePosition(fragment: FragmentValues?) {
 	fragment?.addObject("SCROLL_VIEW_POSITION", arrayOf(scrollX, scrollY))
 }
@@ -106,8 +91,8 @@ fun Int.dpToPx(): Int {
 	return Math.round(px)
 }
 
-@Suppress("DEPRECATION")
 fun TextView.setTextStyle(context: Context, id: Int) {
+	@Suppress("DEPRECATION")
 	if (Build.VERSION.SDK_INT < 23) setTextAppearance(context, id)
 	else setTextAppearance(id)
 }

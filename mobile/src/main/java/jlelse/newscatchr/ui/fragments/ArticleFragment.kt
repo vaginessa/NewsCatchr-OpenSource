@@ -70,7 +70,7 @@ class ArticleFragment : BaseFragment(), FAB {
 		fragmentView = fragmentView ?: ArticleFragmentUI().createView(AnkoContext.create(context, this))
 		refreshOne?.setOnRefreshListener {
 			try {
-				async { showArticle(await { Feedly().entries(arrayOf(article?.originalId ?: ""))?.firstOrNull() }) }
+				async { showArticle(await { Feedly().entries(arrayOf(article?.id ?: ""))?.firstOrNull() }) }
 			} catch (e: Exception) {
 				e.printStackTrace()
 				refreshOne?.hideIndicator()

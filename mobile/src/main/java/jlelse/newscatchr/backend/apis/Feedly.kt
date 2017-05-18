@@ -18,7 +18,6 @@
 
 package jlelse.newscatchr.backend.apis
 
-import com.afollestad.ason.Ason
 import com.afollestad.bridge.Bridge
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
@@ -52,7 +51,7 @@ class Feedly {
 
 	fun entries(ids: Array<String>): Array<Article>? = tryOrNull {
 		if (ids.isNotEmpty()) {
-			Bridge.post("$BASE_URL/entries/.mget").body(Ason.serializeArray<String>(ids)).asClassList(Article::class.java)?.toTypedArray()
+			Bridge.post("$BASE_URL/entries/.mget").body(ids).asClassList(Article::class.java)?.toTypedArray()
 		} else null
 	}
 

@@ -33,13 +33,12 @@ import jlelse.readit.R
 
 @ContentType("application/json")
 class Article(
-		@AsonName(name = "id")
-		var originalId: String? = null,
+		var id: String? = null,
 		var published: Long = 0,
 		var author: String? = null,
 		var title: String? = null,
 		@AsonName(name = "cannonical.$0.href")
-		var canonical: String? = null,
+		var canonicalHref: String? = null,
 		@AsonName(name = "alternate.$0.href")
 		var alternateHref: String? = null,
 		@AsonName(name = "enclosure.$0.href")
@@ -50,9 +49,9 @@ class Article(
 		@AsonName(name = "origin.title")
 		var originTitle: String? = null,
 		@AsonName(name = "summary.content")
-		var content: String? = null,
+		var summaryContent: String? = null,
 		@AsonName(name = "content.content")
-		var contentB: String? = null,
+		var content: String? = null,
 		var excerpt: String? = null,
 		var url: String? = null,
 		var pocketId: String? = null,
@@ -68,17 +67,16 @@ class Article(
 			checkedImageUrl = false
 		}
 		if (!cleanedContent) {
-			content = (if (contentB.notNullOrBlank()) contentB else content)?.cleanHtml()
+			content = (summaryContent.blankNull() ?: content)?.cleanHtml()
 			excerpt = content?.toHtml().toString().buildExcerpt(30)
 			cleanedContent = true
 		}
 		if (!checkedUrl) {
-			if (canonical.notNullOrBlank()) url = canonical
-			else if (alternateHref.notNullOrBlank()) url = alternateHref
+			url = canonicalHref.blankNull() ?: alternateHref.blankNull() ?: url
 			checkedUrl = true
 		}
 		if (!checkedImageUrl) {
-			if (enclosureHref.notNullOrBlank()) visualUrl = enclosureHref
+			visualUrl = enclosureHref.blankNull() ?: visualUrl
 			checkedImageUrl = true
 		}
 		return this

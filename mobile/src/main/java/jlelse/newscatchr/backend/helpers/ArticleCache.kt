@@ -37,9 +37,9 @@ class ArticleCache {
 
 	fun save(article: Article) {
 		article.process()
-		if (article.originalId.notNullOrBlank() && article.originalId.notNullOrBlank()) {
-			sessionCache.put(article.originalId!!, article)
-			store.write<Article>(article.originalId!!.formatForCache(), article)
+		if (article.id.notNullOrBlank() && article.id.notNullOrBlank()) {
+			sessionCache.put(article.id!!, article)
+			store.write<Article>(article.id!!.formatForCache(), article)
 		}
 	}
 

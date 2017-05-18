@@ -63,6 +63,8 @@ fun String.buildExcerpt(words: Int) = split(" ").toMutableList().filter { it.not
 
 fun String?.notNullOrBlank() = !isNullOrBlank()
 
+fun String?.blankNull() = if (isNullOrBlank()) null else this
+
 fun <T> Array<out T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
 fun <T> Collection<T>?.notNullAndEmpty() = this != null && isNotEmpty()

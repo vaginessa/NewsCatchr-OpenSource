@@ -28,7 +28,6 @@ import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.SyncJob
 import jlelse.newscatchr.backend.helpers.cancelSync
 import jlelse.newscatchr.backend.helpers.scheduleSync
-import jlelse.newscatchr.extensions.setLocale
 import jlelse.newscatchr.extensions.setNightMode
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
@@ -39,7 +38,6 @@ class NewsCatchr : Application() {
 	override fun onCreate() {
 		super.onCreate()
 		appContext = applicationContext
-		setLocale()
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 		setNightMode()
 		JobManager.create(this@NewsCatchr).addJobCreator { tag ->

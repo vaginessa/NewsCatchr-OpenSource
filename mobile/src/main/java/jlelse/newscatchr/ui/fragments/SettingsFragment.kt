@@ -39,14 +39,12 @@ import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FragmentValues
-import jlelse.newscatchr.ui.objects.Library
 import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
-import java.util.*
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener, FragmentValues {
 	override val valueMap = mutableMapOf<String, Any?>()
@@ -70,7 +68,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val nightModePref: Preference? by lazy { findPreference(R.string.prefs_key_night_mode.resStr()) }
 	private val pocketLoginPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_login.resStr()) }
 	private val pocketSyncPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_sync.resStr()) }
-	private val languagePref: Preference? by lazy { findPreference(R.string.prefs_key_language.resStr()) }
 	private val issuePref: Preference? by lazy { findPreference(R.string.prefs_key_issue.resStr()) }
 
 	// Pocket stuff
@@ -112,7 +109,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		syncNowPref?.onPreferenceClickListener = this
 		nightModePref?.onPreferenceClickListener = this
 		pocketLoginPref?.onPreferenceClickListener = this
-		languagePref?.onPreferenceClickListener = this
 		issuePref?.onPreferenceClickListener = this
 
 		// Add ChangeListeners
@@ -287,23 +283,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 					}).apply { startAuth() }
 				}
 			}
-			languagePref -> {
-				val availableLocales = mutableSetOf<Locale>().apply {
-					arrayOf("en", "de", "fa", "fr", "hr", "zh").forEach {
-						add(Locale(it))
-					}
-				}
-				MaterialDialog.Builder(context)
-						.items(mutableSetOf<String>().apply {
-							availableLocales.forEach { add(it.displayName) }
-						})
-						.itemsCallback { _, _, i, _ ->
-							Preferences.language = availableLocales.toTypedArray()[i].language
-							activity.setLocale()
-						}
-						.negativeText(android.R.string.cancel)
-						.show()
-			}
 			issuePref -> UrlOpenener().openUrl("https://github.com/jlelse/NewsCatchr-OpenSource/issues", activity)
 		}
 		return true
@@ -371,4 +350,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			fragment.refreshLastSyncTime()
 		}
 	}
+
+	private class Library(var name: String, var description: String, var link: String)
 }

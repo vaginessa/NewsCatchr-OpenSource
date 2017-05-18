@@ -62,10 +62,6 @@ object Preferences {
 		get() = read().getString("recLanguage", Locale.getDefault().language)
 		set(value) = write().putString("recLanguage", value).apply()
 
-	var language: String
-		get() = read().getString(R.string.prefs_key_language.resStr(), Locale.getDefault().language)
-		set(value) = write().putString(R.string.prefs_key_language.resStr(), value).apply()
-
 	var textScaleFactor: Float
 		get() = read().getFloat("textScaleFactor", 1.0f)
 		set(value) = write().putFloat("textScaleFactor", value).apply()
@@ -89,9 +85,5 @@ object Preferences {
 	var supportUser: Boolean
 		get() = read().getBoolean("supportUser", false) || BuildConfig.DEBUG
 		set(value) = write().putBoolean("supportUser", value).apply()
-
-	var hostsVersion: Int
-		get() = read().getInt("hostsVersion", 0)
-		set(value) = write().putInt("hostsVersion", value).apply()
 
 }

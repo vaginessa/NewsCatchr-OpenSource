@@ -18,23 +18,15 @@
 
 package jlelse.newscatchr.backend
 
-import com.afollestad.ason.AsonName
 import com.afollestad.bridge.annotations.ContentType
 
 @ContentType("application/json")
 class Feed(
 		var title: String? = null,
-		@AsonName(name = "id")
-		var feedIdA: String? = null,
+		var id: String? = null,
 		var feedId: String? = null,
 		var website: String? = null,
 		var saved: Boolean = false
 ) {
-	fun url(): String? {
-		return if (feedId != null) {
-			if (feedId?.startsWith("feed") ?: false) feedId?.substring(5) else feedId
-		} else if (feedIdA != null) {
-			if (feedIdA?.startsWith("feed") ?: false) feedIdA?.substring(5) else feedIdA
-		} else null
-	}
+	fun url() = (id ?: feedId)?.replace("^feed/".toRegex(), "")
 }
