@@ -27,12 +27,10 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import co.metalab.asyncawait.async
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.android.flexbox.FlexboxLayout
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.apis.ReadabilityApi
-import jlelse.newscatchr.backend.apis.TranslateApi
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.helpers.UrlOpenener
@@ -46,7 +44,6 @@ import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
-import java.util.*
 
 class ArticleFragment : BaseFragment(), FAB {
 	private var fragmentView: View? = null
@@ -70,7 +67,7 @@ class ArticleFragment : BaseFragment(), FAB {
 		fragmentView = fragmentView ?: ArticleFragmentUI().createView(AnkoContext.create(context, this))
 		refreshOne?.setOnRefreshListener {
 			try {
-				async { showArticle(await { Feedly().entries(arrayOf(article?.id ?: ""))?.firstOrNull() }) }
+				async { showArticle(await { Feedly().entries(listOf(article?.id ?: ""))?.firstOrNull() }) }
 			} catch (e: Exception) {
 				e.printStackTrace()
 				refreshOne?.hideIndicator()
@@ -204,29 +201,6 @@ class ArticleFragment : BaseFragment(), FAB {
 					addObject("article", temp.first)
 				}
 			}
-			true
-		}
-		R.id.translate -> {
-			val translateApi = TranslateApi()
-			MaterialDialog.Builder(context)
-					.items(mutableListOf<String>().apply {
-						translateApi.languages().forEach { add(Locale(it).displayName) }
-					})
-					.itemsCallback { _, _, i, _ ->
-						async {
-							val language = translateApi.languages()[i]
-							refreshOne?.showIndicator()
-							await {
-								article?.apply {
-									title = tryOrNull { TranslateApi().translate(language, title) } ?: title
-									content = tryOrNull { TranslateApi().translate(language, content?.toHtml().toString()) } ?: content
-								}
-							}
-							showArticle(article)
-						}
-					}
-					.negativeText(android.R.string.cancel)
-					.show()
 			true
 		}
 		else -> {

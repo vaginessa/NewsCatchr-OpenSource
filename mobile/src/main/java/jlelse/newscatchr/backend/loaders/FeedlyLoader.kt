@@ -20,7 +20,6 @@ package jlelse.newscatchr.backend.loaders
 
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
-import jlelse.newscatchr.backend.apis.Ids
 import jlelse.newscatchr.backend.helpers.ArticleCache
 import jlelse.newscatchr.backend.helpers.readFromCache
 import jlelse.newscatchr.backend.helpers.saveToCache
@@ -40,10 +39,10 @@ class FeedlyLoader {
 
 	fun items(cache: Boolean): Array<Article>? = when (type) {
 		FeedTypes.MIX -> {
-			var ids: Ids? = if (cache) readFromCache("MixIds$feedUrl" + when (ranked) {
+			var ids: Feedly.Ids? = if (cache) readFromCache("MixIds$feedUrl" + when (ranked) {
 				Ranked.OLDEST -> "oldest"
 				else -> ""
-			}, Ids::class.java) else null
+			}, Feedly.Ids::class.java) else null
 			if (ids == null) {
 				ids = Feedly().mixIds(feedUrl, count).apply {
 					saveToCache("MixIds$feedUrl" + when (ranked) {
@@ -55,10 +54,10 @@ class FeedlyLoader {
 			itemsByIds(ids?.ids, cache)
 		}
 		FeedTypes.FEED -> {
-			var ids: Ids? = if (cache) readFromCache("StreamIds$feedUrl" + when (ranked) {
+			var ids: Feedly.Ids? = if (cache) readFromCache("StreamIds$feedUrl" + when (ranked) {
 				Ranked.OLDEST -> "oldest"
 				else -> ""
-			}, Ids::class.java) else null
+			}, Feedly.Ids::class.java) else null
 			if (ids == null) {
 				ids = Feedly().streamIds(feedUrl, count, null, when (ranked) {
 					Ranked.NEWEST -> "newest"
@@ -97,7 +96,7 @@ class FeedlyLoader {
 	}
 
 	private fun itemsByIds(ids: Array<String>?, cache: Boolean): Array<Article>? = if (ids.notNullAndEmpty()) {
-		ids!!.cleanNullable().filter { if (cache) !articleCache.isCached(it) else true }.toTypedArray().let {
+		ids!!.cleanNullable().filter { if (cache) !articleCache.isCached(it) else true }.let {
 			if (it.notNullAndEmpty()) Feedly().entries(it)?.forEach {
 				articleCache.save(it)
 			}
@@ -109,15 +108,7 @@ class FeedlyLoader {
 		}.toTypedArray()
 	} else null
 
-	enum class FeedTypes {
-		FEED,
-		SEARCH,
-		MIX
-	}
-
-	enum class Ranked {
-		NEWEST,
-		OLDEST
-	}
+	enum class FeedTypes {FEED, SEARCH, MIX }
+	enum class Ranked {NEWEST, OLDEST }
 
 }

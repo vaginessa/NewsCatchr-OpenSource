@@ -33,7 +33,7 @@ class Pocket {
 	fun add(url: String): String? = tryOrNull {
 		Bridge.post("https://getpocket.com/v3/add")
 				.header("Host", "getpocket.com")
-				.header("Content-Type", "application/json; charset=UTF-8")
+				.contentType("application/json; charset=UTF-8")
 				.header("X-Accept", "application/json")
 				.body(Ason().put("url", url).put("consumer_key", PocketApiKey).put("access_token", Preferences.pocketAccessToken).toStockJson())
 				.asAsonObject()?.getString("item_id")
@@ -43,7 +43,7 @@ class Pocket {
 		tryOrNull {
 			Bridge.post("https://getpocket.com/v3/send")
 					.header("Host", "getpocket.com")
-					.header("Content-Type", "application/json; charset=UTF-8")
+					.contentType("application/json; charset=UTF-8")
 					.header("X-Accept", "application/json")
 					.body(Ason().apply {
 						put("consumer_key", PocketApiKey)
@@ -59,7 +59,7 @@ class Pocket {
 		mutableListOf<GetResponseItem>().apply {
 			Bridge.post("https://getpocket.com/v3/get")
 					.header("Host", "getpocket.com")
-					.header("Content-Type", "application/json; charset=UTF-8")
+					.contentType("application/json; charset=UTF-8")
 					.header("X-Accept", "application/json")
 					.body(Ason().apply {
 						put("consumer_key", PocketApiKey)
@@ -101,7 +101,7 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 			try {
 				Bridge.post("https://getpocket.com/v3/oauth/request")
 						.header("Host", "getpocket.com")
-						.header("Content-Type", "application/json; charset=UTF-8")
+						.contentType("application/json; charset=UTF-8")
 						.header("X-Accept", "application/json")
 						.body(Ason().apply {
 							put("consumer_key", PocketApiKey)
@@ -134,7 +134,7 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 				try {
 					Bridge.post("https://getpocket.com/v3/oauth/authorize")
 							.header("Host", "getpocket.com")
-							.header("Content-Type", "application/json; charset=UTF-8")
+							.contentType("application/json; charset=UTF-8")
 							.header("X-Accept", "application/json")
 							.body(Ason().apply {
 								put("consumer_key", PocketApiKey)

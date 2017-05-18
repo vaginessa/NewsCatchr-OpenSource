@@ -49,9 +49,9 @@ class Feedly {
 		Bridge.get(url, id).asClass(Ids::class.java)
 	}
 
-	fun entries(ids: Array<String>): Array<Article>? = tryOrNull {
+	fun entries(ids: List<String>): List<Article>? = tryOrNull {
 		if (ids.isNotEmpty()) {
-			Bridge.post("$BASE_URL/entries/.mget").body(ids).asClassList(Article::class.java)?.toTypedArray()
+			Bridge.post("$BASE_URL/entries/.mget").body(ids).asClassList(Article::class.java)
 		} else null
 	}
 
@@ -89,20 +89,10 @@ class Feedly {
 		Bridge.get(url, id, query).asClass(ArticleSearch::class.java)
 	}
 
+	class Ids(var ids: Array<String>? = null, var continuation: String? = null)
+	class FeedSearch(var results: Array<Feed>? = null, var related: Array<String>? = null)
+	class ArticleSearch(var id: String? = null, var title: String? = null, var items: Array<Article>? = null)
+
 }
 
-class Ids(
-		var ids: Array<String>? = null,
-		var continuation: String? = null
-)
 
-class FeedSearch(
-		var results: Array<Feed>? = null,
-		var related: Array<String>? = null
-)
-
-class ArticleSearch(
-		var id: String? = null,
-		var title: String? = null,
-		var items: Array<Article>? = null
-)

@@ -27,7 +27,7 @@ class UrlShortenerApi {
 		if (url.notNullOrBlank()) {
 			Bridge.post("https://www.googleapis.com/urlshortener/v1/url?fields=id&key=$GoogleApiKey")
 					.body("{\"longUrl\":\"$url\"}")
-					.header("Content-Type", "application/json")
+					.contentType("application/json")
 					.asAsonObject()
 					?.let {
 						if (it.getString("shortUrl").notNullOrBlank()) return it.getString("shortUrl")

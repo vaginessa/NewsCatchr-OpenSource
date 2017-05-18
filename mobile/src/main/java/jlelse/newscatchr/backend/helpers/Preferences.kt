@@ -31,7 +31,7 @@ import java.util.*
  */
 object Preferences {
 
-	private fun write(): SharedPreferences.Editor = sharedPref().edit()
+	private fun write(write: (SharedPreferences.Editor) -> Unit) = sharedPref().edit().apply { write(this) }.apply()
 
 	private fun read(): SharedPreferences = sharedPref()
 
@@ -40,50 +40,50 @@ object Preferences {
 
 	var amp: Boolean
 		get() = read().getBoolean(R.string.prefs_key_amp.resStr(), false)
-		set(value) = write().putBoolean(R.string.prefs_key_amp.resStr(), value).apply()
+		set(value) = write { e -> e.putBoolean(R.string.prefs_key_amp.resStr(), value) }
 
 	var urlShortener: Boolean
 		get() = read().getBoolean(R.string.prefs_key_url_shortener.resStr(), false)
-		set(value) = write().putBoolean(R.string.prefs_key_url_shortener.resStr(), value).apply()
+		set(value) = write { e -> e.putBoolean(R.string.prefs_key_url_shortener.resStr(), value) }
 
 	var pocketUserName: String
 		get() = read().getString(R.string.prefs_key_user_name.resStr(), "")
-		set(value) = write().putString(R.string.prefs_key_user_name.resStr(), value).apply()
+		set(value) = write { e -> e.putString(R.string.prefs_key_user_name.resStr(), value) }
 
 	var pocketAccessToken: String
 		get() = read().getString(R.string.prefs_key_access_token.resStr(), "")
-		set(value) = write().putString(R.string.prefs_key_access_token.resStr(), value).apply()
+		set(value) = write { e -> e.putString(R.string.prefs_key_access_token.resStr(), value) }
 
 	var pocketSync: Boolean
 		get() = read().getBoolean(R.string.prefs_key_pocket_sync.resStr(), true)
-		set(value) = write().putBoolean(R.string.prefs_key_pocket_sync.resStr(), value).apply()
+		set(value) = write { e -> e.putBoolean(R.string.prefs_key_pocket_sync.resStr(), value) }
 
 	var recommendationsLanguage: String
 		get() = read().getString("recLanguage", Locale.getDefault().language)
-		set(value) = write().putString("recLanguage", value).apply()
+		set(value) = write { e -> e.putString("recLanguage", value) }
 
 	var textScaleFactor: Float
 		get() = read().getFloat("textScaleFactor", 1.0f)
-		set(value) = write().putFloat("textScaleFactor", value).apply()
+		set(value) = write { e -> e.putFloat("textScaleFactor", value) }
 
 	var nightMode: Int
 		get() = read().getInt(R.string.prefs_key_night_mode.resStr(), 0)
-		set(value) = write().putInt(R.string.prefs_key_night_mode.resStr(), value).apply()
+		set(value) = write { e -> e.putInt(R.string.prefs_key_night_mode.resStr(), value) }
 
 	var syncEnabled: Boolean
 		get() = read().getBoolean(R.string.prefs_key_sync.resStr(), false)
-		set(value) = write().putBoolean(R.string.prefs_key_sync.resStr(), value).apply()
+		set(value) = write { e -> e.putBoolean(R.string.prefs_key_sync.resStr(), value) }
 
 	var syncInterval: Int
 		get() = read().getInt(R.string.prefs_key_sync_interval.resStr(), 30)
-		set(value) = write().putInt(R.string.prefs_key_sync_interval.resStr(), value).apply()
+		set(value) = write { e -> e.putInt(R.string.prefs_key_sync_interval.resStr(), value) }
 
 	var lastSync: Long
 		get() = read().getLong("lastSync", 0.toLong())
-		set(value) = write().putLong("lastSync", value).apply()
+		set(value) = write { e -> e.putLong("lastSync", value) }
 
 	var supportUser: Boolean
 		get() = read().getBoolean("supportUser", false) || BuildConfig.DEBUG
-		set(value) = write().putBoolean("supportUser", value).apply()
+		set(value) = write { e -> e.putBoolean("supportUser", value) }
 
 }

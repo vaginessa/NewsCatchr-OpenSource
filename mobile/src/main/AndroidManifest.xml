@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ NewsCatchr
   ~ Copyright © 2017 Jan-Lukas Else
   ~
@@ -18,70 +17,71 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="jlelse.readit"
-          android:installLocation="auto">
+	package="jlelse.readit"
+	android:installLocation="auto">
 
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
-	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT"/>
-	<uses-permission android:name="com.android.vending.BILLING"/>
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+	<uses-permission android:name="com.android.launcher.permission.UNINSTALL_SHORTCUT" />
+	<uses-permission android:name="com.android.vending.BILLING" />
 
 	<uses-feature
-			android:name="android.hardware.touchscreen"
-			android:required="false"/>
+		android:name="android.hardware.touchscreen"
+		android:required="false" />
 
 	<application
-			android:name="jlelse.newscatchr.NewsCatchr"
-			android:allowBackup="true"
-			android:fullBackupContent="@xml/backup"
-			android:icon="@drawable/icon"
-			android:roundIcon="@drawable/icon_round"
-			android:label="@string/app_name"
-			android:supportsRtl="true"
-			android:theme="@style/AppTheme">
+		android:name="jlelse.newscatchr.NewsCatchr"
+		android:allowBackup="true"
+		android:fullBackupContent="@xml/backup"
+		android:icon="@drawable/icon"
+		android:label="@string/app_name"
+		android:roundIcon="@drawable/icon_round"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme">
 
 		<activity
-				android:name="jlelse.newscatchr.ui.activities.MainActivity"
-				android:configChanges="locale"
-				android:exported="true"
-				android:label="@string/app_name"
-				android:launchMode="singleTask"
-				android:theme="@style/AppTheme">
+			android:name="jlelse.newscatchr.ui.activities.MainActivity"
+			android:configChanges="locale"
+			android:exported="true"
+			android:label="@string/app_name"
+			android:launchMode="singleTask"
+			android:theme="@style/AppTheme">
 			<!-- Launcher -->
 			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 			<!-- Browser -->
 			<intent-filter>
-				<action android:name="android.intent.action.VIEW"/>
+				<action android:name="android.intent.action.VIEW" />
 
-				<category android:name="android.intent.category.BROWSABLE"/>
-				<category android:name="android.intent.category.DEFAULT"/>
+				<category android:name="android.intent.category.BROWSABLE" />
+				<category android:name="android.intent.category.DEFAULT" />
 
-				<data android:scheme="http"/>
-				<data android:scheme="https"/>
+				<data android:scheme="http" />
+				<data android:scheme="https" />
 			</intent-filter>
 			<!-- Google Search -->
 			<intent-filter>
-				<action android:name="com.google.android.gms.actions.SEARCH_ACTION"/>
-				<category android:name="android.intent.category.DEFAULT"/>
+				<action android:name="com.google.android.gms.actions.SEARCH_ACTION" />
+				<category android:name="android.intent.category.DEFAULT" />
 			</intent-filter>
 			<!-- Pocket Login -->
 			<intent-filter>
-				<action android:name="android.intent.action.VIEW"/>
+				<action android:name="android.intent.action.VIEW" />
 
-				<category android:name="android.intent.category.DEFAULT"/>
-				<category android:name="android.intent.category.BROWSABLE"/>
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
 
-				<data android:scheme="pocketapp45699"/>
+				<data android:scheme="pocketapp45699" />
 			</intent-filter>
 			<!-- Launcher shortcuts -->
 			<meta-data
-					android:name="android.app.shortcuts"
-					android:resource="@xml/shortcuts"/>
+				android:name="android.app.shortcuts"
+				android:resource="@xml/shortcuts" />
 		</activity>
 
 	</application>

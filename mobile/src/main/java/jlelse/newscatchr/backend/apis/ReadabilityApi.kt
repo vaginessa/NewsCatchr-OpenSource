@@ -43,7 +43,7 @@ class ReadabilityApi {
 
 	fun mercury(url: String?): Map<String, String?>? = tryOrNull(execute = url.notNullOrBlank()) {
 		Bridge.get("https://mercury.postlight.com/parser?url=$url")
-				.header("Content-Type", "application/json")
+				.contentType("application/json")
 				.header("x-api-key", ReadabilityApiKey)
 				.asAsonObject()
 				?.let { mapOf("title" to it.getString("title"), "content" to it.getString("content"), "image" to it.getString("lead_image_url")) }
