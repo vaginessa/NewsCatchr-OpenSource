@@ -20,7 +20,6 @@ package jlelse.newscatchr.extensions
 
 import android.content.Context
 import com.afollestad.materialdialogs.MaterialDialog
-import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.AutoCompleteAdapter
 import jlelse.newscatchr.backend.apis.Feedly
@@ -32,27 +31,8 @@ import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-fun List<Article?>.removeEmptyArticles(): List<Article> {
-	return mutableListOf<Article>().apply {
-		this@removeEmptyArticles.forEach { if (it.notNullOrEmpty()) add(it!!) }
-	}
-}
 
-fun Array<out Article?>.removeEmptyArticles() = this.toList().removeEmptyArticles().toTypedArray()
-
-fun List<Feed?>.removeEmptyFeeds(): List<Feed> {
-	return mutableListOf<Feed>().apply {
-		this@removeEmptyFeeds.forEach { if (it.notNullOrEmpty()) add(it!!) }
-	}
-}
-
-fun Array<out Feed?>.removeEmptyFeeds() = this.toList().removeEmptyFeeds().toTypedArray()
-
-fun Array<Feed>.onlySaved(): Array<Feed> = toMutableList().filter(Feed::saved).toTypedArray()
-
-fun Feed?.notNullOrEmpty(): Boolean = this?.url().notNullOrBlank()
-
-fun Article?.notNullOrEmpty(): Boolean = this?.process()?.url.notNullOrBlank()
+fun Array<Feed>.onlySaved(): Array<Feed> = filter(Feed::saved).toTypedArray()
 
 fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNavigation, query: String? = null) {
 	val progressDialog = ProgressDialog(context)

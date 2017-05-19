@@ -21,7 +21,9 @@ package jlelse.newscatchr.backend.helpers
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Pocket
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.notNullOrBlank
+import jlelse.newscatchr.extensions.onlySaved
+import jlelse.newscatchr.extensions.tryOrNull
 import org.jetbrains.anko.doAsync
 
 /**
@@ -47,7 +49,7 @@ object Database {
 	val allFavoritesUrls = allFavorites.map(Feed::url)
 
 	fun addFavorite(feed: Feed?) {
-		if (feed.notNullOrEmpty() && !isSavedFavorite(feed?.url())) allFavorites += feed!!
+		if (feed != null && !isSavedFavorite(feed.url())) allFavorites += feed
 	}
 
 	fun deleteFavorite(url: String?) {
@@ -67,13 +69,13 @@ object Database {
 	var allBookmarks: Array<Article>
 		get() = bookmarksStore.read(BOOKMARKS, Array<Article>::class.java) ?: arrayOf<Article>()
 		set(value) {
-			tryOrNull { bookmarksStore.write<Array<Article>>(BOOKMARKS, value.removeEmptyArticles()) }
+			tryOrNull { bookmarksStore.write<Array<Article>>(BOOKMARKS, value.filterNotNull()) }
 		}
 
 	val allBookmarkUrls = allBookmarks.map { it.url }
 
 	private fun addBookmarks(vararg articles: Article?) {
-		articles.removeEmptyArticles().filter { !isSavedBookmark(it.url) }.let {
+		articles.filterNotNull().filter { !isSavedBookmark(it.url) }.let {
 			allBookmarks += it
 		}
 	}
@@ -107,7 +109,7 @@ object Database {
 	var allReadUrls: Array<String>
 		get() = readUrlsStore.read(READ_URLS, Array<String>::class.java) ?: arrayOf<String>()
 		set(value) {
-			tryOrNull { readUrlsStore.write<Array<String>>(READ_URLS, value.cleanNullable()) }
+			tryOrNull { readUrlsStore.write<Array<String>>(READ_URLS, value.filterNotNull()) }
 		}
 
 	fun addReadUrl(url: String?) {
@@ -117,7 +119,7 @@ object Database {
 	var allLastFeeds: Array<Feed>
 		get() = lastFeedsStore.read(LAST_FEEDS, Array<Feed>::class.java) ?: arrayOf<Feed>()
 		set(value) {
-			tryOrNull { lastFeedsStore.write<Array<Feed>>(LAST_FEEDS, value.removeEmptyFeeds()) }
+			tryOrNull { lastFeedsStore.write<Array<Feed>>(LAST_FEEDS, value.filterNotNull().distinctBy { it.url() }) }
 		}
 
 	val allLastFeedUrls = allLastFeeds.map(Feed::url)
@@ -133,8 +135,6 @@ object Database {
 	fun isSavedReadUrl(url: String?) = url.notNullOrBlank() && allReadUrls.contains(url)
 
 	fun isLastFeed(url: String?) = url.notNullOrBlank() && allLastFeedUrls.contains(url)
-
-	// Helpers
 
 	class PocketHandler {
 

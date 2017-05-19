@@ -20,6 +20,7 @@
 
 package jlelse.newscatchr.ui.fragments
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -85,13 +86,13 @@ class ArticleFragment : BaseFragment(), FAB {
 	private fun showArticle(article: Article?) = async {
 		refreshOne?.showIndicator()
 		await { article?.process(true) }
-		if (article.notNullOrEmpty()) {
+		if (article != null) {
 			this@ArticleFragment.article = article
-			image(article?.visualUrl)
-			title(article?.title)
-			details(article?.author, article?.originTitle, article?.published)
-			content(article?.content)
-			keywords(article?.keywords)
+			image(article.visualUrl)
+			title(article.title)
+			details(article.author, article.originTitle, article.published)
+			content(article.content)
+			keywords(article.keywords)
 		}
 		refreshOne?.hideIndicator()
 	}
@@ -142,6 +143,7 @@ class ArticleFragment : BaseFragment(), FAB {
 		} else tagsBox?.removeAllViews()
 	}
 
+	@SuppressLint("ClickableViewAccessibility")
 	private fun initZoom() {
 		if (!zoomInit) {
 			contentView?.setOnTouchListener { view, motionEvent ->

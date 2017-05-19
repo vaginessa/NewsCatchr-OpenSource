@@ -43,7 +43,7 @@ class MixFragment : BaseFragment() {
 	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var feedId: String? = null
-	private var articles: Array<Article>? = null
+	private var articles: List<Article>? = null
 	private var feedlyLoader: FeedlyLoader? = null
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {

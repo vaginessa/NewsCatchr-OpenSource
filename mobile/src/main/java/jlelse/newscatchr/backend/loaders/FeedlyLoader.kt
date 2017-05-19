@@ -23,9 +23,7 @@ import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.helpers.ArticleCache
 import jlelse.newscatchr.backend.helpers.readFromCache
 import jlelse.newscatchr.backend.helpers.saveToCache
-import jlelse.newscatchr.extensions.cleanNullable
 import jlelse.newscatchr.extensions.notNullAndEmpty
-import jlelse.newscatchr.extensions.removeEmptyArticles
 
 class FeedlyLoader {
 	var type: FeedTypes? = null
@@ -37,7 +35,7 @@ class FeedlyLoader {
 
 	private val articleCache by lazy { ArticleCache() }
 
-	fun items(cache: Boolean): Array<Article>? = when (type) {
+	fun items(cache: Boolean): List<Article>? = when (type) {
 		FeedTypes.MIX -> {
 			var ids: Feedly.Ids? = if (cache) readFromCache("MixIds$feedUrl" + when (ranked) {
 				Ranked.OLDEST -> "oldest"
@@ -72,40 +70,24 @@ class FeedlyLoader {
 			continuation = ids?.continuation
 			itemsByIds(ids?.ids, cache)
 		}
-		FeedTypes.SEARCH -> {
-			Feedly().articleSearch(feedUrl, query)?.items
-		}
+		FeedTypes.SEARCH -> Feedly().articleSearch(feedUrl, query)?.items?.filterNotNull()
 		else -> null
-	}?.apply {
-		forEach {
-			ArticleCache().save(it.process())
-		}
-	}?.removeEmptyArticles()
+	}?.onEach { ArticleCache().save(it.process()) }
 
-	fun moreItems(): Array<Article>? = itemsByIds(
+	fun moreItems(): List<Article>? = itemsByIds(
 			Feedly().streamIds(feedUrl, count, continuation, when (ranked) {
 				Ranked.NEWEST -> "newest"
 				Ranked.OLDEST -> "oldest"
 			})?.apply {
 				this@FeedlyLoader.continuation = continuation
 			}?.ids, true
-	)?.apply {
-		forEach {
-			ArticleCache().save(it.process())
-		}
-	}
+	)?.onEach { ArticleCache().save(it.process()) }
 
-	private fun itemsByIds(ids: Array<String>?, cache: Boolean): Array<Article>? = if (ids.notNullAndEmpty()) {
-		ids!!.cleanNullable().filter { if (cache) !articleCache.isCached(it) else true }.let {
-			if (it.notNullAndEmpty()) Feedly().entries(it)?.forEach {
-				articleCache.save(it)
-			}
+	private fun itemsByIds(ids: Array<String>?, cache: Boolean): List<Article>? = if (ids.notNullAndEmpty()) {
+		ids?.filterNotNull()?.filter { if (cache) !articleCache.isCached(it) else true }?.let {
+			Feedly().entries(it)?.forEach { articleCache.save(it) }
 		}
-		mutableListOf<Article>().apply {
-			ids.cleanNullable().forEach {
-				articleCache.getById(it)?.let { add(it) }
-			}
-		}.toTypedArray()
+		ids?.filterNotNull()?.map { articleCache.getById(it) }?.filterNotNull()
 	} else null
 
 	enum class FeedTypes {FEED, SEARCH, MIX }

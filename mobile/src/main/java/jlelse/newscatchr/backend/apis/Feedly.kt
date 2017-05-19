@@ -91,7 +91,7 @@ class Feedly {
 
 	class Ids(var ids: Array<String>? = null, var continuation: String? = null)
 	class FeedSearch(var results: Array<Feed>? = null, var related: Array<String>? = null)
-	class ArticleSearch(var id: String? = null, var title: String? = null, var items: Array<Article>? = null)
+	class ArticleSearch(var id: String? = null, var title: String? = null, var items: List<Article>? = null)
 
 }
 
