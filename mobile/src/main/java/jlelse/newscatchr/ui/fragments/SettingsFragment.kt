@@ -140,8 +140,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			}
 			supportPref -> if (activity is MainActivity) (activity as MainActivity).purchaseSupport()
 			viewLibsPref -> {
-				var html = ""
-				arrayOf(
+				val html = listOf(
 						Library("Material Dialogs", "A beautiful, easy-to-use, and customizable dialogs API, enabling you to use Material designed dialogs down to API 8.", "https://github.com/afollestad/material-dialogs"),
 						Library("FastAdapter", "The bullet proof, fast and easy to use adapter library, which minimizes developing time to a fraction...", "https://github.com/mikepenz/FastAdapter/"),
 						Library("jsoup", "Java HTML Parser, with best of DOM, CSS, and jquery", "https://github.com/jhy/jsoup"),
@@ -155,9 +154,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("Android-Job", "Android library to handle jobs in the background.", "https://github.com/evernote/android-job"),
 						Library("android-issue-reporter", "A powerful and simple library to open issues on GitHub directly from your app.", "https://github.com/HeinrichReimer/android-issue-reporter"),
 						Library("CustomTabsHelper", "Custom tabs, made easy.", "https://github.com/DreaminginCodeZH/CustomTabsHelper")
-				).forEach {
-					html += "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}<br><br>"
-				}
+				).map { "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}<br><br>" }.joinToString(separator = "")
 				if (html.length > 8) html.removeRange(html.lastIndex - 8, html.lastIndex) // Remove last useless linebreaks
 				MaterialDialog.Builder(context)
 						.title(R.string.used_libraries)
@@ -170,16 +167,13 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						}
 			}
 			viewApisPref -> {
-				var html = ""
-				arrayOf(
+				val html = listOf(
 						Library("feedly Cloud API", "", "https://developer.feedly.com"),
 						Library("Pocket API", "", "https://getpocket.com/developer/"),
 						Library("Google URL Shortener", "", "https://developers.google.com/url-shortener/"),
 						Library("Google AMP Cache", "", "https://developers.google.com/amp/cache/"),
 						Library("Mercury Web Parser", "", "https://mercury.postlight.com/web-parser/")
-				).forEach {
-					html += "<b><a href=\"${it.link}\">${it.name}</a></b><br><br>"
-				}
+				).map { "<b><a href=\"${it.link}\">${it.name}</a></b><br><br>" }.joinToString(separator = "")
 				if (html.length > 8) html.removeRange(html.lastIndex - 8, html.lastIndex)
 				MaterialDialog.Builder(context)
 						.title(R.string.used_libraries)
