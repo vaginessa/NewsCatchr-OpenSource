@@ -53,9 +53,12 @@ class FeedFragment : BaseFragment() {
 	private val fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
 	private val footerAdapter = FooterAdapter<ProgressItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
-	private var articles = mutableListOf<Article>()
-	private var feed: Feed? = null
-	private var favorite = false
+	private val feed by lazy { getAddedObject<Feed?>("feed") }
+	private var articles: MutableList<Article>
+		get() = getAddedObject("articles") ?: mutableListOf()
+		set(value) = addObject("articles", value)
+	private val favorite
+		get() = Database.isSavedFavorite(feed?.url())
 	private var feedlyLoader: FeedlyLoader? = null
 	private var editMenuItem: MenuItem? = null
 
@@ -67,8 +70,6 @@ class FeedFragment : BaseFragment() {
 			loadArticles()
 		}
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = footerAdapter.wrap(fastAdapter)
-		feed = getAddedObject("feed")
-		favorite = Database.isSavedFavorite(feed?.url())
 		feedlyLoader = FeedlyLoader().apply {
 			type = FeedlyLoader.FeedTypes.FEED
 			feedUrl = "feed/" + feed?.url()
@@ -89,24 +90,22 @@ class FeedFragment : BaseFragment() {
 		refreshOne?.showIndicator()
 		if (articles.isEmpty() || !cache) await {
 			feedlyLoader?.items(cache)?.let {
-				articles.clear()
-				articles.addAll(it)
+				articles = it.toMutableList()
 			}
 			addString("continuation", feedlyLoader?.continuation)
 		}
 		if (articles.notNullAndEmpty()) {
 			recyclerOne?.clearOnScrollListeners()
-			fastAdapter.clear()
-			fastAdapter.add(mutableListOf<ArticleListRecyclerItem>().apply {
-				articles.forEach { add(ArticleListRecyclerItem(article = it, fragment = this@FeedFragment)) }
-			})
+			fastAdapter.setNewList(articles.map { ArticleListRecyclerItem(article = it, fragment = this@FeedFragment) })
 			recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
 				override fun onLoadMore(currentPage: Int) {
 					async {
 						val newArticles = await { feedlyLoader?.moreItems() }
 						addString("continuation", feedlyLoader?.continuation)
-						if (newArticles != null) articles.addAll(newArticles)
-						newArticles?.forEach { fastAdapter.add(ArticleListRecyclerItem(article = it, fragment = this@FeedFragment)) }
+						if (newArticles != null) {
+							articles.addAll(newArticles)
+							fastAdapter.add(newArticles.map { ArticleListRecyclerItem(article = it, fragment = this@FeedFragment) })
+						}
 					}
 				}
 			})
@@ -129,8 +128,7 @@ class FeedFragment : BaseFragment() {
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 		return when (item?.itemId) {
 			R.id.favorite -> {
-				favorite = !favorite
-				feed?.saved = favorite
+				feed?.saved = !favorite
 				if (favorite) Database.addFavorites(feed)
 				else Database.deleteFavorite(feed?.url())
 				item.icon = (if (favorite) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, Color.WHITE)
