@@ -29,6 +29,7 @@ import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
@@ -50,7 +51,6 @@ import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.interfaces.FragmentValues
 import jlelse.newscatchr.ui.layout.MainActivityUI
-import jlelse.newscatchr.ui.views.Toolbar
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 import org.jetbrains.anko.*
