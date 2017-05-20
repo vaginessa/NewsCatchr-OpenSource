@@ -53,10 +53,12 @@ fun ImageView.loadImage(url: String?) {
 	}
 }
 
-fun Context.nothingFound() {
+fun Context.nothingFound(callback: () -> Unit = {}) {
 	MaterialDialog.Builder(this)
 			.content(R.string.nothing_found)
 			.positiveText(android.R.string.ok)
+			.onAny { _, _ -> callback() }
+			.cancelListener { callback() }
 			.show()
 }
 

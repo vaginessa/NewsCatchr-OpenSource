@@ -27,7 +27,6 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.loaders.FeedlyLoader
-import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.nothingFound
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
@@ -42,8 +41,10 @@ class MixFragment : BaseFragment() {
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
-	private var feedId: String? = null
-	private var articles: List<Article>? = null
+	private val feedId by lazy { getAddedString("feedId") }
+	private var articles: List<Article>
+		get() = getAddedObject("articles") ?: listOf()
+		set(value) = addObject("articles", value)
 	private var feedlyLoader: FeedlyLoader? = null
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,7 +54,6 @@ class MixFragment : BaseFragment() {
 		refreshOne?.setOnRefreshListener {
 			loadArticles(false)
 		}
-		feedId = getAddedString("feedId")
 		feedlyLoader = FeedlyLoader().apply {
 			type = FeedlyLoader.FeedTypes.MIX
 			feedUrl = feedId
@@ -66,16 +66,11 @@ class MixFragment : BaseFragment() {
 
 	private fun loadArticles(cache: Boolean = false) = async {
 		refreshOne?.showIndicator()
-		if (articles == null || !cache) await { articles = feedlyLoader?.items(cache) }
-		if (articles.notNullAndEmpty()) {
-			fastAdapter.clear()
-			articles?.forEach {
-				fastAdapter.add(ArticleRecyclerItem(ctx = context, article = it, fragment = this@MixFragment))
-			}
+		if (!cache) await { feedlyLoader?.items(cache)?.let { articles = it } }
+		if (!articles.isEmpty()) {
+			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@MixFragment) })
 			if (cache) recyclerOne?.restorePosition()
-		} else {
-			fastAdapter.clear()
-			context.nothingFound()
+		} else context.nothingFound {
 			fragmentNavigation.popFragment()
 		}
 		refreshOne?.hideIndicator()

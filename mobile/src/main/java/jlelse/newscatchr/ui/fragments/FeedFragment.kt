@@ -111,8 +111,9 @@ class FeedFragment : BaseFragment() {
 			})
 			if (cache) recyclerOne?.restorePosition()
 		} else {
-			context.nothingFound()
-			fragmentNavigation.popFragment()
+			context.nothingFound {
+				fragmentNavigation.popFragment()
+			}
 		}
 		refreshOne?.hideIndicator()
 	}

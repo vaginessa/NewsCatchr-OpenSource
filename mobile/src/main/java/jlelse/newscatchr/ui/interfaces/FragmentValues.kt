@@ -18,10 +18,8 @@
 
 package jlelse.newscatchr.ui.interfaces
 
-import android.os.Bundle
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.masterValueMap
-import java.util.*
 
 interface FragmentValues {
 	val valueMap: MutableMap<String, Any?>?
@@ -51,27 +49,17 @@ interface FragmentValues {
 		return getAddedString("ncTitle")
 	}
 
-	fun saveValues(outState: Bundle?) {
-		val uniqueId = getAddedString("uniqueId") ?: UUID.randomUUID().toString()
-		addString("uniqueId", uniqueId)
-		masterValueMap.put(uniqueId, valueMap)
-		outState?.putString("valueMapId", uniqueId)
+	fun saveValues(tag: String) {
+		masterValueMap.put(tag, valueMap)
 	}
 
-	fun restoreValues(savedInstanceState: Bundle?) {
-		savedInstanceState?.getString("valueMapId")?.let {
-			if (valueMap != null && valueMap?.isEmpty() ?: false) {
-				masterValueMap.apply {
-					get(it)?.let { valueMap?.putAll(it) }
-					remove(it)
-				}
+	fun restoreValues(tag: String) {
+		if (valueMap != null && masterValueMap.containsKey(tag)) {
+			masterValueMap.apply {
+				get(tag)?.let { valueMap?.putAll(it) }
+				remove(tag)
 			}
 		}
-	}
-
-	fun destroyValues() {
-		masterValueMap.remove(getAddedString("uniqueId"))
-		valueMap?.clear()
 	}
 
 }

@@ -79,7 +79,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	}
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		restoreValues(savedInstanceState)
+		restoreValues(tag)
 		if (activity is MainActivity) (activity as MainActivity).resetToolbarBackground()
 		val view = super.onCreateView(inflater, container, savedInstanceState)
 		if (!purchaseReceiverRegistered) {
@@ -324,13 +324,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
 	override fun onSaveInstanceState(outState: Bundle?) {
 		super.onSaveInstanceState(outState)
-		saveValues(outState)
+		saveValues(tag)
 	}
 
 	override fun onDestroy() {
 		tryOrNull { activity.unregisterReceiver(purchaseReceiver) }
 		tryOrNull { activity.unregisterReceiver(syncReceiver) }
-		destroyValues()
 		super.onDestroy()
 	}
 
