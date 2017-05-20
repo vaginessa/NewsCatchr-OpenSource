@@ -96,7 +96,7 @@ class FeedFragment : BaseFragment() {
 		}
 		if (articles.notNullAndEmpty()) {
 			recyclerOne?.clearOnScrollListeners()
-			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(article = it, fragment = this@FeedFragment) })
+			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@FeedFragment) })
 			recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
 				override fun onLoadMore(currentPage: Int) {
 					async {
@@ -104,7 +104,7 @@ class FeedFragment : BaseFragment() {
 						addString("continuation", feedlyLoader?.continuation)
 						if (newArticles != null) {
 							articles.addAll(newArticles)
-							fastAdapter.add(newArticles.map { ArticleRecyclerItem(article = it, fragment = this@FeedFragment) })
+							fastAdapter.add(newArticles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@FeedFragment) })
 						}
 					}
 				}

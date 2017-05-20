@@ -67,7 +67,7 @@ class BookmarksFragment : BaseFragment() {
 		if (articles.notNullAndEmpty()) {
 			fastAdapter.clear()
 			articles.forEach {
-				fastAdapter.add(ArticleRecyclerItem(article = it, fragment = this@BookmarksFragment))
+				fastAdapter.add(ArticleRecyclerItem(ctx = context, article = it, fragment = this@BookmarksFragment))
 			}
 			if (cache) recyclerOne?.restorePosition()
 		} else {

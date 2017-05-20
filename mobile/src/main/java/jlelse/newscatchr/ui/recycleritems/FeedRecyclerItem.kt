@@ -40,7 +40,7 @@ import org.jetbrains.anko.find
 class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: BaseFragment? = null, val adapter: FastItemAdapter<FeedRecyclerItem>? = null) : AbstractItem<FeedRecyclerItem, FeedRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
-		return R.id.feedlist_item_id
+		return R.id.feed_item_id
 	}
 
 	override fun getLayoutRes(): Int {

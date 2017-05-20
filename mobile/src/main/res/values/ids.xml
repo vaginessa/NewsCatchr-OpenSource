@@ -19,33 +19,40 @@
 <resources>
 
 	<!-- RecyclerView ids -->
-	<item name="feedlist_item_id" type="id"/>
-	<item name="articlelist_item_id" type="id"/>
-	<item name="library_item_id" type="id"/>
-	<item name="header_item_id" type="id"/>
-	<item name="more_item_id" type="id"/>
-	<item name="tags_item_id" type="id"/>
+	<item name="feed_item_id" type="id" />
+	<item name="article_item_id" type="id" />
+	<item name="library_item_id" type="id" />
+	<item name="header_item_id" type="id" />
+	<item name="more_item_id" type="id" />
+	<item name="tags_item_id" type="id" />
 
 	<!-- Layout ids -->
-	<item name="homefragment_refresh" type="id"/>
-	<item name="homefragment_scrollview" type="id"/>
-	<item name="homefragment_recyclerone" type="id"/>
-	<item name="homefragment_recyclertwo" type="id"/>
-	<item name="homefragment_recyclerthree" type="id"/>
-	<item name="homefragment_tagstitle" type="id"/>
-	<item name="homefragment_tagsbox" type="id"/>
-	<item name="articlefragment_refresh" type="id"/>
-	<item name="articlefragment_scrollview" type="id"/>
-	<item name="articlefragment_tagsbox" type="id"/>
-	<item name="articlefragment_title" type="id"/>
-	<item name="articlefragment_visual" type="id"/>
-	<item name="articlefragment_details" type="id"/>
-	<item name="articlefragment_content" type="id"/>
-	<item name="basicrecyclerview_recycler" type="id"/>
-	<item name="refreshrecyclerview_recycler" type="id"/>
-	<item name="refreshrecyclerview_refresh" type="id"/>
-	<item name="refreshrecyclerview_scrollview" type="id"/>
-	<item name="headerrecycleritem_textview" type="id"/>
-	<item name="morerecycleritem_button" type="id"/>
+	<item name="homefragment_refresh" type="id" />
+	<item name="homefragment_scrollview" type="id" />
+	<item name="homefragment_recyclerone" type="id" />
+	<item name="homefragment_recyclertwo" type="id" />
+	<item name="homefragment_recyclerthree" type="id" />
+	<item name="homefragment_tagstitle" type="id" />
+	<item name="homefragment_tagsbox" type="id" />
+	<item name="articlefragment_refresh" type="id" />
+	<item name="articlefragment_scrollview" type="id" />
+	<item name="articlefragment_tagsbox" type="id" />
+	<item name="articlefragment_title" type="id" />
+	<item name="articlefragment_visual" type="id" />
+	<item name="articlefragment_details" type="id" />
+	<item name="articlefragment_content" type="id" />
+	<item name="basicrecyclerview_recycler" type="id" />
+	<item name="refreshrecyclerview_recycler" type="id" />
+	<item name="refreshrecyclerview_refresh" type="id" />
+	<item name="refreshrecyclerview_scrollview" type="id" />
+	<item name="headerrecycleritem_textview" type="id" />
+	<item name="morerecycleritem_button" type="id" />
+	<item name="articlerecycleritem_tagsbox" type="id" />
+	<item name="articlerecycleritem_title" type="id" />
+	<item name="articlerecycleritem_bookmark" type="id" />
+	<item name="articlerecycleritem_share" type="id" />
+	<item name="articlerecycleritem_visual" type="id" />
+	<item name="articlerecycleritem_details" type="id" />
+	<item name="articlerecycleritem_content" type="id" />
 
 </resources>

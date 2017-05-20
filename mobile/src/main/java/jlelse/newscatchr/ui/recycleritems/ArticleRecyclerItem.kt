@@ -18,6 +18,7 @@
 
 package jlelse.newscatchr.ui.recycleritems
 
+import android.content.Context
 import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
@@ -25,24 +26,25 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
-import com.mikepenz.fastadapter.items.AbstractItem
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.fragments.ArticleFragment
 import jlelse.newscatchr.ui.fragments.BaseFragment
+import jlelse.newscatchr.ui.layout.ArticleRecyclerItemUI
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class ArticleRecyclerItem(val article: Article? = null, val fragment: BaseFragment? = null) : AbstractItem<ArticleRecyclerItem, ArticleRecyclerItem.ViewHolder>() {
+class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fragment: BaseFragment? = null) : NCAbstractItem<ArticleRecyclerItem, ArticleRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
-		return R.id.articlelist_item_id
+		return R.id.article_item_id
 	}
 
-	override fun getLayoutRes(): Int {
-		return R.layout.articlelistrecycleritem
+	override fun getItemView(): View {
+		return ArticleRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
@@ -107,12 +109,12 @@ class ArticleRecyclerItem(val article: Article? = null, val fragment: BaseFragme
 	override fun getViewHolder(p0: View) = ViewHolder(p0)
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var bookmark: ImageView = view.find<ImageView>(R.id.bookmark)
-		var share: ImageView = view.find<ImageView>(R.id.share)
-		var title: TextView = view.find<TextView>(R.id.title)
-		var details: TextView = view.find<TextView>(R.id.details)
-		var content: TextView = view.find<TextView>(R.id.content)
-		var visual: ImageView = view.find<ImageView>(R.id.visual)
-		var tagsBox: FlexboxLayout = view.find<FlexboxLayout>(R.id.tagsBox)
+		var bookmark: ImageView = view.find<ImageView>(R.id.articlerecycleritem_bookmark)
+		var share: ImageView = view.find<ImageView>(R.id.articlerecycleritem_share)
+		var title: TextView = view.find<TextView>(R.id.articlerecycleritem_title)
+		var details: TextView = view.find<TextView>(R.id.articlerecycleritem_details)
+		var content: TextView = view.find<TextView>(R.id.articlerecycleritem_content)
+		var visual: ImageView = view.find<ImageView>(R.id.articlerecycleritem_visual)
+		var tagsBox: FlexboxLayout = view.find<FlexboxLayout>(R.id.articlerecycleritem_tagsbox)
 	}
 }
