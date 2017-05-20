@@ -52,7 +52,8 @@ interface FragmentValues {
 	}
 
 	fun saveValues(outState: Bundle?) {
-		val uniqueId = UUID.randomUUID().toString()
+		val uniqueId = getAddedString("uniqueId") ?: UUID.randomUUID().toString()
+		addString("uniqueId", uniqueId)
 		masterValueMap.put(uniqueId, valueMap)
 		outState?.putString("valueMapId", uniqueId)
 	}
@@ -66,6 +67,11 @@ interface FragmentValues {
 				}
 			}
 		}
+	}
+
+	fun destroyValues() {
+		masterValueMap.remove(getAddedString("uniqueId"))
+		valueMap?.clear()
 	}
 
 }

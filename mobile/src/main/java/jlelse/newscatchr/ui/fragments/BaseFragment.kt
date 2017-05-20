@@ -68,4 +68,9 @@ abstract class BaseFragment : Fragment(), FragmentValues {
 		saveStateScrollViews?.forEach { tryOrNull { it?.savePosition(this) } }
 		super.onPause()
 	}
+
+	override fun onDestroy() {
+		destroyValues()
+		super.onDestroy()
+	}
 }

@@ -336,6 +336,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	override fun onDestroy() {
 		tryOrNull { activity.unregisterReceiver(purchaseReceiver) }
 		tryOrNull { activity.unregisterReceiver(syncReceiver) }
+		destroyValues()
 		super.onDestroy()
 	}
 
