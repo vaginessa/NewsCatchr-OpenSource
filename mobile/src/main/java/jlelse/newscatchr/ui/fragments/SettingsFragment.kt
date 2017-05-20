@@ -277,7 +277,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 					}).apply { startAuth() }
 				}
 			}
-			issuePref -> UrlOpenener().openUrl("https://github.com/jlelse/NewsCatchr-OpenSource/issues", activity)
+			issuePref -> "https://github.com/jlelse/NewsCatchr-OpenSource/issues".openUrl(activity)
 		}
 		return true
 	}

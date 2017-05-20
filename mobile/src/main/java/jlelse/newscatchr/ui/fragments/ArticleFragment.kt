@@ -34,7 +34,7 @@ import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.apis.ReadabilityApi
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Tracking
-import jlelse.newscatchr.backend.helpers.UrlOpenener
+import jlelse.newscatchr.backend.helpers.openUrl
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FAB
@@ -191,7 +191,7 @@ class ArticleFragment : BaseFragment(), FAB {
 			true
 		}
 		R.id.browser -> {
-			UrlOpenener().openUrl(article?.url ?: "", activity)
+			article?.url?.openUrl(activity)
 			true
 		}
 		R.id.readability -> {

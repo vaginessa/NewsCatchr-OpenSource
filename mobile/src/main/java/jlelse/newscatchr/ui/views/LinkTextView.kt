@@ -26,7 +26,7 @@ import android.text.style.ClickableSpan
 import android.text.style.URLSpan
 import android.view.View
 import android.widget.TextView
-import jlelse.newscatchr.backend.helpers.UrlOpenener
+import jlelse.newscatchr.backend.helpers.openUrl
 
 class LinkTextView {
 
@@ -45,7 +45,7 @@ class LinkTextView {
 
 	private class CustomTextClick(private val url: String, private val activity: Activity) : ClickableSpan() {
 		override fun onClick(view: View?) {
-			UrlOpenener().openUrl(url, activity)
+			url.openUrl(activity)
 		}
 	}
 

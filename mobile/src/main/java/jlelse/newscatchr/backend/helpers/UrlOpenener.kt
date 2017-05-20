@@ -30,28 +30,24 @@ import jlelse.newscatchr.extensions.resClr
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
-class UrlOpenener {
-
-	fun openUrl(url: String, activity: Activity) = async {
-		val finalUrl = await { if (Preferences.amp) AmpApi().getAmpUrl(url) ?: url else url }
-		val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
-		if (Preferences.customTabs) {
-			try {
-				val customTabsIntent = CustomTabsIntent.Builder()
-						.setToolbarColor(R.color.colorPrimary.resClr(activity)!!)
-						.setShowTitle(true)
-						.addDefaultShareMenuItem()
-						.enableUrlBarHiding()
-						.build()
-				CustomTabsHelperFragment.open(activity, customTabsIntent, Uri.parse(finalUrl)) { activity, _ ->
-					activity.startActivity(alternateIntent)
-				}
-			} catch (e: Exception) {
+fun String.openUrl(activity: Activity) = async {
+	val finalUrl = await { if (Preferences.amp) AmpApi().getAmpUrl(this@openUrl) ?: this@openUrl else this@openUrl }
+	val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
+	if (Preferences.customTabs) {
+		try {
+			val customTabsIntent = CustomTabsIntent.Builder()
+					.setToolbarColor(R.color.colorPrimary.resClr(activity)!!)
+					.setShowTitle(true)
+					.addDefaultShareMenuItem()
+					.enableUrlBarHiding()
+					.build()
+			CustomTabsHelperFragment.open(activity, customTabsIntent, Uri.parse(finalUrl)) { activity, _ ->
 				activity.startActivity(alternateIntent)
 			}
-		} else {
+		} catch (e: Exception) {
 			activity.startActivity(alternateIntent)
 		}
+	} else {
+		activity.startActivity(alternateIntent)
 	}
-
 }
