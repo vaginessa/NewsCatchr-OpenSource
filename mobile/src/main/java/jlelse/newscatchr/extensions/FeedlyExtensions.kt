@@ -32,8 +32,6 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 
-fun Array<Feed>.onlySaved(): Array<Feed> = filter(Feed::saved).toTypedArray()
-
 fun searchForFeeds(context: Context, fragmentNavigation: BaseFragment.FragmentNavigation, query: String? = null) {
 	val progressDialog = ProgressDialog(context)
 	val load = { finalQuery: String ->

@@ -29,11 +29,7 @@ class KeyObjectStore(name: String = "default") {
 	private var ason: Ason
 
 	init {
-		if (file.exists()) ason = tryOrNull { Ason(file.readText()) } ?: Ason()
-		else {
-			file.createNewFile()
-			ason = Ason()
-		}
+		ason = if (file.exists()) tryOrNull { Ason(file.readText()) } ?: Ason() else Ason()
 	}
 
 	fun <T> write(key: String?, item: Any?): KeyObjectStore {
@@ -41,7 +37,7 @@ class KeyObjectStore(name: String = "default") {
 		else if (key != null && key.isNotBlank()) {
 			if (item.javaClass.isArray) tryOrNull { ason.put(key, Ason.serializeArray<T>(item)) }
 			else tryOrNull { ason.put(key, Ason.serialize(item)) }
-			tryOrNull { file.writeText(ason.toString()) }
+			apply()
 		}
 		return this
 	}
@@ -49,7 +45,7 @@ class KeyObjectStore(name: String = "default") {
 	fun delete(key: String?): KeyObjectStore {
 		if (key != null && key.isNotBlank()) {
 			tryOrNull { ason.remove(key) }
-			tryOrNull { file.writeText(ason.toString()) }
+			apply()
 		}
 		return this
 	}
@@ -60,10 +56,15 @@ class KeyObjectStore(name: String = "default") {
 	} ?: defaultValue else defaultValue
 
 	fun destroy() {
-		tryOrNull { file.writeText("") }
+		tryOrNull { file.delete() }
 		ason = Ason()
 	}
 
 	fun exists(key: String?): Boolean = if (key != null && key.isNotBlank()) ason.has(key) else false
+
+	private fun apply() {
+		if (!file.exists()) tryOrNull { file.createNewFile() }
+		tryOrNull { file.writeText(ason.toString()) }
+	}
 
 }

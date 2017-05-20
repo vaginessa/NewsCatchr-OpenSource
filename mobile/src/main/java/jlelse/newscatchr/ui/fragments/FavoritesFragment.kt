@@ -124,7 +124,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		var feeds: Array<Feed>?
 		if (opml.notNullOrBlank()) await {
 			feeds = opml?.convertOpmlToFeeds()
-			feeds?.forEach { Database.addFavorite(it) }
+			feeds?.forEach { Database.addFavorites(it) }
 			imported = feeds?.size ?: 0
 		}
 		sendBroadcast(Intent("favorites_updated"))

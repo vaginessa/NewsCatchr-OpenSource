@@ -66,7 +66,7 @@ class FeedListRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, 
 					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_border_universal.resDrw(context, context.getPrimaryTextColor()))
 				} else {
 					feed.saved = true
-					Database.addFavorite(feed)
+					Database.addFavorites(feed)
 					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_universal.resDrw(context, context.getPrimaryTextColor()))
 				}
 				context.sendBroadcast(Intent("favorites_updated"))
