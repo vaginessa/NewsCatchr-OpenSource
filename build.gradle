@@ -1,7 +1,7 @@
 buildscript {
     ext.APP_ID = "jlelse.readit"
-    ext.VERSION_NAME = "5.2.0"
-    ext.VERSION_CODE = 52
+    ext.VERSION_NAME = "6.0.0"
+    ext.VERSION_CODE = 53
     ext.TARGET_SDK = 25
     ext.BUILD_TOOLS = "25.0.2"
     ext.SUPPORT_LIBS = "25.3.1"
