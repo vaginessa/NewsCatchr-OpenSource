@@ -25,16 +25,16 @@ import co.metalab.asyncawait.async
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.extensions.tryOrNull
 
-fun <T> T?.saveToCache(key: String?) = KeyObjectStore("cache").write<T>(key?.formatForCache(), this)
+fun <T> T?.saveToCache(key: String?) = KeyObjectStore(name = "cache", cache = true).write<T>(key?.formatForCache(), this)
 
-fun <T> readFromCache(key: String?, type: Class<T>): T? = KeyObjectStore("cache").read(key?.formatForCache(), type)
+fun <T> readFromCache(key: String?, type: Class<T>): T? = KeyObjectStore(name = "cache", cache = true).read(key?.formatForCache(), type)
 
 fun String.formatForCache(): String = tryOrNull { replace("[^0-9a-zA-Z]".toRegex(), "") } ?: this
 
 fun Context.clearCache(finished: () -> Unit) {
 	async {
 		await {
-			KeyObjectStore("cache").destroy()
+			KeyObjectStore(name = "cache", cache = true).destroy()
 			Glide.get(this@clearCache).clearDiskCache()
 		}
 		finished()

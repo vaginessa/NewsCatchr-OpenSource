@@ -25,7 +25,7 @@ import jlelse.newscatchr.extensions.tryOrNull
 class ArticleCache {
 
 	private val sessionCache = mutableMapOf<String, Article>()
-	private val store by lazy { KeyObjectStore("article_cache") }
+	private val store by lazy { KeyObjectStore(name = "article_cache", cache = true) }
 
 	fun isCached(id: String): Boolean = store.exists(id.formatForCache())
 

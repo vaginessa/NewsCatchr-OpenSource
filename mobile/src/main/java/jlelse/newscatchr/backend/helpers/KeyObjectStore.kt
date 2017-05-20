@@ -24,45 +24,53 @@ import jlelse.newscatchr.appContext
 import jlelse.newscatchr.extensions.tryOrNull
 import java.io.File
 
-class KeyObjectStore(name: String = "default") {
-	private var file: File = File(appContext?.filesDir, "NCStore$name.nc")
-	private var ason: Ason
+class KeyObjectStore(name: String = "default", cache: Boolean = false) {
+	private var folder: File = File(if (cache) appContext?.cacheDir else appContext?.filesDir, "NCStore$name")
 
 	init {
-		ason = if (file.exists()) tryOrNull { Ason(file.readText()) } ?: Ason() else Ason()
+		if (!folder.exists()) {
+			tryOrNull { folder.parentFile.mkdirs() }
+			tryOrNull { folder.mkdir() }
+		}
 	}
 
 	fun <T> write(key: String?, item: Any?): KeyObjectStore {
-		if (item == null) delete(key)
+		val file = File(folder, key + ".nc")
+		if (item == null) tryOrNull { file.delete() }
 		else if (key != null && key.isNotBlank()) {
-			if (item.javaClass.isArray) tryOrNull { ason.put(key, Ason.serializeArray<T>(item)) }
-			else tryOrNull { ason.put(key, Ason.serialize(item)) }
-			apply()
+			if (item.javaClass.isArray) tryOrNull { saveAsonArray(file, Ason.serializeArray<T>(item)) }
+			else tryOrNull { saveAson(file, Ason.serialize(item)) }
 		}
 		return this
 	}
 
 	fun delete(key: String?): KeyObjectStore {
 		if (key != null && key.isNotBlank()) {
-			tryOrNull { ason.remove(key) }
-			apply()
+			tryOrNull { File(folder, key + ".nc").delete() }
 		}
 		return this
 	}
 
 	fun <T> read(key: String?, type: Class<T>, defaultValue: T? = null): T? = if (key != null) tryOrNull {
-		if (type.isArray) Ason.deserialize(ason.get(key, AsonArray::class.java), type)
-		else Ason.deserialize(ason.get(key, Ason::class.java), type)
+		val file = File(folder, key + ".nc")
+		if (file.exists()) {
+			if (type.isArray) Ason.deserialize(AsonArray<T>(file.readText()), type)
+			else Ason.deserialize(Ason(file.readText()), type)
+		} else null
 	} ?: defaultValue else defaultValue
 
 	fun destroy() {
-		tryOrNull { file.delete() }
-		ason = Ason()
+		tryOrNull { folder.deleteRecursively() }
 	}
 
-	fun exists(key: String?): Boolean = if (key != null && key.isNotBlank()) ason.has(key) else false
+	fun exists(key: String?): Boolean = if (key != null && key.isNotBlank()) File(folder, key + ".nc").exists() else false
 
-	private fun apply() {
+	private fun saveAson(file: File, ason: Ason) {
+		if (!file.exists()) tryOrNull(print = true) { file.createNewFile() }
+		tryOrNull { file.writeText(ason.toString()) }
+	}
+
+	private fun <T> saveAsonArray(file: File, ason: AsonArray<T>) {
 		if (!file.exists()) tryOrNull { file.createNewFile() }
 		tryOrNull { file.writeText(ason.toString()) }
 	}
