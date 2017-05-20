@@ -20,7 +20,8 @@ package jlelse.newscatchr.backend.loaders
 
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
-import jlelse.newscatchr.backend.helpers.ArticleCache
+import jlelse.newscatchr.backend.helpers.getCachedArticle
+import jlelse.newscatchr.backend.helpers.isArticleCached
 import jlelse.newscatchr.backend.helpers.readFromCache
 import jlelse.newscatchr.backend.helpers.saveToCache
 import jlelse.newscatchr.extensions.notNullAndEmpty
@@ -32,8 +33,6 @@ class FeedlyLoader {
 	var feedUrl: String? = null
 	var ranked: Ranked = Ranked.NEWEST
 	var continuation: String? = null
-
-	private val articleCache by lazy { ArticleCache() }
 
 	fun items(cache: Boolean): List<Article>? = when (type) {
 		FeedTypes.MIX -> {
@@ -72,7 +71,7 @@ class FeedlyLoader {
 		}
 		FeedTypes.SEARCH -> Feedly().articleSearch(feedUrl, query)?.items?.filterNotNull()
 		else -> null
-	}?.onEach { ArticleCache().save(it.process()) }
+	}?.onEach { it.process().saveToCache() }
 
 	fun moreItems(): List<Article>? = itemsByIds(
 			Feedly().streamIds(feedUrl, count, continuation, when (ranked) {
@@ -81,13 +80,13 @@ class FeedlyLoader {
 			})?.apply {
 				this@FeedlyLoader.continuation = continuation
 			}?.ids, true
-	)?.onEach { ArticleCache().save(it.process()) }
+	)?.onEach { it.process().saveToCache() }
 
 	private fun itemsByIds(ids: Array<String>?, cache: Boolean): List<Article>? = if (ids.notNullAndEmpty()) {
-		ids?.filterNotNull()?.filter { if (cache) !articleCache.isCached(it) else true }?.let {
-			Feedly().entries(it)?.forEach { articleCache.save(it) }
+		ids?.filterNotNull()?.filter { if (cache) !isArticleCached(it) else true }?.let {
+			Feedly().entries(it)?.forEach { it.saveToCache() }
 		}
-		ids?.filterNotNull()?.map { articleCache.getById(it) }?.filterNotNull()
+		ids?.filterNotNull()?.map { getCachedArticle(it) }?.filterNotNull()
 	} else null
 
 	enum class FeedTypes {FEED, SEARCH, MIX }

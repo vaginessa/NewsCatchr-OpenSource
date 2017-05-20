@@ -23,6 +23,7 @@ import android.content.Context
 import android.support.v7.app.AppCompatDelegate
 import com.cloudrail.si.CloudRail
 import com.evernote.android.job.JobManager
+import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.CloudRailApiKey
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.SyncJob
@@ -54,4 +55,5 @@ class NewsCatchr : Application() {
 var appContext: Context? = null
 var customTabsHelperFragment: CustomTabsHelperFragment? = null
 var lastTab = 0
-var masterValueMap = mutableMapOf<String, MutableMap<String, Any?>?>()
+val masterValueMap = mutableMapOf<String, MutableMap<String, Any?>?>()
+val sessionArticleCache = mutableMapOf<String, Article>()
