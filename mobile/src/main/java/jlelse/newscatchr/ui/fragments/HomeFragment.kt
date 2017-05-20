@@ -117,24 +117,6 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			loadFavoriteFeeds()
 			loadRecommendedFeeds()
 		}
-		if (recyclerOne?.adapter == null) {
-			moreAdapterOne.wrap(fastAdapterOne)
-			headerAdapterOne.wrap(moreAdapterOne)
-			headerAdapterOne.add(HeaderRecyclerItem(title = R.string.last_feeds.resStr()!!, ctx = context))
-			recyclerOne?.adapter = headerAdapterOne
-		}
-		if (recyclerTwo?.adapter == null) {
-			moreAdapterTwo.wrap(fastAdapterTwo)
-			headerAdapterTwo.wrap(moreAdapterTwo)
-			headerAdapterTwo.add(HeaderRecyclerItem(title = R.string.favorites.resStr()!!, ctx = context))
-			recyclerTwo?.adapter = headerAdapterTwo
-		}
-		if (recyclerThree?.adapter == null) {
-			moreAdapterThree.wrap(fastAdapterThree)
-			headerAdapterThree.wrap(moreAdapterThree)
-			headerAdapterThree.add(HeaderRecyclerItem(title = R.string.recommendations.resStr()!!, ctx = context))
-			recyclerThree?.adapter = headerAdapterThree
-		}
 		loadLastFeeds(true)
 		loadFavoriteFeeds(true)
 		loadRecommendedFeeds(true)
@@ -170,40 +152,46 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	}
 
 	private fun loadLastFeeds(first: Boolean = false) = async {
+		if (recyclerOne?.adapter == null) {
+			moreAdapterOne.wrap(fastAdapterOne)
+			headerAdapterOne.wrap(moreAdapterOne)
+			headerAdapterOne.add(HeaderRecyclerItem(title = R.string.last_feeds.resStr()!!, ctx = context))
+			recyclerOne?.adapter = headerAdapterOne
+		}
 		val lastFeeds = await { Database.allLastFeeds.takeLast(5).reversed() }
-		fastAdapterOne.clear()
-		moreAdapterOne.clear()
-		if (lastFeeds.notNullAndEmpty()) {
-			recyclerOne?.showView()
-			lastFeeds.forEachIndexed { i, feed ->
-				fastAdapterOne.add(FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == lastFeeds.lastIndex))
-			}
-			moreAdapterOne.add(MoreRecyclerItem(context) {
-				fragmentNavigation.pushFragment(FeedListFragment().apply {
-					addObject("feeds", Database.allLastFeeds.reversed().toTypedArray())
-				}, R.string.last_feeds.resStr())
-			})
-		} else recyclerOne?.hideView()
+		fastAdapterOne.setNewList(lastFeeds.mapIndexed { i, feed -> FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == lastFeeds.lastIndex) })
+		moreAdapterOne.setNewList(listOf(MoreRecyclerItem(context) {
+			fragmentNavigation.pushFragment(FeedListFragment().apply {
+				addObject("feeds", Database.allLastFeeds.reversed().toTypedArray())
+			}, R.string.last_feeds.resStr())
+		}))
+		if (lastFeeds.notNullAndEmpty()) recyclerOne?.showView() else recyclerOne?.hideView()
 		if (first) restoreScrollState()
 	}
 
 	private fun loadFavoriteFeeds(first: Boolean = false) = async {
+		if (recyclerTwo?.adapter == null) {
+			moreAdapterTwo.wrap(fastAdapterTwo)
+			headerAdapterTwo.wrap(moreAdapterTwo)
+			headerAdapterTwo.add(HeaderRecyclerItem(title = R.string.favorites.resStr()!!, ctx = context))
+			recyclerTwo?.adapter = headerAdapterTwo
+		}
 		val favoriteFeeds = await { Database.allFavorites.take(5) }
-		fastAdapterTwo.clear()
-		moreAdapterTwo.clear()
-		if (favoriteFeeds.notNullAndEmpty()) {
-			recyclerOne?.showView()
-			favoriteFeeds.forEachIndexed { i, feed ->
-				fastAdapterTwo.add(FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == favoriteFeeds.lastIndex))
-			}
-			moreAdapterTwo.add(MoreRecyclerItem(context) {
-				fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
-			})
-		} else recyclerTwo?.hideView()
+		fastAdapterTwo.setNewList(favoriteFeeds.mapIndexed { i, feed -> FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == favoriteFeeds.lastIndex) })
+		moreAdapterTwo.setNewList(listOf(MoreRecyclerItem(context) {
+			fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
+		}))
+		if (favoriteFeeds.notNullAndEmpty()) recyclerOne?.showView() else recyclerTwo?.hideView()
 		if (first) restoreScrollState()
 	}
 
 	private fun loadRecommendedFeeds(cache: Boolean = false) = async {
+		if (recyclerThree?.adapter == null) {
+			moreAdapterThree.wrap(fastAdapterThree)
+			headerAdapterThree.wrap(moreAdapterThree)
+			headerAdapterThree.add(HeaderRecyclerItem(title = R.string.recommendations.resStr()!!, ctx = context))
+			recyclerThree?.adapter = headerAdapterThree
+		}
 		refresh?.showIndicator()
 		await {
 			if (recFeeds == null || !cache) Feedly().recommendedFeeds(Preferences.recommendationsLanguage, cache) { feeds, related ->
@@ -211,20 +199,17 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 				recRelated = related
 			}
 		}
-		fastAdapterThree.clear()
-		moreAdapterThree.clear()
-		if (recFeeds.notNullAndEmpty()) {
-			recyclerThree?.showView()
-			recFeeds?.take(15)?.forEachIndexed { i, feed ->
-				fastAdapterThree.add(FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == recFeeds?.take(15)?.lastIndex))
-			}
-			moreAdapterThree.add(MoreRecyclerItem(context) {
+		val tempRecFeeds = recFeeds?.take(15)
+		if (tempRecFeeds != null) {
+			fastAdapterThree.setNewList(tempRecFeeds.mapIndexed { i, feed -> FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == tempRecFeeds.lastIndex) })
+			moreAdapterThree.setNewList(listOf(MoreRecyclerItem(context) {
 				fragmentNavigation.pushFragment(FeedListFragment().apply {
 					addObject("feeds", recFeeds)
 					addObject("tags", recRelated)
 				}, R.string.recommendations.resStr())
-			})
-		} else recyclerThree?.hideView()
+			}))
+		}
+		if (recFeeds.notNullAndEmpty()) recyclerThree?.showView() else recyclerThree?.hideView()
 		if (recRelated.notNullAndEmpty()) {
 			tagsTitle?.showView()
 			tagsBox?.showView()
