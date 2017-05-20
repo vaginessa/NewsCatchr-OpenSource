@@ -128,8 +128,7 @@ class FeedFragment : BaseFragment() {
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
 		return when (item?.itemId) {
 			R.id.favorite -> {
-				feed?.saved = !favorite
-				if (favorite) Database.addFavorites(feed)
+				if (!favorite) Database.addFavorites(feed)
 				else Database.deleteFavorite(feed?.url())
 				item.icon = (if (favorite) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, Color.WHITE)
 				editMenuItem?.isVisible = favorite

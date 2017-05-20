@@ -39,22 +39,22 @@ object Database {
 	private val LAST_FEEDS = "last_feeds"
 	private val lastFeedsStore = KeyObjectStore(LAST_FEEDS)
 
-	private fun Feed?.safeFavorite() = this != null && !this.url().isNullOrBlank() && this.saved
+	private fun Feed?.safeFavorite() = this != null && !this.url().isNullOrBlank()
 
 	var allFavorites: Array<Feed>
 		get() = favoritesStore.read(FAVORITES, Array<Feed>::class.java) ?: arrayOf<Feed>()
 		set(value) {
-			tryOrNull { favoritesStore.write<Array<Feed>>(FAVORITES, value.filter { it.safeFavorite() }.toTypedArray()) }
+			tryOrNull { favoritesStore.write<Array<Feed>>(FAVORITES, value.filter { it.safeFavorite() }.distinctBy { it.url() }.toTypedArray()) }
 		}
 
-	val allFavoritesUrls = allFavorites.map(Feed::url)
+	val allFavoritesUrls = allFavorites.map { it.url() }
 
 	fun addFavorites(vararg feeds: Feed?) {
-		allFavorites += feeds.filterNotNull().filterNot { isSavedFavorite(it.url()) }
+		allFavorites += feeds.filterNotNull().filter { !isSavedFavorite(it.url()) }
 	}
 
 	fun deleteFavorite(url: String?) {
-		allFavorites = allFavorites.filterNot { it.url() == url }.toTypedArray()
+		allFavorites = allFavorites.filter { it.url() != url }.toTypedArray()
 	}
 
 	fun updateFavoriteTitle(feedUrl: String?, newTitle: String?) {
@@ -70,13 +70,13 @@ object Database {
 	var allBookmarks: Array<Article>
 		get() = bookmarksStore.read(BOOKMARKS, Array<Article>::class.java) ?: arrayOf<Article>()
 		set(value) {
-			tryOrNull { bookmarksStore.write<Array<Article>>(BOOKMARKS, value.filter { it.safeBookmark() }.toTypedArray()) }
+			tryOrNull { bookmarksStore.write<Array<Article>>(BOOKMARKS, value.filter { it.safeBookmark() }.distinctBy { it.url }.toTypedArray()) }
 		}
 
 	val allBookmarkUrls = allBookmarks.map { it.url }
 
 	private fun addBookmarks(vararg articles: Article?) {
-		allBookmarks += articles.filterNotNull().filterNot { isSavedBookmark(it.url) }
+		allBookmarks += articles.filterNotNull().filter { !isSavedBookmark(it.url) }
 	}
 
 	fun addBookmark(article: Article?) {
@@ -101,7 +101,7 @@ object Database {
 						PocketHandler().archiveOnPocket(it)
 					}
 				}
-			allBookmarks = allBookmarks.filterNot { it.url == url }.toTypedArray()
+			allBookmarks = allBookmarks.filter { it.url != url }.toTypedArray()
 		}
 	}
 
@@ -112,7 +112,7 @@ object Database {
 		}
 
 	fun addReadUrl(url: String?) {
-		if (!isSavedReadUrl(url)) allReadUrls += url!!
+		if (url != null) allReadUrls += url
 	}
 
 	private fun Feed?.safeLastFeed() = this != null && !this.url().isNullOrBlank()
@@ -125,16 +125,16 @@ object Database {
 
 	fun addLastFeed(feed: Feed?) {
 		if (feed != null) {
-			allLastFeeds = allLastFeeds.filterNot { it.url() == feed.url() }.toTypedArray()
+			allLastFeeds = allLastFeeds.filter { it.url() != feed.url() }.toTypedArray()
 			allLastFeeds += feed
 		}
 	}
 
-	fun isSavedFavorite(url: String?) = url.notNullOrBlank() && allFavoritesUrls.contains(url)
+	fun isSavedFavorite(url: String?) = allFavoritesUrls.contains(url)
 
-	fun isSavedBookmark(url: String?) = url.notNullOrBlank() && allBookmarkUrls.contains(url)
+	fun isSavedBookmark(url: String?) = allBookmarkUrls.contains(url)
 
-	fun isSavedReadUrl(url: String?) = url.notNullOrBlank() && allReadUrls.contains(url)
+	fun isSavedReadUrl(url: String?) = allReadUrls.contains(url)
 
 	class PocketHandler {
 

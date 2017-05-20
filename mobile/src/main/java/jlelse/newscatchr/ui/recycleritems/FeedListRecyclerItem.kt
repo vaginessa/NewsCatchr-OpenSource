@@ -61,11 +61,9 @@ class FeedListRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, 
 			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
 			viewHolder.favorite.setOnClickListener {
 				if (Database.isSavedFavorite(feed.url())) {
-					feed.saved = false
 					Database.deleteFavorite(feed.url())
 					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_border_universal.resDrw(context, context.getPrimaryTextColor()))
 				} else {
-					feed.saved = true
 					Database.addFavorites(feed)
 					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_universal.resDrw(context, context.getPrimaryTextColor()))
 				}

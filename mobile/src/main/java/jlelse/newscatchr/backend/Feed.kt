@@ -25,8 +25,7 @@ class Feed(
 		var title: String? = null,
 		var id: String? = null,
 		var feedId: String? = null,
-		var website: String? = null,
-		var saved: Boolean = false
+		var website: String? = null
 ) {
 	fun url() = (id ?: feedId)?.replace("^feed/".toRegex(), "")
 }

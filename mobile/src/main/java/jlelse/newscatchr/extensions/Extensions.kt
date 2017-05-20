@@ -47,8 +47,7 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 					if (qName.equals("outline", ignoreCase = true) && attributes.getValue("xmlUrl") != null) {
 						add(Feed(
 								title = attributes.getValue("title"),
-								feedId = attributes.getValue("xmlUrl"),
-								saved = true
+								feedId = attributes.getValue("xmlUrl")
 						))
 					}
 				}
