@@ -43,7 +43,7 @@ import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.layout.HomeFragmentUI
-import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.HeaderRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.MoreRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.NCAdapter
@@ -61,13 +61,13 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerone) }
 	private val recyclerTwo: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclertwo) }
 	private val recyclerThree: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerthree) }
-	private val fastAdapterOne = FastItemAdapter<FeedListRecyclerItem>()
+	private val fastAdapterOne = FastItemAdapter<FeedRecyclerItem>()
 	private val headerAdapterOne = HeaderAdapter<HeaderRecyclerItem>()
 	private val moreAdapterOne = NCAdapter<MoreRecyclerItem>(order = 1000)
-	private val fastAdapterTwo = FastItemAdapter<FeedListRecyclerItem>()
+	private val fastAdapterTwo = FastItemAdapter<FeedRecyclerItem>()
 	private val headerAdapterTwo = HeaderAdapter<HeaderRecyclerItem>()
 	private val moreAdapterTwo = NCAdapter<MoreRecyclerItem>(order = 1000)
-	private val fastAdapterThree = FastItemAdapter<FeedListRecyclerItem>()
+	private val fastAdapterThree = FastItemAdapter<FeedRecyclerItem>()
 	private val headerAdapterThree = HeaderAdapter<HeaderRecyclerItem>()
 	private val moreAdapterThree = NCAdapter<MoreRecyclerItem>(order = 1000)
 	private val tagsTitle: TextView? by lazy { fragmentView?.find<TextView>(R.id.homefragment_tagstitle) }
@@ -159,7 +159,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			recyclerOne?.adapter = headerAdapterOne
 		}
 		val lastFeeds = await { Database.allLastFeeds.takeLast(5).reversed() }
-		fastAdapterOne.setNewList(lastFeeds.mapIndexed { i, feed -> FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == lastFeeds.lastIndex) })
+		fastAdapterOne.setNewList(lastFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == lastFeeds.lastIndex) })
 		moreAdapterOne.setNewList(listOf(MoreRecyclerItem(context) {
 			fragmentNavigation.pushFragment(FeedListFragment().apply {
 				addObject("feeds", Database.allLastFeeds.reversed().toTypedArray())
@@ -177,7 +177,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 			recyclerTwo?.adapter = headerAdapterTwo
 		}
 		val favoriteFeeds = await { Database.allFavorites.take(5) }
-		fastAdapterTwo.setNewList(favoriteFeeds.mapIndexed { i, feed -> FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == favoriteFeeds.lastIndex) })
+		fastAdapterTwo.setNewList(favoriteFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == favoriteFeeds.lastIndex) })
 		moreAdapterTwo.setNewList(listOf(MoreRecyclerItem(context) {
 			fragmentNavigation.pushFragment(FavoritesFragment(), R.string.favorites.resStr())
 		}))
@@ -201,7 +201,7 @@ class HomeFragment : BaseFragment(), FAB, FragmentManipulation {
 		}
 		val tempRecFeeds = recFeeds?.take(15)
 		if (tempRecFeeds != null) {
-			fastAdapterThree.setNewList(tempRecFeeds.mapIndexed { i, feed -> FeedListRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == tempRecFeeds.lastIndex) })
+			fastAdapterThree.setNewList(tempRecFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeFragment, isLast = i == tempRecFeeds.lastIndex) })
 			moreAdapterThree.setNewList(listOf(MoreRecyclerItem(context) {
 				fragmentNavigation.pushFragment(FeedListFragment().apply {
 					addObject("feeds", recFeeds)

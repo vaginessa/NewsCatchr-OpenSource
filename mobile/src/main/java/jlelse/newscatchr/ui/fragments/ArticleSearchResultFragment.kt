@@ -26,7 +26,7 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.ui.layout.BasicRecyclerUI
-import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
@@ -35,7 +35,7 @@ import org.jetbrains.anko.find
 class ArticleSearchResultFragment : BaseFragment() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.basicrecyclerview_recycler) }
-	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private var articles: Array<Article>? = null
 
 	@SuppressWarnings("unchecked")
@@ -48,7 +48,7 @@ class ArticleSearchResultFragment : BaseFragment() {
 		if (articles.notNullAndEmpty()) {
 			fastAdapter.clear()
 			articles?.forEach {
-				fastAdapter.add(ArticleListRecyclerItem(article = it, fragment = this@ArticleSearchResultFragment))
+				fastAdapter.add(ArticleRecyclerItem(article = it, fragment = this@ArticleSearchResultFragment))
 			}
 			recyclerOne?.restorePosition()
 		}

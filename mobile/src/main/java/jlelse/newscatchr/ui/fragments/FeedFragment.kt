@@ -39,7 +39,7 @@ import jlelse.newscatchr.backend.loaders.FeedlyLoader
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
-import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
@@ -50,7 +50,7 @@ import org.jetbrains.anko.find
 class FeedFragment : BaseFragment() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
-	private val fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+	private val fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val footerAdapter = FooterAdapter<ProgressItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private val feed by lazy { getAddedObject<Feed?>("feed") }
@@ -96,7 +96,7 @@ class FeedFragment : BaseFragment() {
 		}
 		if (articles.notNullAndEmpty()) {
 			recyclerOne?.clearOnScrollListeners()
-			fastAdapter.setNewList(articles.map { ArticleListRecyclerItem(article = it, fragment = this@FeedFragment) })
+			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(article = it, fragment = this@FeedFragment) })
 			recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
 				override fun onLoadMore(currentPage: Int) {
 					async {
@@ -104,7 +104,7 @@ class FeedFragment : BaseFragment() {
 						addString("continuation", feedlyLoader?.continuation)
 						if (newArticles != null) {
 							articles.addAll(newArticles)
-							fastAdapter.add(newArticles.map { ArticleListRecyclerItem(article = it, fragment = this@FeedFragment) })
+							fastAdapter.add(newArticles.map { ArticleRecyclerItem(article = it, fragment = this@FeedFragment) })
 						}
 					}
 				}

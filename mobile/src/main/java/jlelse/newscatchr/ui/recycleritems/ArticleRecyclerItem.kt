@@ -35,7 +35,7 @@ import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import org.jetbrains.anko.find
 
-class ArticleListRecyclerItem(val article: Article? = null, val fragment: BaseFragment? = null) : AbstractItem<ArticleListRecyclerItem, ArticleListRecyclerItem.ViewHolder>() {
+class ArticleRecyclerItem(val article: Article? = null, val fragment: BaseFragment? = null) : AbstractItem<ArticleRecyclerItem, ArticleRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.articlelist_item_id

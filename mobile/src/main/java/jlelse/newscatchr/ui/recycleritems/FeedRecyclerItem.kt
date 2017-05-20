@@ -37,7 +37,7 @@ import jlelse.newscatchr.ui.fragments.FeedFragment
 import jlelse.readit.R
 import org.jetbrains.anko.find
 
-class FeedListRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: BaseFragment? = null, val adapter: FastItemAdapter<FeedListRecyclerItem>? = null) : AbstractItem<FeedListRecyclerItem, FeedListRecyclerItem.ViewHolder>() {
+class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: BaseFragment? = null, val adapter: FastItemAdapter<FeedRecyclerItem>? = null) : AbstractItem<FeedRecyclerItem, FeedRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.feedlist_item_id

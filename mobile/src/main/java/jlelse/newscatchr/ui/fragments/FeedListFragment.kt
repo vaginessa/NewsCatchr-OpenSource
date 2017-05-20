@@ -26,7 +26,7 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.ui.layout.BasicRecyclerUI
-import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.NCAdapter
 import jlelse.newscatchr.ui.recycleritems.TagsRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
@@ -39,7 +39,7 @@ class FeedListFragment : BaseFragment() {
 	private var feeds: Array<Feed>? = null
 	private var tags: Array<String>? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.basicrecyclerview_recycler) }
-	private var fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
+	private var fastAdapter = FastItemAdapter<FeedRecyclerItem>()
 	private var tagsAdapter = NCAdapter<TagsRecyclerItem>(order = 100)
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,9 +52,9 @@ class FeedListFragment : BaseFragment() {
 		feeds = getAddedObject("feeds")
 		fastAdapter.clear()
 		if (feeds.notNullAndEmpty()) {
-			fastAdapter.add(mutableListOf<FeedListRecyclerItem>().apply {
+			fastAdapter.add(mutableListOf<FeedRecyclerItem>().apply {
 				feeds?.forEachIndexed { i, feed ->
-					add(FeedListRecyclerItem(feed = feed, isLast = i == feeds?.lastIndex, fragment = this@FeedListFragment, adapter = fastAdapter))
+					add(FeedRecyclerItem(feed = feed, isLast = i == feeds?.lastIndex, fragment = this@FeedListFragment, adapter = fastAdapter))
 				}
 			})
 		}

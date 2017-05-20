@@ -31,7 +31,7 @@ import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
-import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
@@ -41,7 +41,7 @@ import org.jetbrains.anko.find
 class BookmarksFragment : BaseFragment() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
-	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -67,7 +67,7 @@ class BookmarksFragment : BaseFragment() {
 		if (articles.notNullAndEmpty()) {
 			fastAdapter.clear()
 			articles.forEach {
-				fastAdapter.add(ArticleListRecyclerItem(article = it, fragment = this@BookmarksFragment))
+				fastAdapter.add(ArticleRecyclerItem(article = it, fragment = this@BookmarksFragment))
 			}
 			if (cache) recyclerOne?.restorePosition()
 		} else {

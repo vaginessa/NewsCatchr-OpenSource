@@ -30,7 +30,7 @@ import jlelse.newscatchr.backend.loaders.FeedlyLoader
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.nothingFound
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
-import jlelse.newscatchr.ui.recycleritems.ArticleListRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
@@ -40,7 +40,7 @@ import org.jetbrains.anko.find
 class MixFragment : BaseFragment() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
-	private var fastAdapter = FastItemAdapter<ArticleListRecyclerItem>()
+	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var feedId: String? = null
 	private var articles: List<Article>? = null
@@ -70,7 +70,7 @@ class MixFragment : BaseFragment() {
 		if (articles.notNullAndEmpty()) {
 			fastAdapter.clear()
 			articles?.forEach {
-				fastAdapter.add(ArticleListRecyclerItem(article = it, fragment = this@MixFragment))
+				fastAdapter.add(ArticleRecyclerItem(article = it, fragment = this@MixFragment))
 			}
 			if (cache) recyclerOne?.restorePosition()
 		} else {

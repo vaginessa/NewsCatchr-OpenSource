@@ -36,7 +36,7 @@ import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
-import jlelse.newscatchr.ui.recycleritems.FeedListRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
@@ -48,7 +48,7 @@ import java.util.*
 class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
-	private var fastAdapter = FastItemAdapter<FeedListRecyclerItem>()
+	private var fastAdapter = FastItemAdapter<FeedRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var feeds: MutableList<Feed>? = null
 
@@ -70,7 +70,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		if (feeds.notNullAndEmpty()) {
 			fastAdapter.clear()
 			feeds?.forEach {
-				fastAdapter.add(FeedListRecyclerItem(feed = it, fragment = this@FavoritesFragment, adapter = fastAdapter))
+				fastAdapter.add(FeedRecyclerItem(feed = it, fragment = this@FavoritesFragment, adapter = fastAdapter))
 			}
 			if (first) recyclerOne?.restorePosition()
 		} else {
