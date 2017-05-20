@@ -95,9 +95,7 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				})
 			}
 		}
-
 		setSupportActionBar(toolbar)
-
 		fragNavController = FragNavController.Builder(savedInstanceState, supportFragmentManager, R.id.mainactivity_container)
 				.rootFragments(listOf(
 						HomeFragment().apply { addTitle(R.string.news.resStr()) },
@@ -108,11 +106,14 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 					override fun onFragmentTransaction(p0: Fragment?, p1: FragNavController.TransactionType?) = checkFragmentDependingThings()
 					override fun onTabTransaction(p0: Fragment?, p1: Int) = checkFragmentDependingThings()
 				})
-				.selectedTabIndex(0)
+				.selectedTabIndex(lastTab)
 				.build()
-
-		var firstLaunch = true
 		bottomNavigationView?.apply {
+			selectedItemId = when (lastTab) {
+				1 -> R.id.bb_bookmarks
+				2 -> R.id.bb_settings
+				else -> R.id.bb_news
+			}
 			setOnNavigationItemSelectedListener { item ->
 				val itemNumber = when (item.itemId) {
 					R.id.bb_news -> 0
@@ -120,20 +121,12 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 					R.id.bb_settings -> 2
 					else -> 0
 				}
-				if (itemNumber == lastTab && !firstLaunch) fragNavController?.clearStack()
+				if (itemNumber == lastTab) fragNavController?.clearStack()
 				else fragNavController?.switchTab(itemNumber)
 				lastTab = itemNumber
-				firstLaunch = false
 				true
 			}
 		}
-		fragNavController?.switchTab(lastTab)
-		findViewById(when (lastTab) {
-			0 -> R.id.bb_news
-			1 -> R.id.bb_bookmarks
-			2 -> R.id.bb_settings
-			else -> R.id.bb_news
-		}).performClick()
 
 		checkFragmentDependingThings()
 
