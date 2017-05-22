@@ -22,6 +22,7 @@ package jlelse.newscatchr.ui.fragments
 
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.Menu
 import android.view.MenuInflater
@@ -42,7 +43,6 @@ import jlelse.newscatchr.extensions.readString
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
-import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -52,7 +52,7 @@ import java.util.*
 
 class FavoritesView : ViewManagerView(), ItemTouchCallback {
 	private var fragmentView: View? = null
-	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<FeedRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var feeds: MutableList<Feed>? = null
@@ -63,19 +63,14 @@ class FavoritesView : ViewManagerView(), ItemTouchCallback {
 		ItemTouchHelper(SimpleDragCallback(this)).attachToRecyclerView(recyclerOne)
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
 		refreshOne?.setOnRefreshListener { load() }
-		load(true)
+		load()
 		return fragmentView
 	}
 
-	private fun load(first: Boolean = false) {
+	private fun load() {
 		feeds = Database.allFavorites.toMutableList()
-		if (feeds.notNullAndEmpty()) {
-			fastAdapter.clear()
-			feeds?.forEach {
-				fastAdapter.add(FeedRecyclerItem(feed = it, fragment = this@FavoritesView, adapter = fastAdapter))
-			}
-			if (first) recyclerOne?.restorePosition()
-		} else fastAdapter.clear()
+		if (feeds.notNullAndEmpty()) fastAdapter.setNewList(feeds?.map { FeedRecyclerItem(feed = it, fragment = this@FavoritesView, adapter = fastAdapter) })
+		else fastAdapter.setNewList(listOf())
 		refreshOne?.hideIndicator()
 	}
 

@@ -20,6 +20,7 @@
 
 package jlelse.newscatchr.ui.fragments
 
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -34,7 +35,6 @@ import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
-import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -43,7 +43,7 @@ import org.jetbrains.anko.find
 
 class BookmarksView : ViewManagerView() {
 	private var fragmentView: View? = null
-	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 
@@ -64,12 +64,8 @@ class BookmarksView : ViewManagerView() {
 			}
 			Database.allBookmarks
 		}
-		if (articles.notNullAndEmpty()) {
-			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@BookmarksView) })
-			if (cache) recyclerOne?.restorePosition()
-		} else {
-			fastAdapter.setNewList(listOf())
-		}
+		if (articles.notNullAndEmpty()) fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@BookmarksView) })
+		else fastAdapter.setNewList(listOf())
 		refreshOne?.hideIndicator()
 	}
 

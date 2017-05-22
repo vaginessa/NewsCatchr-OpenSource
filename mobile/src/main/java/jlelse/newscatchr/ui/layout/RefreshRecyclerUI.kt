@@ -20,18 +20,18 @@ package jlelse.newscatchr.ui.layout
 
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import jlelse.newscatchr.extensions.statefulRecyclerView
 import jlelse.newscatchr.extensions.swipeRefreshLayout
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.recyclerview.v7.recyclerView
 
 class RefreshRecyclerUI : AnkoComponent<ViewManagerView> {
 	override fun createView(ui: AnkoContext<ViewManagerView>): View = with(ui) {
 		swipeRefreshLayout {
 			id = R.id.refreshrecyclerview_refresh
-			statefulRecyclerView {
+			recyclerView {
 				id = R.id.refreshrecyclerview_recycler
 				layoutManager = LinearLayoutManager(context)
 			}

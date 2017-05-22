@@ -18,13 +18,13 @@
 
 package jlelse.newscatchr.ui.fragments
 
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.ui.layout.BasicRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
-import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
@@ -32,7 +32,7 @@ import org.jetbrains.anko.find
 
 class ArticleSearchResultView(val articles: List<Article>) : ViewManagerView() {
 	private var fragmentView: View? = null
-	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.basicrecyclerview_recycler) }
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.basicrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 
 	override fun onCreateView(): View? {
