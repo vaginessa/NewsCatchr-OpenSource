@@ -228,7 +228,7 @@ class MainActivity : ViewManagerActivity() {
 	}
 
 	override fun createMenu(menu: Menu?) {
-		super.onCreateOptionsMenu(menu)
+		super.createMenu(menu)
 		menuInflater.inflate(R.menu.universal, menu)
 	}
 

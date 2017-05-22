@@ -111,7 +111,9 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 
 	override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
 		super.onPrepareOptionsMenu(menu)
-		onCreateOptionsMenu(menu)
+		menu?.clear()
+		createMenu(menu)
+		currentView().inflateMenu(menuInflater, menu)
 		return true
 	}
 
