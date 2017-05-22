@@ -55,5 +55,3 @@ class NewsCatchr : Application() {
 var appContext: Context? = null
 var customTabsHelperFragment: CustomTabsHelperFragment? = null
 var lastTab = 0
-val masterValueMap = mutableMapOf<String, MutableMap<String, Any?>?>()
-val sessionArticleCache = mutableMapOf<String, Article>()

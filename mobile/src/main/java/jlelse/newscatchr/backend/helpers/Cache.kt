@@ -26,7 +26,6 @@ import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
-import jlelse.newscatchr.sessionArticleCache
 
 fun <T> T?.saveToCache(key: String?) = KeyObjectStore(name = "cache", cache = true).write<T>(key?.formatForCache(), this)
 
@@ -37,17 +36,13 @@ fun String.formatForCache(): String = tryOrNull { replace("[^0-9a-zA-Z]".toRegex
 fun isArticleCached(id: String): Boolean = KeyObjectStore(name = "article_cache", cache = true).exists(id.formatForCache())
 
 fun getCachedArticle(id: String): Article? = tryOrNull {
-	if (sessionArticleCache.contains(id)) sessionArticleCache[id]
-	else if (isArticleCached(id)) KeyObjectStore(name = "article_cache", cache = true).read(id.formatForCache(), Article::class.java)
+	if (isArticleCached(id)) KeyObjectStore(name = "article_cache", cache = true).read(id.formatForCache(), Article::class.java)
 	else null
 }
 
 fun Article.saveToCache() {
 	process()
-	if (id.notNullOrBlank() && id.notNullOrBlank()) {
-		sessionArticleCache.put(id!!, this)
-		KeyObjectStore(name = "article_cache", cache = true).write<Article>(id!!.formatForCache(), this)
-	}
+	if (id.notNullOrBlank() && id.notNullOrBlank()) KeyObjectStore(name = "article_cache", cache = true).write<Article>(id!!.formatForCache(), this)
 }
 
 fun Context.clearCache(finished: () -> Unit) {
