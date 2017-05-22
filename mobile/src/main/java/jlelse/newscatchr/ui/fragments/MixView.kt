@@ -20,6 +20,7 @@
 
 package jlelse.newscatchr.ui.fragments
 
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -32,7 +33,6 @@ import jlelse.newscatchr.backend.loaders.FeedlyLoader
 import jlelse.newscatchr.extensions.nothingFound
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
-import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -41,7 +41,7 @@ import org.jetbrains.anko.find
 
 class MixView(val feedId: String) : ViewManagerView() {
 	private var fragmentView: View? = null
-	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var articles = listOf<Article>()
@@ -66,10 +66,8 @@ class MixView(val feedId: String) : ViewManagerView() {
 	private fun loadArticles(cache: Boolean = false) = async {
 		refreshOne?.showIndicator()
 		if (!cache) await { feedlyLoader?.items(cache)?.let { articles = it } }
-		if (!articles.isEmpty()) {
-			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@MixView) })
-			if (cache) recyclerOne?.restorePosition()
-		} else context.nothingFound { closeView() }
+		if (!articles.isEmpty()) fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@MixView) })
+		else context.nothingFound { closeView() }
 		refreshOne?.hideIndicator()
 	}
 

@@ -227,10 +227,9 @@ class MainActivity : ViewManagerActivity() {
 		super.onDestroy()
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+	override fun createMenu(menu: Menu?) {
 		super.onCreateOptionsMenu(menu)
 		menuInflater.inflate(R.menu.universal, menu)
-		return true
 	}
 
 	override fun onOptionsItemSelected(item: MenuItem?): Boolean {

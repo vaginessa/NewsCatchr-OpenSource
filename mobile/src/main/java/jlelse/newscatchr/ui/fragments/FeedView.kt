@@ -23,6 +23,7 @@ package jlelse.newscatchr.ui.fragments
 import android.content.Intent
 import android.graphics.Color
 import android.support.design.widget.Snackbar
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -43,7 +44,6 @@ import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.newscatchr.ui.views.ProgressDialog
-import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -51,7 +51,7 @@ import org.jetbrains.anko.*
 
 class FeedView(val feed: Feed) : ViewManagerView() {
 	private var fragmentView: View? = null
-	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
+	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private val fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val footerAdapter = FooterAdapter<ProgressItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
@@ -107,7 +107,6 @@ class FeedView(val feed: Feed) : ViewManagerView() {
 					}
 				}
 			})
-			if (cache) recyclerOne?.restorePosition()
 		} else context.nothingFound {
 			closeView()
 		}
