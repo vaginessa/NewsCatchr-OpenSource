@@ -29,15 +29,15 @@ import com.google.android.flexbox.FlexboxLayout
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.*
-import jlelse.newscatchr.ui.fragments.ArticleFragment
-import jlelse.newscatchr.ui.fragments.BaseFragment
+import jlelse.newscatchr.ui.fragments.ArticleView
 import jlelse.newscatchr.ui.layout.ArticleRecyclerItemUI
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fragment: BaseFragment? = null) : NCAbstractItem<ArticleRecyclerItem, ArticleRecyclerItem.ViewHolder>() {
+class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fragment: ViewManagerView? = null) : NCAbstractItem<ArticleRecyclerItem, ArticleRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.article_item_id
@@ -84,9 +84,9 @@ class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fr
 			viewHolder.visual.hideView()
 		}
 		viewHolder.itemView.setOnClickListener {
-			if (article != null) fragment?.fragmentNavigation?.pushFragment(ArticleFragment().apply {
-				addObject("article", article)
-			}, article.originTitle)
+			if (article != null) fragment?.openView(ArticleView(article = article).apply {
+				title = article.originTitle
+			})
 		}
 		viewHolder.bookmark.setImageDrawable((if (Database.isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
 		viewHolder.bookmark.setOnClickListener {
@@ -102,7 +102,7 @@ class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fr
 		}
 		viewHolder.share.setImageDrawable(R.drawable.ic_share_universal.resDrw(context, context.getPrimaryTextColor()))
 		viewHolder.share.setOnClickListener {
-			if (fragment != null) article?.share(fragment.activity)
+			if (fragment != null) article?.share(fragment.context)
 		}
 	}
 

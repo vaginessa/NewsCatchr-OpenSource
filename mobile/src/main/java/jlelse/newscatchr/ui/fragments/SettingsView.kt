@@ -16,26 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jlelse.newscatchr.ui.views
+package jlelse.newscatchr.ui.fragments
 
-import android.view.LayoutInflater
-import android.widget.TextView
-import com.google.android.flexbox.FlexboxLayout
-import jlelse.newscatchr.extensions.tryOrNull
-import jlelse.newscatchr.ui.fragments.MixView
+import android.view.View
+import jlelse.newscatchr.ui.layout.SettingsViewUI
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
-import org.jetbrains.anko.find
+import org.jetbrains.anko.AnkoContext
 
-fun FlexboxLayout.addTagView(fragment: ViewManagerView, tagString: String?) = tryOrNull {
-	addView(LayoutInflater.from(fragment.context).inflate(R.layout.tagitem, null)?.apply {
-		find<TextView>(R.id.tagView).apply {
-			text = "#$tagString"
-			setOnClickListener {
-				fragment.openView(MixView(feedId = "topic/$tagString").apply {
-					title = "#$tagString"
-				})
-			}
-		}
-	})
+class SettingsView : ViewManagerView() {
+	private val settingsFragment by lazy { context.supportFragmentManager.findFragmentById(R.id.settings_fragment) as SettingsFragment }
+
+	override fun onCreateView(): View? {
+		super.onCreateView()
+		return SettingsViewUI().createView(AnkoContext.create(context, this))
+	}
+
+	fun finishPocketAuth(){
+		settingsFragment.progressDialog?.show()
+		settingsFragment.pocketAuth?.authenticate()
+	}
 }

@@ -21,9 +21,11 @@
 package jlelse.newscatchr.ui.fragments
 
 import android.graphics.Color
-import android.os.Bundle
 import android.text.format.DateUtils
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import co.metalab.asyncawait.async
@@ -42,41 +44,39 @@ import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.ZoomTextView
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class ArticleFragment : BaseFragment(), FAB {
+class ArticleView(var article: Article) : ViewManagerView(), FAB {
 	private var fragmentView: View? = null
 	private val titleView: TextView? by lazy { fragmentView?.find<TextView>(R.id.articlefragment_title) }
 	private val visualView: ImageView? by lazy { fragmentView?.find<ImageView>(R.id.articlefragment_visual) }
 	private val detailsView: TextView? by lazy { fragmentView?.find<TextView>(R.id.articlefragment_details) }
 	private val tagsBox: FlexboxLayout? by lazy { fragmentView?.find<FlexboxLayout>(R.id.articlefragment_tagsbox) }
-	private val contentView: ZoomTextView? by lazy { fragmentView?.find<ZoomTextView>(R.id.articlefragment_content) }
+	private val articleContentView: ZoomTextView? by lazy { fragmentView?.find<ZoomTextView>(R.id.articlefragment_content) }
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.articlefragment_refresh) }
 
-	private var article: Article? = null
 	private val bookmark
-		get() = Database.isSavedBookmark(article?.url)
+		get() = Database.isSavedBookmark(article.url)
 
 	override val fabDrawable = R.drawable.ic_share
 	override val fabClick = { shareArticle() }
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		super.onCreateView(inflater, container, savedInstanceState)
-		setHasOptionsMenu(true)
-		fragmentView = fragmentView ?: ArticleFragmentUI().createView(AnkoContext.create(context, this))
+	override fun onCreateView(): View? {
+		super.onCreateView()
+		fragmentView = ArticleFragmentUI().createView(AnkoContext.create(context, this))
 		refreshOne?.setOnRefreshListener {
 			try {
-				async { showArticle(await { Feedly().entries(listOf(article?.id ?: ""))?.firstOrNull() }) }
+				async { showArticle(await { Feedly().entries(listOf(article.id ?: ""))?.firstOrNull() }) }
 			} catch (e: Exception) {
 				e.printStackTrace()
 				refreshOne?.hideIndicator()
 			}
 		}
-		article = getAddedObject("article")
 		showArticle(article)
-		Database.addReadUrl(article?.url)
-		Tracking.track(type = Tracking.TYPE.ARTICLE, url = article?.url)
+		Database.addReadUrl(article.url)
+		Tracking.track(type = Tracking.TYPE.ARTICLE, url = article.url)
 		return fragmentView
 	}
 
@@ -84,7 +84,7 @@ class ArticleFragment : BaseFragment(), FAB {
 		refreshOne?.showIndicator()
 		await { article?.process(true) }
 		if (article != null) {
-			this@ArticleFragment.article = article
+			this@ArticleView.article = article
 			image(article.visualUrl)
 			title(article.title)
 			details(article.author, article.originTitle, article.published)
@@ -98,7 +98,7 @@ class ArticleFragment : BaseFragment(), FAB {
 		if (visualUrl.notNullOrBlank()) visualView?.apply {
 			showView()
 			loadImage(visualUrl)
-			tryOrNull(execute = activity != null) { (activity as MainActivity).loadToolbarBackground(visualUrl) }
+			tryOrNull(execute = context != null) { (context as MainActivity).loadToolbarBackground(visualUrl) }
 		} else visualView?.hideView()
 	}
 
@@ -127,55 +127,45 @@ class ArticleFragment : BaseFragment(), FAB {
 	}
 
 	private fun content(content: String? = "") {
-		if (content.notNullOrBlank()) contentView?.apply {
+		if (content.notNullOrBlank()) articleContentView?.apply {
 			showView()
 			text = content?.toHtml()
-		} else contentView?.hideView()
+		} else articleContentView?.hideView()
 	}
 
 	private fun keywords(keywords: Array<String>? = null) {
 		if (keywords.notNullAndEmpty()) tagsBox?.apply {
 			removeAllViews()
-			keywords?.forEach { addTagView(this@ArticleFragment, it) }
+			keywords?.forEach { addTagView(this@ArticleView, it) }
 		} else tagsBox?.removeAllViews()
 	}
 
-	private fun shareArticle() = article?.share(activity)
+	private fun shareArticle() = article.share(context)
 
-	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-		super.onCreateOptionsMenu(menu, inflater)
-		inflater?.inflate(R.menu.articlefragment, menu)
+	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
+		super.inflateMenu(inflater, menu)
+		inflater.inflate(R.menu.articlefragment, menu)
 		menu?.findItem(R.id.bookmark)?.icon = (if (bookmark) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, Color.WHITE)
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
-		R.id.bookmark -> {
-			if (!bookmark) Database.addBookmark(article)
-			else Database.deleteBookmark(article?.url)
-			item.icon = (if (bookmark) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, Color.WHITE)
-			true
-		}
-		R.id.share -> {
-			shareArticle()
-			true
-		}
-		R.id.browser -> {
-			article?.url?.openUrl(activity)
-			true
-		}
-		R.id.readability -> {
-			async {
+	override fun onOptionsItemSelected(item: MenuItem?) {
+		super.onOptionsItemSelected(item)
+		when (item?.itemId) {
+			R.id.bookmark -> {
+				if (!bookmark) Database.addBookmark(article)
+				else Database.deleteBookmark(article.url)
+				item.icon = (if (bookmark) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, Color.WHITE)
+			}
+			R.id.share -> shareArticle()
+			R.id.browser -> article.url?.openUrl(context)
+			R.id.readability -> async {
 				refreshOne?.showIndicator()
 				val temp = await { ReadabilityApi().reparse(article) }
 				if (temp.second) {
 					showArticle(temp.first)
-					addObject("article", temp.first)
+					if (temp.first != null) article = temp.first!!
 				}
 			}
-			true
-		}
-		else -> {
-			super.onOptionsItemSelected(item)
 		}
 	}
 }

@@ -81,7 +81,6 @@ dependencies {
     compile 'com.cloudrail:cloudrail-si-android:2.17.1'
     compile 'com.anjlab.android.iab.v3:library:1.0.39'
     compile 'me.zhanghai.android.customtabshelper:library:1.0.3'
-    compile 'com.ncapdevi:frag-nav:2.0.1'
     // Firebase
     compile "com.google.firebase:firebase-core:$PLAY_SERVICES"
     compile "com.google.firebase:firebase-messaging:$PLAY_SERVICES"
@@ -102,6 +101,8 @@ dependencies {
     compile "org.jetbrains.anko:anko-recyclerview-v7:$ANKO"
     compile "org.jetbrains.anko:anko-appcompat-v7:$ANKO"
     compile "org.jetbrains.anko:anko-design:$ANKO"
+    // Other
+    compile project(':viewmanager')
 }
 
 apply plugin: 'com.google.gms.google-services'

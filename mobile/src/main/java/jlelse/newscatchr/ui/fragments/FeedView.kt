@@ -22,9 +22,11 @@ package jlelse.newscatchr.ui.fragments
 
 import android.content.Intent
 import android.graphics.Color
-import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.fastadapter.adapters.FooterAdapter
@@ -44,44 +46,41 @@ import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.*
 
-class FeedFragment : BaseFragment() {
+class FeedView(val feed: Feed) : ViewManagerView() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private val fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val footerAdapter = FooterAdapter<ProgressItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
-	private val feed by lazy { getAddedObject<Feed?>("feed") }
-	private var articles: MutableList<Article>
-		get() = getAddedObject("articles") ?: mutableListOf()
-		set(value) = addObject("articles", value)
+	private var articles = mutableListOf<Article>()
 	private val favorite
-		get() = Database.isSavedFavorite(feed?.url())
+		get() = Database.isSavedFavorite(feed.url())
 	private var feedlyLoader: FeedlyLoader? = null
 	private var editMenuItem: MenuItem? = null
+	private var continuation: String? = null
+	private var ranked: String? = null
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		super.onCreateView(inflater, container, savedInstanceState)
-		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
-		setHasOptionsMenu(true)
-		refreshOne?.setOnRefreshListener {
-			loadArticles()
-		}
+	override fun onCreateView(): View? {
+		super.onCreateView()
+		fragmentView = RefreshRecyclerUI().createView(AnkoContext.create(context, this))
+		refreshOne?.setOnRefreshListener { loadArticles() }
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = footerAdapter.wrap(fastAdapter)
 		feedlyLoader = FeedlyLoader().apply {
 			type = FeedlyLoader.FeedTypes.FEED
-			feedUrl = "feed/" + feed?.url()
-			continuation = getAddedString("continuation")
-			ranked = when (getAddedString("ranked")) {
+			feedUrl = "feed/" + feed.url()
+			continuation = this@FeedView.continuation
+			ranked = when (this@FeedView.ranked) {
 				"oldest" -> FeedlyLoader.Ranked.OLDEST
 				else -> FeedlyLoader.Ranked.NEWEST
 			}
 		}
 		loadArticles(true)
-		Tracking.track(type = Tracking.TYPE.FEED, url = feed?.url())
+		Tracking.track(type = Tracking.TYPE.FEED, url = feed.url())
 		Database.addLastFeed(feed)
-		sendBroadcast(Intent("last_feed_updated"))
+		context.sendBroadcast(Intent("last_feed_updated"))
 		return fragmentView
 	}
 
@@ -91,28 +90,26 @@ class FeedFragment : BaseFragment() {
 			feedlyLoader?.items(cache)?.let {
 				articles = it.toMutableList()
 			}
-			addString("continuation", feedlyLoader?.continuation)
+			continuation = feedlyLoader?.continuation
 		}
 		if (articles.notNullAndEmpty()) {
 			recyclerOne?.clearOnScrollListeners()
-			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@FeedFragment) })
+			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@FeedView) })
 			recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
 				override fun onLoadMore(currentPage: Int) {
 					async {
 						val newArticles = await { feedlyLoader?.moreItems() }
-						addString("continuation", feedlyLoader?.continuation)
+						continuation = feedlyLoader?.continuation
 						if (newArticles != null) {
 							articles.addAll(newArticles)
-							fastAdapter.add(newArticles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@FeedFragment) })
+							fastAdapter.add(newArticles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@FeedView) })
 						}
 					}
 				}
 			})
 			if (cache) recyclerOne?.restorePosition()
-		} else {
-			context.nothingFound {
-				fragmentNavigation.popFragment()
-			}
+		} else context.nothingFound {
+			closeView()
 		}
 		refreshOne?.hideIndicator()
 	}
@@ -124,28 +121,27 @@ class FeedFragment : BaseFragment() {
 		}.let { context.applicationContext.sendBroadcast(it) }
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-		super.onCreateOptionsMenu(menu, inflater)
-		inflater?.inflate(R.menu.feedfragment, menu)
+	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
+		super.inflateMenu(inflater, menu)
+		inflater.inflate(R.menu.feedfragment, menu)
 		menu?.findItem(R.id.favorite)?.icon = (if (favorite) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, Color.WHITE)
 		editMenuItem = menu?.findItem(R.id.edit_title)
 		editMenuItem?.isVisible = favorite
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-		return when (item?.itemId) {
+	override fun onOptionsItemSelected(item: MenuItem?) {
+		when (item?.itemId) {
 			R.id.favorite -> {
 				if (!favorite) Database.addFavorites(feed)
-				else Database.deleteFavorite(feed?.url())
+				else Database.deleteFavorite(feed.url())
 				item.icon = (if (favorite) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, Color.WHITE)
 				editMenuItem?.isVisible = favorite
-				true
 			}
 			R.id.sort -> {
 				MaterialDialog.Builder(context)
 						.title(R.string.sort)
 						.items(R.string.newest_first.resStr(), R.string.oldest_first.resStr())
-						.itemsCallbackSingleChoice(when (getAddedString("ranked")) {
+						.itemsCallbackSingleChoice(when (ranked) {
 							"oldest" -> 1
 							else -> 0
 						}) { _, _, which, _ ->
@@ -158,16 +154,15 @@ class FeedFragment : BaseFragment() {
 							}
 							articles.clear()
 							loadArticles()
-							addObject(when (feedlyLoader?.ranked) {
+							ranked = when (feedlyLoader?.ranked) {
 								FeedlyLoader.Ranked.OLDEST -> "oldest"
 								else -> "newest"
-							}, "ranked")
+							}
 							true
 						}
 						.positiveText(R.string.set)
 						.negativeText(android.R.string.cancel)
 						.show()
-				true
 			}
 			R.id.search -> {
 				val progressDialog = ProgressDialog(context)
@@ -179,49 +174,39 @@ class FeedFragment : BaseFragment() {
 								val foundArticles = await {
 									FeedlyLoader().apply {
 										type = FeedlyLoader.FeedTypes.SEARCH
-										feedUrl = "feed/" + feed?.url()
+										feedUrl = "feed/" + feed.url()
 										this.query = query.toString()
 									}.items(false)
 								}
 								progressDialog.dismiss()
-								if (foundArticles.notNullAndEmpty()) fragmentNavigation.pushFragment(ArticleSearchResultFragment().apply { addObject("articles", foundArticles) }, "Results for " + query.toString())
+								if (foundArticles.notNullAndEmpty()) openView(ArticleSearchResultView(articles = foundArticles!!).apply { title = "Results for " + query.toString() })
 								else context.nothingFound()
 							}
 						})
 						.negativeText(android.R.string.cancel)
 						.positiveText(android.R.string.search_go)
 						.show()
-				true
 			}
-			R.id.refresh -> {
-				loadArticles()
-				true
-			}
+			R.id.refresh -> loadArticles()
 			R.id.edit_title -> {
 				MaterialDialog.Builder(context)
 						.title(R.string.edit_feed_title)
-						.input(null, feed?.title, { _, input ->
+						.input(null, feed.title, { _, input ->
 							if (input.toString().notNullOrBlank()) {
-								Database.updateFavoriteTitle(feed?.url(), input.toString())
-								feed?.title = input.toString()
-								addObject("feed", feed)
-								addTitle(feed?.title)
-								val curActivity = activity
+								Database.updateFavoriteTitle(feed.url(), input.toString())
+								feed.title = input.toString()
+								title = feed.title
+								val curActivity = context
 								if (curActivity is MainActivity) curActivity.refreshFragmentDependingTitle(this)
 							}
 						})
 						.negativeText(android.R.string.cancel)
 						.positiveText(android.R.string.ok)
 						.show()
-				true
 			}
 			R.id.create_shortcut -> {
-				createHomeScreenShortcut(getAddedTitle() ?: R.string.app_name.resStr()!!, feed?.url() ?: "")
-				Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.shortcut_created, Snackbar.LENGTH_SHORT).show()
-				true
-			}
-			else -> {
-				super.onOptionsItemSelected(item)
+				createHomeScreenShortcut(title ?: R.string.app_name.resStr()!!, feed.url() ?: "")
+				Snackbar.make(contentView, R.string.shortcut_created, Snackbar.LENGTH_SHORT).show()
 			}
 		}
 	}

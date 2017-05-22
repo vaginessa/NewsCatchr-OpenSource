@@ -22,12 +22,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
 import com.mikepenz.fastadapter.items.AbstractItem
-import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.find
 
-class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: BaseFragment? = null) : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHolder>() {
+class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: ViewManagerView? = null) : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.tags_item_id

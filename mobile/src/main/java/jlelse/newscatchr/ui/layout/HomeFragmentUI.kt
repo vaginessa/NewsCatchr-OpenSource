@@ -27,14 +27,14 @@ import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.extensions.flexboxLayout
 import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.swipeRefreshLayout
-import jlelse.newscatchr.ui.fragments.HomeFragment
+import jlelse.newscatchr.ui.fragments.HomeView
 import jlelse.readit.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.support.v4.nestedScrollView
 
-class HomeFragmentUI : AnkoComponent<HomeFragment> {
-	override fun createView(ui: AnkoContext<HomeFragment>): View = with(ui) {
+class HomeFragmentUI : AnkoComponent<HomeView> {
+	override fun createView(ui: AnkoContext<HomeView>): View = with(ui) {
 		swipeRefreshLayout {
 			id = R.id.homefragment_refresh
 			nestedScrollView {

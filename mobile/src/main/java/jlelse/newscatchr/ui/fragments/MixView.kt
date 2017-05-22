@@ -20,8 +20,10 @@
 
 package jlelse.newscatchr.ui.fragments
 
-import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import co.metalab.asyncawait.async
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
@@ -33,24 +35,21 @@ import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class MixFragment : BaseFragment() {
+class MixView(val feedId: String) : ViewManagerView() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
-	private val feedId by lazy { getAddedString("feedId") }
-	private var articles: List<Article>
-		get() = getAddedObject("articles") ?: listOf()
-		set(value) = addObject("articles", value)
+	private var articles = listOf<Article>()
 	private var feedlyLoader: FeedlyLoader? = null
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		super.onCreateView(inflater, container, savedInstanceState)
-		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
-		setHasOptionsMenu(true)
+	override fun onCreateView(): View? {
+		super.onCreateView()
+		fragmentView = RefreshRecyclerUI().createView(AnkoContext.create(context, this))
 		refreshOne?.setOnRefreshListener {
 			loadArticles(false)
 		}
@@ -68,26 +67,20 @@ class MixFragment : BaseFragment() {
 		refreshOne?.showIndicator()
 		if (!cache) await { feedlyLoader?.items(cache)?.let { articles = it } }
 		if (!articles.isEmpty()) {
-			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@MixFragment) })
+			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@MixView) })
 			if (cache) recyclerOne?.restorePosition()
-		} else context.nothingFound {
-			fragmentNavigation.popFragment()
-		}
+		} else context.nothingFound { closeView() }
 		refreshOne?.hideIndicator()
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-		super.onCreateOptionsMenu(menu, inflater)
-		inflater?.inflate(R.menu.mixfragment, menu)
+	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
+		super.inflateMenu(inflater, menu)
+		inflater.inflate(R.menu.mixfragment, menu)
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-		return when (item?.itemId) {
-			R.id.refresh -> {
-				loadArticles(false)
-				true
-			}
-			else -> super.onOptionsItemSelected(item)
+	override fun onOptionsItemSelected(item: MenuItem?) {
+		when (item?.itemId) {
+			R.id.refresh -> loadArticles(false)
 		}
 	}
 }

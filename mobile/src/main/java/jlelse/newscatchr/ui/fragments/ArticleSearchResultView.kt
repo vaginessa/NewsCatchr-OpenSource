@@ -18,10 +18,7 @@
 
 package jlelse.newscatchr.ui.fragments
 
-import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.extensions.notNullAndEmpty
@@ -29,24 +26,21 @@ import jlelse.newscatchr.ui.layout.BasicRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class ArticleSearchResultFragment : BaseFragment() {
+class ArticleSearchResultView(val articles: List<Article>) : ViewManagerView() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.basicrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 
-	@SuppressWarnings("unchecked")
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		super.onCreateView(inflater, container, savedInstanceState)
-		fragmentView = fragmentView ?: BasicRecyclerUI().createView(AnkoContext.create(context, this))
-		setHasOptionsMenu(true)
-		val articles: List<Article>? = getAddedObject("articles")
+	override fun onCreateView(): View? {
+		super.onCreateView()
+		fragmentView = BasicRecyclerUI().createView(AnkoContext.create(context, this))
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
 		if (articles.notNullAndEmpty()) {
-			fastAdapter.setNewList(articles?.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@ArticleSearchResultFragment) })
-			recyclerOne?.restorePosition()
+			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@ArticleSearchResultView) })
 		}
 		return fragmentView
 	}

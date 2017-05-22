@@ -22,13 +22,13 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import jlelse.newscatchr.extensions.statefulRecyclerView
 import jlelse.newscatchr.extensions.swipeRefreshLayout
-import jlelse.newscatchr.ui.fragments.BaseFragment
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoComponent
 import org.jetbrains.anko.AnkoContext
 
-class RefreshRecyclerUI : AnkoComponent<BaseFragment> {
-	override fun createView(ui: AnkoContext<BaseFragment>): View = with(ui) {
+class RefreshRecyclerUI : AnkoComponent<ViewManagerView> {
+	override fun createView(ui: AnkoContext<ViewManagerView>): View = with(ui) {
 		swipeRefreshLayout {
 			id = R.id.refreshrecyclerview_refresh
 			statefulRecyclerView {

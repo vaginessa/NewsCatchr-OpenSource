@@ -16,21 +16,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jlelse.newscatchr.ui.layout
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
-import android.support.v7.widget.LinearLayoutManager
-import android.view.View
-import jlelse.newscatchr.extensions.statefulRecyclerView
-import jlelse.readit.R
-import jlelse.viewmanager.ViewManagerView
-import org.jetbrains.anko.AnkoComponent
-import org.jetbrains.anko.AnkoContext
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
-class BasicRecyclerUI : AnkoComponent<ViewManagerView> {
-	override fun createView(ui: AnkoContext<ViewManagerView>): View = with(ui) {
-		statefulRecyclerView {
-			id = R.id.basicrecyclerview_recycler
-			layoutManager = LinearLayoutManager(context)
-		}
-	}
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    compile "com.android.support:support-v4:$SUPPORT_LIBS"
+    compile "com.android.support:appcompat-v7:$SUPPORT_LIBS"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN"
 }

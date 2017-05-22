@@ -24,14 +24,14 @@ import android.util.TypedValue
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
 import jlelse.newscatchr.extensions.*
-import jlelse.newscatchr.ui.fragments.ArticleFragment
+import jlelse.newscatchr.ui.fragments.ArticleView
 import jlelse.readit.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.nestedScrollView
 
-class ArticleFragmentUI : AnkoComponent<ArticleFragment> {
+class ArticleFragmentUI : AnkoComponent<ArticleView> {
 	@SuppressLint("PrivateResource")
-	override fun createView(ui: AnkoContext<ArticleFragment>): View = with(ui) {
+	override fun createView(ui: AnkoContext<ArticleView>): View = with(ui) {
 		swipeRefreshLayout {
 			id = R.id.articlefragment_refresh
 			nestedScrollView {

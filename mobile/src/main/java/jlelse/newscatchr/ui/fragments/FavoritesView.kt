@@ -21,10 +21,12 @@
 package jlelse.newscatchr.ui.fragments
 
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
@@ -33,34 +35,34 @@ import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.convertOpmlToFeeds
+import jlelse.newscatchr.extensions.notNullAndEmpty
+import jlelse.newscatchr.extensions.notNullOrBlank
+import jlelse.newscatchr.extensions.readString
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
-import org.jetbrains.anko.support.v4.onUiThread
 import java.util.*
 
-class FavoritesFragment : BaseFragment(), ItemTouchCallback {
+class FavoritesView : ViewManagerView(), ItemTouchCallback {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<FeedRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var feeds: MutableList<Feed>? = null
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		super.onCreateView(inflater, container, savedInstanceState)
-		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
-		setHasOptionsMenu(true)
+	override fun onCreateView(): View? {
+		super.onCreateView()
+		fragmentView = RefreshRecyclerUI().createView(AnkoContext.create(context, this))
 		ItemTouchHelper(SimpleDragCallback(this)).attachToRecyclerView(recyclerOne)
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
-		refreshOne?.setOnRefreshListener {
-			load()
-		}
+		refreshOne?.setOnRefreshListener { load() }
 		load(true)
 		return fragmentView
 	}
@@ -70,12 +72,10 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		if (feeds.notNullAndEmpty()) {
 			fastAdapter.clear()
 			feeds?.forEach {
-				fastAdapter.add(FeedRecyclerItem(feed = it, fragment = this@FavoritesFragment, adapter = fastAdapter))
+				fastAdapter.add(FeedRecyclerItem(feed = it, fragment = this@FavoritesView, adapter = fastAdapter))
 			}
 			if (first) recyclerOne?.restorePosition()
-		} else {
-			fastAdapter.clear()
-		}
+		} else fastAdapter.clear()
 		refreshOne?.hideIndicator()
 	}
 
@@ -84,31 +84,23 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		fastAdapter.notifyAdapterItemMoved(oldPosition, newPosition)
 		Collections.swap(feeds, oldPosition, newPosition)
 		if (feeds != null) Database.allFavorites = feeds!!.toTypedArray()
-		sendBroadcast(Intent("favorites_updated"))
+		context.sendBroadcast(Intent("favorites_updated"))
 		return true
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-		super.onCreateOptionsMenu(menu, inflater)
-		inflater?.inflate(R.menu.backup, menu)
-		inflater?.inflate(R.menu.favoritesfragment, menu)
+	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
+		super.inflateMenu(inflater, menu)
+		inflater.inflate(R.menu.backup, menu)
+		inflater.inflate(R.menu.favoritesfragment, menu)
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+	override fun onOptionsItemSelected(item: MenuItem?) {
+		super.onOptionsItemSelected(item)
 		when (item?.itemId) {
-			R.id.backup -> {
-				backupRestore(activity as MainActivity, {
-					onUiThread { load() }
-				})
-				return true
-			}
-			R.id.opml -> {
-				importFromFile()
-				return true
-			}
-			else -> {
-				return super.onOptionsItemSelected(item)
-			}
+			R.id.backup -> backupRestore(context as MainActivity, {
+				context.runOnUiThread { load() }
+			})
+			R.id.opml -> importFromFile()
 		}
 	}
 
@@ -116,7 +108,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		val intent = Intent(Intent.ACTION_GET_CONTENT)
 		intent.type = "*/*"
 		intent.addCategory(Intent.CATEGORY_OPENABLE)
-		startActivityForResult(intent, 555)
+		context.startActivityForResult(intent, 555)
 	}
 
 	private fun importOpml(opml: String?) = async {
@@ -127,7 +119,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 			feeds?.forEach { Database.addFavorites(it) }
 			imported = feeds?.size ?: 0
 		}
-		sendBroadcast(Intent("favorites_updated"))
+		context.sendBroadcast(Intent("favorites_updated"))
 		MaterialDialog.Builder(context)
 				.title(R.string.import_opml)
 				.content(if (imported != 0) R.string.suc_import else R.string.import_failed)
@@ -140,7 +132,7 @@ class FavoritesFragment : BaseFragment(), ItemTouchCallback {
 		super.onActivityResult(requestCode, resultCode, data)
 		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) async {
 			var opml: String? = null
-			if (data != null && data.data != null) opml = await { activity.contentResolver.openInputStream(data.data).readString() }
+			if (data != null && data.data != null) opml = await { context.contentResolver.openInputStream(data.data).readString() }
 			importOpml(opml)
 		}
 	}

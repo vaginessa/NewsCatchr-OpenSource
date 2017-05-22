@@ -16,26 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package jlelse.newscatchr.ui.views
+package jlelse.newscatchr.ui.layout
 
-import android.view.LayoutInflater
-import android.widget.TextView
-import com.google.android.flexbox.FlexboxLayout
-import jlelse.newscatchr.extensions.tryOrNull
-import jlelse.newscatchr.ui.fragments.MixView
+import android.view.View
+import jlelse.newscatchr.ui.fragments.SettingsView
 import jlelse.readit.R
-import jlelse.viewmanager.ViewManagerView
-import org.jetbrains.anko.find
+import org.jetbrains.anko.AnkoComponent
+import org.jetbrains.anko.AnkoContext
+import org.jetbrains.anko.include
 
-fun FlexboxLayout.addTagView(fragment: ViewManagerView, tagString: String?) = tryOrNull {
-	addView(LayoutInflater.from(fragment.context).inflate(R.layout.tagitem, null)?.apply {
-		find<TextView>(R.id.tagView).apply {
-			text = "#$tagString"
-			setOnClickListener {
-				fragment.openView(MixView(feedId = "topic/$tagString").apply {
-					title = "#$tagString"
-				})
-			}
-		}
-	})
+class SettingsViewUI : AnkoComponent<SettingsView> {
+	override fun createView(ui: AnkoContext<SettingsView>): View = with(ui) {
+		include(R.layout.settingsview)
+	}
 }

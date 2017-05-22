@@ -20,8 +20,10 @@
 
 package jlelse.newscatchr.ui.fragments
 
-import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import co.metalab.asyncawait.async
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.helpers.Database
@@ -35,22 +37,20 @@ import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class BookmarksFragment : BaseFragment() {
+class BookmarksView : ViewManagerView() {
 	private var fragmentView: View? = null
 	private val recyclerOne: StatefulRecyclerView? by lazy { fragmentView?.find<StatefulRecyclerView>(R.id.refreshrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		super.onCreateView(inflater, container, savedInstanceState)
-		fragmentView = fragmentView ?: RefreshRecyclerUI().createView(AnkoContext.create(context, this))
-		setHasOptionsMenu(true)
-		refreshOne?.setOnRefreshListener {
-			loadArticles()
-		}
+	override fun onCreateView(): View? {
+		super.onCreateView()
+		fragmentView = RefreshRecyclerUI().createView(AnkoContext.create(context, this))
+		refreshOne?.setOnRefreshListener { loadArticles() }
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
 		loadArticles(true)
 		return fragmentView
@@ -65,30 +65,23 @@ class BookmarksFragment : BaseFragment() {
 			Database.allBookmarks
 		}
 		if (articles.notNullAndEmpty()) {
-			fastAdapter.clear()
-			articles.forEach {
-				fastAdapter.add(ArticleRecyclerItem(ctx = context, article = it, fragment = this@BookmarksFragment))
-			}
+			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@BookmarksView) })
 			if (cache) recyclerOne?.restorePosition()
 		} else {
-			fastAdapter.clear()
+			fastAdapter.setNewList(listOf())
 		}
 		refreshOne?.hideIndicator()
 	}
 
-	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-		super.onCreateOptionsMenu(menu, inflater)
-		inflater?.inflate(R.menu.bookmarksfragment, menu)
+	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
+		super.inflateMenu(inflater, menu)
+		inflater.inflate(R.menu.bookmarksfragment, menu)
 	}
 
-	override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+	override fun onOptionsItemSelected(item: MenuItem?) {
 		when (item?.itemId) {
 			R.id.refresh -> {
 				loadArticles()
-				return true
-			}
-			else -> {
-				return super.onOptionsItemSelected(item)
 			}
 		}
 	}

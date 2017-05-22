@@ -32,12 +32,12 @@ import jlelse.newscatchr.extensions.getPrimaryTextColor
 import jlelse.newscatchr.extensions.hideView
 import jlelse.newscatchr.extensions.resDrw
 import jlelse.newscatchr.extensions.showView
-import jlelse.newscatchr.ui.fragments.BaseFragment
-import jlelse.newscatchr.ui.fragments.FeedFragment
+import jlelse.newscatchr.ui.fragments.FeedView
 import jlelse.readit.R
+import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.find
 
-class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: BaseFragment? = null, val adapter: FastItemAdapter<FeedRecyclerItem>? = null) : AbstractItem<FeedRecyclerItem, FeedRecyclerItem.ViewHolder>() {
+class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: ViewManagerView? = null, val adapter: FastItemAdapter<FeedRecyclerItem>? = null) : AbstractItem<FeedRecyclerItem, FeedRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.feed_item_id
@@ -54,9 +54,9 @@ class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val 
 			setTitleText(feed.title, viewHolder.title)
 			viewHolder.website.text = Uri.parse(feed.website ?: feed.url()).host
 			viewHolder.itemView.setOnClickListener {
-				fragment?.fragmentNavigation?.pushFragment(FeedFragment().apply {
-					addObject("feed", feed)
-				}, feed.title)
+				fragment?.openView(FeedView(feed = feed).apply {
+					title = feed.title
+				})
 			}
 			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
 			viewHolder.favorite.setOnClickListener {

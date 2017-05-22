@@ -22,7 +22,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.app.AppCompatDelegate
 import android.view.View
 import android.widget.ImageView
@@ -30,7 +29,6 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.helpers.Preferences
-import jlelse.newscatchr.ui.interfaces.FragmentValues
 import jlelse.readit.R
 
 fun View.hideView() {
@@ -77,14 +75,6 @@ fun setNightMode() {
 		2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 		3 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 	}
-}
-
-fun NestedScrollView.savePosition(fragment: FragmentValues?) {
-	fragment?.addObject("SCROLL_VIEW_POSITION", arrayOf(scrollX, scrollY))
-}
-
-fun NestedScrollView.restorePosition(fragment: FragmentValues?) {
-	fragment?.getAddedObject<Array<Int>>("SCROLL_VIEW_POSITION")?.let { post { scrollTo(it[0], it[1]) } }
 }
 
 fun Int.dpToPx(): Int {
