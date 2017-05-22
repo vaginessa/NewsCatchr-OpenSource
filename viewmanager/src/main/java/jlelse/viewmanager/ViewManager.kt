@@ -131,7 +131,8 @@ private class DummyViewManagerActivity : ViewManagerActivity() {
 
 abstract class ViewManagerView : LinearLayout(viewManagerActivity) {
 	val contentView by lazy { this }
-	val context by lazy { viewManagerActivity }
+	val context
+		get() = viewManagerActivity
 	var title: String? = null
 
 	init {
