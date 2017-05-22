@@ -44,8 +44,7 @@ import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.newscatchr.ui.views.StatefulRecyclerView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.find
+import org.jetbrains.anko.*
 
 class FeedFragment : BaseFragment() {
 	private var fragmentView: View? = null
@@ -116,6 +115,13 @@ class FeedFragment : BaseFragment() {
 			}
 		}
 		refreshOne?.hideIndicator()
+	}
+
+	fun createHomeScreenShortcut(title: String, feedId: String) {
+		Intent().apply {
+			putExtras(bundleOf("duplicate" to false, Intent.EXTRA_SHORTCUT_INTENT to context.intentFor<MainActivity>("feedtitle" to title, "feedid" to feedId).newTask().clearTop(), Intent.EXTRA_SHORTCUT_NAME to title, Intent.EXTRA_SHORTCUT_ICON_RESOURCE to Intent.ShortcutIconResource.fromContext(context.applicationContext, R.drawable.icon)))
+			action = "com.android.launcher.action.INSTALL_SHORTCUT"
+		}.let { context.applicationContext.sendBroadcast(it) }
 	}
 
 	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -210,7 +216,7 @@ class FeedFragment : BaseFragment() {
 				true
 			}
 			R.id.create_shortcut -> {
-				if (activity is MainActivity) (activity as MainActivity).createHomeScreenShortcut(getAddedTitle() ?: R.string.app_name.resStr()!!, feed?.url() ?: "")
+				createHomeScreenShortcut(getAddedTitle() ?: R.string.app_name.resStr()!!, feed?.url() ?: "")
 				Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.shortcut_created, Snackbar.LENGTH_SHORT).show()
 				true
 			}

@@ -20,7 +20,6 @@
 
 package jlelse.newscatchr.ui.fragments
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -56,8 +55,8 @@ class ArticleFragment : BaseFragment(), FAB {
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.articlefragment_refresh) }
 
 	private var article: Article? = null
-	private var bookmark = false
-	private var zoomInit = false
+	private val bookmark
+		get() = Database.isSavedBookmark(article?.url)
 
 	override val fabDrawable = R.drawable.ic_share
 	override val fabClick = { shareArticle() }
@@ -75,8 +74,6 @@ class ArticleFragment : BaseFragment(), FAB {
 			}
 		}
 		article = getAddedObject("article")
-		bookmark = Database.isSavedBookmark(article?.url)
-		initZoom()
 		showArticle(article)
 		Database.addReadUrl(article?.url)
 		Tracking.track(type = Tracking.TYPE.ARTICLE, url = article?.url)
@@ -143,33 +140,6 @@ class ArticleFragment : BaseFragment(), FAB {
 		} else tagsBox?.removeAllViews()
 	}
 
-	@SuppressLint("ClickableViewAccessibility")
-	private fun initZoom() {
-		if (!zoomInit) {
-			contentView?.setOnTouchListener { view, motionEvent ->
-				view.performClick()
-				if (motionEvent.pointerCount >= 2) {
-					when (motionEvent.action) {
-						MotionEvent.ACTION_DOWN -> {
-							view.parent.parent.requestDisallowInterceptTouchEvent(true)
-							contentView?.scaleDetector?.onTouchEvent(motionEvent)
-						}
-						MotionEvent.ACTION_MOVE -> {
-							view.parent.parent.requestDisallowInterceptTouchEvent(true)
-							contentView?.scaleDetector?.onTouchEvent(motionEvent)
-						}
-						MotionEvent.ACTION_UP -> view.parent.parent.requestDisallowInterceptTouchEvent(false)
-					}
-				} else {
-					view.parent.parent.requestDisallowInterceptTouchEvent(false)
-					view.onTouchEvent(motionEvent)
-				}
-				true
-			}
-			zoomInit = true
-		}
-	}
-
 	private fun shareArticle() = article?.share(activity)
 
 	override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -180,8 +150,7 @@ class ArticleFragment : BaseFragment(), FAB {
 
 	override fun onOptionsItemSelected(item: MenuItem?) = when (item?.itemId) {
 		R.id.bookmark -> {
-			bookmark = !bookmark
-			if (bookmark) Database.addBookmark(article)
+			if (!bookmark) Database.addBookmark(article)
 			else Database.deleteBookmark(article?.url)
 			item.icon = (if (bookmark) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, Color.WHITE)
 			true

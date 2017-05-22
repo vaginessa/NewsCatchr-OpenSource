@@ -23,7 +23,6 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.util.AttributeSet
 import jlelse.readit.R
 
-
 class SwipeRefreshLayout : SwipeRefreshLayout {
 
 	constructor(context: Context?) : super(context) {
@@ -36,11 +35,11 @@ class SwipeRefreshLayout : SwipeRefreshLayout {
 
 	fun showIndicator() {
 		setColorSchemeResources(R.color.colorAccent)
-		if (isRefreshing == false) isRefreshing = true
+		if (!isRefreshing) isRefreshing = true
 	}
 
 	fun hideIndicator() {
-		if (isRefreshing == true) isRefreshing = false
+		if (isRefreshing) isRefreshing = false
 	}
 
 }

@@ -127,12 +127,8 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				true
 			}
 		}
-
 		checkFragmentDependingThings()
-
-		// Check Intent
 		handleIntent(intent)
-
 	}
 
 	private fun handleIntent(intent: Intent?) {
@@ -163,18 +159,6 @@ class MainActivity : AppCompatActivity(), BaseFragment.FragmentNavigation {
 				currentFrag.progressDialog?.show()
 				currentFrag.pocketAuth?.authenticate()
 			}
-		}
-	}
-
-	fun createHomeScreenShortcut(title: String, feedId: String) {
-		Intent().apply {
-			putExtra("duplicate", false)
-			putExtra(Intent.EXTRA_SHORTCUT_INTENT, intentFor<MainActivity>("feedtitle" to title, "feedid" to feedId).newTask().clearTop())
-			putExtra(Intent.EXTRA_SHORTCUT_NAME, title)
-			putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(applicationContext, R.drawable.icon))
-			action = "com.android.launcher.action.INSTALL_SHORTCUT"
-		}.let {
-			applicationContext.sendBroadcast(it)
 		}
 	}
 

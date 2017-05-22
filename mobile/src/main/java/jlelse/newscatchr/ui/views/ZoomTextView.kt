@@ -51,6 +51,26 @@ class ZoomTextView : TextView {
 		scaleFactor = Preferences.textScaleFactor
 		scaleFactor = Math.max(1.0f, Math.min(scaleFactor, zoomLimit))
 		setTextSize(TypedValue.COMPLEX_UNIT_PX, defaultSize * scaleFactor)
+		setOnTouchListener { view, motionEvent ->
+			view.performClick()
+			if (motionEvent.pointerCount >= 2) {
+				when (motionEvent.action) {
+					MotionEvent.ACTION_DOWN -> {
+						view.parent.parent.requestDisallowInterceptTouchEvent(true)
+						scaleDetector?.onTouchEvent(motionEvent)
+					}
+					MotionEvent.ACTION_MOVE -> {
+						view.parent.parent.requestDisallowInterceptTouchEvent(true)
+						scaleDetector?.onTouchEvent(motionEvent)
+					}
+					MotionEvent.ACTION_UP -> view.parent.parent.requestDisallowInterceptTouchEvent(false)
+				}
+			} else {
+				view.parent.parent.requestDisallowInterceptTouchEvent(false)
+				view.onTouchEvent(motionEvent)
+			}
+			true
+		}
 	}
 
 	override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
