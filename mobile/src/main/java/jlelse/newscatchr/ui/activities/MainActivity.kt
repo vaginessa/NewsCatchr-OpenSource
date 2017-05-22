@@ -185,6 +185,8 @@ class MainActivity : ViewManagerActivity() {
 		}
 		// Check Title
 		refreshFragmentDependingTitle(currentFragment)
+		// Background images
+		resetToolbarBackground()
 		// Check Help Menu Item
 		invalidateOptionsMenu()
 		// Check FAB

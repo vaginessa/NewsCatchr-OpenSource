@@ -40,9 +40,9 @@ import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.layout.ArticleFragmentUI
+import jlelse.newscatchr.ui.recycleritems.addTagView
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.ZoomTextView
-import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
