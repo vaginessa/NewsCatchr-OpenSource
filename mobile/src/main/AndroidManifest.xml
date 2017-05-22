@@ -78,10 +78,6 @@
 
 				<data android:scheme="pocketapp45699" />
 			</intent-filter>
-			<!-- Launcher shortcuts -->
-			<meta-data
-				android:name="android.app.shortcuts"
-				android:resource="@xml/shortcuts" />
 		</activity>
 
 	</application>
