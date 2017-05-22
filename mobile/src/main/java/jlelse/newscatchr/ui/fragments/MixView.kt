@@ -65,7 +65,7 @@ class MixView(val feedId: String) : ViewManagerView() {
 
 	private fun loadArticles(cache: Boolean = false) = async {
 		refreshOne?.showIndicator()
-		if (!cache) await { feedlyLoader?.items(cache)?.let { articles = it } }
+		await { feedlyLoader?.items(cache)?.let { articles = it } }
 		if (!articles.isEmpty()) fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@MixView) })
 		else context.nothingFound { closeView() }
 		refreshOne?.hideIndicator()
