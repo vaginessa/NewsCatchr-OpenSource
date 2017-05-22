@@ -31,7 +31,6 @@ import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.fragments.ArticleView
 import jlelse.newscatchr.ui.layout.ArticleRecyclerItemUI
-import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext

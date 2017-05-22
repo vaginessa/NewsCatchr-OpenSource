@@ -45,12 +45,8 @@ import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.layout.HomeFragmentUI
-import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
-import jlelse.newscatchr.ui.recycleritems.HeaderRecyclerItem
-import jlelse.newscatchr.ui.recycleritems.MoreRecyclerItem
-import jlelse.newscatchr.ui.recycleritems.NCAdapter
+import jlelse.newscatchr.ui.recycleritems.*
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
-import jlelse.newscatchr.ui.views.addTagView
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
