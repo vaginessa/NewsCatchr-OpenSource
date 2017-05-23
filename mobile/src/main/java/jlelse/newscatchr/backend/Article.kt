@@ -83,7 +83,7 @@ class Article(
 
 	fun share(context: Activity) {
 		async {
-			val newUrl = await { if (Preferences.urlShortener) url?.shortUrl() ?: url else url }
+			val newUrl = await { if (Preferences.urlShortener) tryOrNull { url?.shortUrl() } ?: url else url }
 			context.share("\"$title\"", "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}")
 		}
 	}

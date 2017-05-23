@@ -22,15 +22,14 @@ import android.content.Context
 import com.afollestad.materialdialogs.MaterialDialog
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Feedly
+import jlelse.newscatchr.mainAcivity
 import jlelse.newscatchr.ui.fragments.FeedListView
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
-import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
-
-fun searchForFeeds(context: Context, fragmentNavigation: ViewManagerView, query: String? = null) {
+fun searchForFeeds(context: Context, query: String? = null) {
 	val progressDialog = ProgressDialog(context)
 	val load = { finalQuery: String ->
 		progressDialog.show()
@@ -43,7 +42,7 @@ fun searchForFeeds(context: Context, fragmentNavigation: ViewManagerView, query:
 			}
 			uiThread {
 				progressDialog.dismiss()
-				if (foundFeeds.notNullAndEmpty()) fragmentNavigation.openView(FeedListView(feeds = foundFeeds, tags = foundRelated).apply { title = "${R.string.search_results_for.resStr()} $finalQuery" })
+				if (foundFeeds.notNullAndEmpty()) mainAcivity?.openView(FeedListView(feeds = foundFeeds, tags = foundRelated).apply { title = "${R.string.search_results_for.resStr()} $finalQuery" })
 				else context.nothingFound()
 			}
 		}

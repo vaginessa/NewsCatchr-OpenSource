@@ -81,7 +81,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	override val fabDrawable = R.drawable.ic_search
 
 	override val fabClick = {
-		searchForFeeds(context, this)
+		searchForFeeds(context)
 	}
 
 	override val expanded = true

@@ -33,10 +33,13 @@ import android.view.MenuItem
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import co.metalab.asyncawait.async
+import com.afollestad.materialdialogs.MaterialDialog
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.Feed
+import jlelse.newscatchr.backend.apis.fetchArticle
 import jlelse.newscatchr.backend.apis.share
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
@@ -44,13 +47,11 @@ import jlelse.newscatchr.customTabsHelperFragment
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.lastTab
 import jlelse.newscatchr.mainAcivity
-import jlelse.newscatchr.ui.fragments.BookmarksView
-import jlelse.newscatchr.ui.fragments.FeedView
-import jlelse.newscatchr.ui.fragments.HomeView
-import jlelse.newscatchr.ui.fragments.SettingsView
+import jlelse.newscatchr.ui.fragments.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.layout.MainActivityUI
+import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerActivity
 import jlelse.viewmanager.ViewManagerView
@@ -150,13 +151,28 @@ class MainActivity : ViewManagerActivity() {
 			// Browser
 			if (intent.scheme == "http" || intent.scheme == "https") {
 				intent.dataString?.let {
-					searchForFeeds(this, currentView(), it)
+					MaterialDialog.Builder(this)
+							.items("Feed", "Article")
+							.itemsCallback { _, _, i, _ ->
+								when (i) {
+									0 -> searchForFeeds(this, it)
+									1 -> async {
+										val progressDialog = ProgressDialog(this@MainActivity).apply { show() }
+										val article = await { tryOrNull { it.fetchArticle() } }
+										if (article != null) {
+											this@MainActivity.openView(ArticleView(article = article))
+										}
+										progressDialog.dismiss()
+									}
+								}
+							}
+							.show()
 				}
 			}
 			// Google Voice Search
 			if (intent.action == "com.google.android.gms.actions.SEARCH_ACTION") {
 				intent.getStringExtra(SearchManager.QUERY).let {
-					searchForFeeds(this, currentView(), it)
+					searchForFeeds(this, it)
 				}
 			}
 			// Pocket

@@ -46,7 +46,7 @@ class BackupApi(val context: Context) {
 		val readUrls = await { Ason.serializeArray<String>(Database.allReadUrls) }
 		await { backupAson.put("favorites", favorites).put("bookmarks", bookmarks).put("readUrls", readUrls) }
 		progressDialog.dismiss()
-		val key = await { backupAson.toString().uploadHaste() }
+		val key = await { tryOrNull { backupAson.toString().uploadHaste() } }
 		if (key != null) {
 			MaterialDialog.Builder(context)
 					.title(R.string.suc_backup)
@@ -62,7 +62,7 @@ class BackupApi(val context: Context) {
 	}
 
 	fun restore(key: String) = async {
-		val json = await { key.downloadHaste() }
+		val json = await { tryOrNull { key.downloadHaste() } }
 		if (json != null) {
 			val progressDialog: ProgressDialog = ProgressDialog(context).apply { show() }
 			val restoreAson = tryOrNull { Ason(json) }
