@@ -44,6 +44,7 @@ import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.customTabsHelperFragment
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.lastTab
+import jlelse.newscatchr.mainAcivity
 import jlelse.newscatchr.ui.fragments.BookmarksView
 import jlelse.newscatchr.ui.fragments.FeedView
 import jlelse.newscatchr.ui.fragments.HomeView
@@ -84,6 +85,7 @@ class MainActivity : ViewManagerActivity() {
 		get() = find(R.id.mainactivity_container)
 
 	override fun onCreate(savedInstanceState: Bundle?) {
+		mainAcivity = this
 		setContentView(MainActivityUI().createView(AnkoContext.create(this, this)))
 		super.onCreate(savedInstanceState)
 		doAsync {

@@ -28,7 +28,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
-import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.readit.R
 
 fun View.hideView() {
@@ -69,12 +68,13 @@ fun Context.getPrimaryTextColor(): Int {
 }
 
 fun setNightMode() {
-	when (Preferences.nightMode) {
+	AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+	/*when (Preferences.nightMode) {
 		0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
 		1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
 		2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 		3 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-	}
+	}*/
 }
 
 fun Int.dpToPx(): Int {

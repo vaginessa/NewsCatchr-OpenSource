@@ -40,7 +40,7 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 	abstract val initViewStacks: List<Stack<ViewManagerView>>
 	abstract val containerView: FrameLayout
 
-	fun currentView() = viewStacks[currentStack].peek()
+	fun currentView(): ViewManagerView = viewStacks[currentStack].peek()
 	fun allViews() = viewStacks.flatten()
 
 	open fun onSwitchView() {
@@ -95,6 +95,7 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 
 	override fun onDestroy() {
 		containerView.removeAllViews()
+		allViews().forEach { it.onDestroy() }
 		super.onDestroy()
 	}
 

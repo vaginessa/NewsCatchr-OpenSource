@@ -23,13 +23,13 @@ import android.content.Context
 import android.support.v7.app.AppCompatDelegate
 import com.cloudrail.si.CloudRail
 import com.evernote.android.job.JobManager
-import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.CloudRailApiKey
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.SyncJob
 import jlelse.newscatchr.backend.helpers.cancelSync
 import jlelse.newscatchr.backend.helpers.scheduleSync
 import jlelse.newscatchr.extensions.setNightMode
+import jlelse.newscatchr.ui.activities.MainActivity
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
 /**
@@ -55,3 +55,4 @@ class NewsCatchr : Application() {
 var appContext: Context? = null
 var customTabsHelperFragment: CustomTabsHelperFragment? = null
 var lastTab = 0
+var mainAcivity: MainActivity? = null

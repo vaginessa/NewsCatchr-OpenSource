@@ -37,6 +37,7 @@ import jlelse.newscatchr.backend.apis.PocketAuth
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.mainAcivity
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
@@ -194,7 +195,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							show()
 						}
 			}
-			nightModePref -> {
+			/*nightModePref -> {
 				val oldValue = Preferences.nightMode
 				MaterialDialog.Builder(context)
 						.title(R.string.night_mode)
@@ -205,12 +206,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							preference?.summary = R.array.night_mode_pref_titles.resStrArr()!![Preferences.nightMode]
 							if (which != oldPrefValue) {
 								setNightMode()
-								activity.recreate()
+								mainAcivity?.recreate()
 							}
 							true
 						}
 						.show()
-			}
+			}*/
 			backupPref -> {
 				backupRestore(activity as MainActivity, {})
 			}
