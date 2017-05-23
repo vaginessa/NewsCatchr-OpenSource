@@ -78,7 +78,6 @@ dependencies {
     compile 'com.google.android:flexbox:0.2.6'
     compile 'com.evernote:android-job:1.1.10'
     compile 'org.jsoup:jsoup:1.10.2'
-    compile 'com.cloudrail:cloudrail-si-android:2.17.1'
     compile 'com.anjlab.android.iab.v3:library:1.0.39'
     compile 'me.zhanghai.android.customtabshelper:library:1.0.3'
     // Firebase

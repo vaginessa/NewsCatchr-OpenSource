@@ -21,9 +21,7 @@ package jlelse.newscatchr
 import android.app.Application
 import android.content.Context
 import android.support.v7.app.AppCompatDelegate
-import com.cloudrail.si.CloudRail
 import com.evernote.android.job.JobManager
-import jlelse.newscatchr.backend.apis.CloudRailApiKey
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.SyncJob
 import jlelse.newscatchr.backend.helpers.cancelSync
@@ -48,7 +46,6 @@ class NewsCatchr : Application() {
 			}
 		}
 		if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
-		CloudRail.setAppKey(CloudRailApiKey)
 	}
 }
 
