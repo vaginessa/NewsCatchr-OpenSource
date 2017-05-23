@@ -20,6 +20,9 @@ package jlelse.newscatchr.backend.apis
 
 import android.content.Context
 import android.content.Intent
+import com.afollestad.ason.Ason
+import com.afollestad.bridge.Bridge
+import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
@@ -35,4 +38,18 @@ fun Context.share(title: String, text: String) {
 		putExtra(Intent.EXTRA_TEXT, text)
 	}, "${R.string.share.resStr()} $title"))
 	runOnUiThread { progressDialog.dismiss() }
+}
+
+// Short Url
+fun String.shortUrl(): String {
+	if (isNotBlank()) {
+		Bridge.post("https://www.googleapis.com/urlshortener/v1/url?fields=id&key=$GoogleApiKey")
+				.body(Ason().put("longUrl", this))
+				.contentType("application/json")
+				.asAsonObject()
+				.let {
+					if (it?.getString("id").notNullOrBlank()) return it!!.getString("id")!!
+					else return this
+				}
+	} else return this
 }

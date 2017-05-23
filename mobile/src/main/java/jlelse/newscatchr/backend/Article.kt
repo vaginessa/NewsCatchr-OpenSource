@@ -24,8 +24,8 @@ import android.app.Activity
 import co.metalab.asyncawait.async
 import com.afollestad.ason.AsonName
 import com.afollestad.bridge.annotations.ContentType
-import jlelse.newscatchr.backend.apis.UrlShortenerApi
 import jlelse.newscatchr.backend.apis.share
+import jlelse.newscatchr.backend.apis.shortUrl
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.*
 import jlelse.readit.R
@@ -83,7 +83,7 @@ class Article(
 
 	fun share(context: Activity) {
 		async {
-			val newUrl = await { if (Preferences.urlShortener) UrlShortenerApi().getShortUrl(url) ?: url else url }
+			val newUrl = await { if (Preferences.urlShortener) url?.shortUrl() ?: url else url }
 			context.share("\"$title\"", "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}")
 		}
 	}
