@@ -19,8 +19,8 @@
 package jlelse.newscatchr.backend.helpers
 
 import android.content.Context
-import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
+import org.jetbrains.anko.bundleOf
 
 /**
  * Everything Google Analytics related
@@ -38,36 +38,11 @@ object Tracking {
 			query: String? = null
 	) {
 		when (type) {
-			TYPE.FEED -> {
-				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
-					putString(FirebaseAnalytics.Param.CONTENT_TYPE, "feed")
-					putString(FirebaseAnalytics.Param.ITEM_ID, url)
-				})
-			}
-			TYPE.MIX -> {
-				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
-					putString(FirebaseAnalytics.Param.CONTENT_TYPE, "mix")
-					putString(FirebaseAnalytics.Param.ITEM_ID, url)
-				})
-			}
-			TYPE.ARTICLE -> {
-				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
-					putString(FirebaseAnalytics.Param.CONTENT_TYPE, "article")
-					putString(FirebaseAnalytics.Param.ITEM_ID, url)
-				})
-			}
-			TYPE.FEED_SEARCH -> {
-				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
-					putString(FirebaseAnalytics.Param.SEARCH_TERM, query)
-					putString("search_type", "feed")
-				})
-			}
-			TYPE.ARTICLE_SEARCH -> {
-				analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, Bundle().apply {
-					putString(FirebaseAnalytics.Param.SEARCH_TERM, query)
-					putString("search_type", "article")
-				})
-			}
+			TYPE.FEED -> analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundleOf(FirebaseAnalytics.Param.CONTENT_TYPE to "feed", FirebaseAnalytics.Param.ITEM_ID to (url ?: "")))
+			TYPE.MIX -> analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundleOf(FirebaseAnalytics.Param.CONTENT_TYPE to "mix", FirebaseAnalytics.Param.ITEM_ID to (url ?: "")))
+			TYPE.ARTICLE -> analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundleOf(FirebaseAnalytics.Param.CONTENT_TYPE to "article", FirebaseAnalytics.Param.ITEM_ID to (url ?: "")))
+			TYPE.FEED_SEARCH -> analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundleOf(FirebaseAnalytics.Param.SEARCH_TERM to (query ?: ""), "search_type" to "feed"))
+			TYPE.ARTICLE_SEARCH -> analyticsInstance?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundleOf(FirebaseAnalytics.Param.SEARCH_TERM to (query ?: ""), "search_type" to "article"))
 		}
 	}
 
