@@ -24,20 +24,16 @@ import com.afollestad.ason.Ason
 import com.afollestad.bridge.Bridge
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.resStr
-import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
-import org.jetbrains.anko.runOnUiThread
 
 // Share
 fun Context.share(title: String, text: String) {
-	val progressDialog: ProgressDialog = ProgressDialog(this).apply { show() }
 	startActivity(Intent.createChooser(Intent().apply {
 		action = Intent.ACTION_SEND
 		type = "text/plain"
 		putExtra(Intent.EXTRA_SUBJECT, title)
 		putExtra(Intent.EXTRA_TEXT, text)
 	}, "${R.string.share.resStr()} $title"))
-	runOnUiThread { progressDialog.dismiss() }
 }
 
 // Short Url
@@ -52,4 +48,29 @@ fun String.shortUrl(): String {
 					else return this
 				}
 	} else return this
+}
+
+// Hastebin
+fun String.uploadHaste(): String? {
+	if (isNotBlank()) {
+		Bridge.post("https://hastebin.com/documents")
+				.body(this)
+				.contentType("plain/text")
+				.asAsonObject()
+				.let {
+					if (it?.getString("key").notNullOrBlank()) return it!!.getString("key")!!
+					else return null
+				}
+	} else return null
+}
+
+fun String.downloadHaste(): String? {
+	if (isNotBlank()) {
+		Bridge.get("https://hastebin.com/documents/$this")
+				.asAsonObject()
+				.let {
+					if (it?.getString("data").notNullOrBlank()) return it!!.getString("data")!!
+					else return null
+				}
+	} else return null
 }

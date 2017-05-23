@@ -40,7 +40,6 @@ import jlelse.newscatchr.extensions.convertOpmlToFeeds
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.readString
-import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
@@ -92,9 +91,7 @@ class FavoritesView : ViewManagerView(), ItemTouchCallback {
 	override fun onOptionsItemSelected(item: MenuItem?) {
 		super.onOptionsItemSelected(item)
 		when (item?.itemId) {
-			R.id.backup -> backupRestore(context as MainActivity, {
-				context.runOnUiThread { load() }
-			})
+			R.id.backup -> context.backupRestore()
 			R.id.opml -> importFromFile()
 		}
 	}

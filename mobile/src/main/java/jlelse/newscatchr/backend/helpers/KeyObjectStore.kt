@@ -28,10 +28,7 @@ class KeyObjectStore(name: String = "default", cache: Boolean = false) {
 	private var folder: File = File(if (cache) appContext?.cacheDir else appContext?.filesDir, "NCStore$name")
 
 	init {
-		if (!folder.exists()) {
-			tryOrNull { folder.parentFile.mkdirs() }
-			tryOrNull { folder.mkdir() }
-		}
+		if (!folder.exists()) tryOrNull { folder.mkdir() }
 	}
 
 	fun <T> write(key: String?, item: Any?): KeyObjectStore {

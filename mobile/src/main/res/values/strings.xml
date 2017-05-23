@@ -77,7 +77,7 @@
 	<string name="subscribe_support">Get the donate subscription</string>
 	<string name="subscribe_support_desc">Support the development with just a few coins on a regular base</string>
 	<string name="prefs_amp">Accelerated Mobile Pages</string>
-    <string name="prefs_amp_desc">Load the accelerated website instead of the original one page. When AMP isn\'t
+	<string name="prefs_amp_desc">Load the accelerated website instead of the original one page. When AMP isn\'t
         available for the article, the app tries to use Google Web Light.
     </string>
 	<string name="share_app">Share NewsCatchr</string>
@@ -106,8 +106,10 @@
 	<string name="newest_first">Newest first</string>
 	<string name="oldest_first">Oldest first</string>
 	<string name="shared_with_nc">Shared with NewsCatchr ( http://bit.ly/readit-gplay )</string>
-    <string name="try_nc">Try NewsCatchr ( http://bit.ly/readit-gplay ), it\'s a really cool newsreader app for
+	<string name="try_nc">Try NewsCatchr ( http://bit.ly/readit-gplay ), it\'s a really cool newsreader app for
         Android.
     </string>
 	<string name="submit_issue">Submit issue</string>
+	<string name="restore_key">Restore Key</string>
+	<string name="restore_key_desc">You need to copy this key to restore your backup within 30 days.</string>
 </resources>

@@ -37,7 +37,6 @@ import jlelse.newscatchr.backend.apis.PocketAuth
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
-import jlelse.newscatchr.mainAcivity
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
@@ -195,26 +194,24 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							show()
 						}
 			}
-			/*nightModePref -> {
-				val oldValue = Preferences.nightMode
-				MaterialDialog.Builder(context)
-						.title(R.string.night_mode)
-						.items(R.array.night_mode_pref_titles)
-						.itemsCallbackSingleChoice(oldValue) { _, _, which, _ ->
-							val oldPrefValue = Preferences.nightMode
-							Preferences.nightMode = which
-							preference?.summary = R.array.night_mode_pref_titles.resStrArr()!![Preferences.nightMode]
-							if (which != oldPrefValue) {
-								setNightMode()
-								mainAcivity?.recreate()
-							}
-							true
+		/*nightModePref -> {
+			val oldValue = Preferences.nightMode
+			MaterialDialog.Builder(context)
+					.title(R.string.night_mode)
+					.items(R.array.night_mode_pref_titles)
+					.itemsCallbackSingleChoice(oldValue) { _, _, which, _ ->
+						val oldPrefValue = Preferences.nightMode
+						Preferences.nightMode = which
+						preference?.summary = R.array.night_mode_pref_titles.resStrArr()!![Preferences.nightMode]
+						if (which != oldPrefValue) {
+							setNightMode()
+							mainAcivity?.recreate()
 						}
-						.show()
-			}*/
-			backupPref -> {
-				backupRestore(activity as MainActivity, {})
-			}
+						true
+					}
+					.show()
+		}*/
+			backupPref -> context.backupRestore()
 			syncIntervalPref -> {
 				MaterialDialog.Builder(context)
 						.title(R.string.sync_interval)
