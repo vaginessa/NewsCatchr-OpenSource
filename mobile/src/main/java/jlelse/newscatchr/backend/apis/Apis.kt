@@ -22,7 +22,8 @@ import android.content.Context
 import android.content.Intent
 import com.afollestad.ason.Ason
 import com.afollestad.bridge.Bridge
-import jlelse.newscatchr.extensions.notNullOrBlank
+import jlelse.newscatchr.backend.Article
+import jlelse.newscatchr.extensions.blankNull
 import jlelse.newscatchr.extensions.resStr
 import jlelse.readit.R
 
@@ -44,8 +45,7 @@ fun String.shortUrl(): String {
 				.contentType("application/json")
 				.asAsonObject()
 				.let {
-					if (it?.getString("id").notNullOrBlank()) return it!!.getString("id")!!
-					else return this
+					return it?.getString("id").blankNull() ?: this
 				}
 	} else return this
 }
@@ -58,8 +58,7 @@ fun String.uploadHaste(): String? {
 				.contentType("plain/text")
 				.asAsonObject()
 				.let {
-					if (it?.getString("key").notNullOrBlank()) return it!!.getString("key")!!
-					else return null
+					return it?.getString("key").blankNull()
 				}
 	} else return null
 }
@@ -69,8 +68,29 @@ fun String.downloadHaste(): String? {
 		Bridge.get("https://hastebin.com/documents/$this")
 				.asAsonObject()
 				.let {
-					if (it?.getString("data").notNullOrBlank()) return it!!.getString("data")!!
-					else return null
+					return it?.getString("data").blankNull()
 				}
 	} else return null
+}
+
+// Readability
+fun String.fetchArticle(oldArticle: Article? = null): Article? {
+	Bridge.get("https://mercury.postlight.com/parser?url=$this")
+			.contentType("application/json")
+			.header("x-api-key", ReadabilityApiKey)
+			.asAsonObject()
+			?.let {
+				return (oldArticle ?: Article()).apply {
+					url = it.getString("url").blankNull() ?: oldArticle?.url ?: this@fetchArticle
+					canonicalHref = null
+					alternateHref = null
+					title = it.getString("title").blankNull() ?: oldArticle?.title
+					content = it.getString("content").blankNull() ?: oldArticle?.title
+					summaryContent = null
+					visualUrl = it.getString("lead_image_url").blankNull() ?: oldArticle?.visualUrl
+					enclosureHref = null
+					process(force = true)
+				}
+			}
+	return null
 }

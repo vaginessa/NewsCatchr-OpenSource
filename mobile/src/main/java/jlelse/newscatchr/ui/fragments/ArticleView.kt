@@ -32,7 +32,7 @@ import co.metalab.asyncawait.async
 import com.google.android.flexbox.FlexboxLayout
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
-import jlelse.newscatchr.backend.apis.ReadabilityApi
+import jlelse.newscatchr.backend.apis.fetchArticle
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.helpers.openUrl
@@ -95,7 +95,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 	}
 
 	private fun image(visualUrl: String? = "") {
-		if (visualUrl.notNullOrBlank()) visualView?.apply {
+		if (!visualUrl.isNullOrBlank()) visualView?.apply {
 			showView()
 			loadImage(visualUrl)
 			tryOrNull(execute = context != null) { (context as MainActivity).loadToolbarBackground(visualUrl) }
@@ -103,7 +103,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 	}
 
 	private fun title(title: String? = "") {
-		if (title.notNullOrBlank()) titleView?.apply {
+		if (!title.isNullOrBlank()) titleView?.apply {
 			showView()
 			text = title?.toHtml()
 		} else titleView?.hideView()
@@ -111,7 +111,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 
 	private fun details(author: String? = "", originTitle: String? = "", published: Long? = 0) {
 		var details: String? = ""
-		if (author.notNullOrBlank()) details += author
+		details += author.blankNull()
 		if (originTitle.notNullOrBlank()) {
 			if (details.notNullOrBlank()) details += " - "
 			details += originTitle
@@ -160,11 +160,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 			R.id.browser -> article.url?.openUrl(context)
 			R.id.readability -> async {
 				refreshOne?.showIndicator()
-				val temp = await { ReadabilityApi().reparse(article) }
-				if (temp.second) {
-					showArticle(temp.first)
-					if (temp.first != null) article = temp.first!!
-				}
+				await { showArticle(article.url?.fetchArticle(article) ?: article) }
 			}
 		}
 	}
