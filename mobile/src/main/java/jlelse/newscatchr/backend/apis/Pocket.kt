@@ -35,7 +35,9 @@ class Pocket {
 				.header("Host", "getpocket.com")
 				.contentType("application/json; charset=UTF-8")
 				.header("X-Accept", "application/json")
-				.body(Ason().put("url", url).put("consumer_key", PocketApiKey).put("access_token", Preferences.pocketAccessToken).toStockJson())
+				.body(Ason().put("url", url)
+						.put("consumer_key", PocketApiKey)
+						.put("access_token", Preferences.pocketAccessToken))
 				.asAsonObject()?.getString("item_id")
 	}
 
@@ -45,12 +47,10 @@ class Pocket {
 					.header("Host", "getpocket.com")
 					.contentType("application/json; charset=UTF-8")
 					.header("X-Accept", "application/json")
-					.body(Ason().apply {
-						put("consumer_key", PocketApiKey)
-						put("access_token", Preferences.pocketAccessToken)
-						put("actions.$0.item_id", itemId)
-						put("actions.$0.action", "archive")
-					})
+					.body(Ason().put("consumer_key", PocketApiKey)
+							.put("access_token", Preferences.pocketAccessToken)
+							.put("actions.$0.item_id", itemId)
+							.put("actions.$0.action", "archive"))
 					.request()
 		}
 	}
@@ -61,11 +61,9 @@ class Pocket {
 					.header("Host", "getpocket.com")
 					.contentType("application/json; charset=UTF-8")
 					.header("X-Accept", "application/json")
-					.body(Ason().apply {
-						put("consumer_key", PocketApiKey)
-						put("access_token", Preferences.pocketAccessToken)
-						put("detailType", "complete")
-					})
+					.body(Ason().put("consumer_key", PocketApiKey)
+							.put("access_token", Preferences.pocketAccessToken)
+							.put("detailType", "complete"))
 					?.asJsonObject()
 					?.optJSONObject("list")
 					?.let {
@@ -103,10 +101,8 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 						.header("Host", "getpocket.com")
 						.contentType("application/json; charset=UTF-8")
 						.header("X-Accept", "application/json")
-						.body(Ason().apply {
-							put("consumer_key", PocketApiKey)
-							put("redirect_uri", pocketRedirectUri)
-						})
+						.body(Ason().put("consumer_key", PocketApiKey)
+								.put("redirect_uri", pocketRedirectUri))
 						.response()
 						?.let {
 							when (it.header("X-Error-Code")) {
@@ -136,10 +132,8 @@ class PocketAuth(val pocketRedirectUri: String, val pocketCallback: PocketAuthCa
 							.header("Host", "getpocket.com")
 							.contentType("application/json; charset=UTF-8")
 							.header("X-Accept", "application/json")
-							.body(Ason().apply {
-								put("consumer_key", PocketApiKey)
-								put("code", pocketCode)
-							})
+							.body(Ason().put("consumer_key", PocketApiKey)
+									.put("code", pocketCode))
 							.response()
 							?.let {
 								when (it.header("X-Error-Code")) {
