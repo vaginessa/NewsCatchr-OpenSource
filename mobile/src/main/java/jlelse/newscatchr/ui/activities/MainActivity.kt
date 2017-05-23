@@ -37,8 +37,7 @@ import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.Feed
-import jlelse.newscatchr.backend.apis.SharingApi
-import jlelse.newscatchr.backend.apis.askForSharingService
+import jlelse.newscatchr.backend.apis.share
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.customTabsHelperFragment
@@ -240,9 +239,7 @@ class MainActivity : ViewManagerActivity() {
 		super.onOptionsItemSelected(item)
 		when (item?.itemId) {
 			android.R.id.home -> onBackPressed()
-			R.id.share_app -> askForSharingService(this, { network ->
-				SharingApi(this, network).share("\" ${R.string.share_app.resStr()}\"", R.string.try_nc.resStr()!!)
-			})
+			R.id.share_app -> share("\" ${R.string.share_app.resStr()}\"", R.string.try_nc.resStr()!!)
 		}
 		return true
 	}

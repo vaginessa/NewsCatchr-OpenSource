@@ -24,9 +24,8 @@ import android.app.Activity
 import co.metalab.asyncawait.async
 import com.afollestad.ason.AsonName
 import com.afollestad.bridge.annotations.ContentType
-import jlelse.newscatchr.backend.apis.SharingApi
 import jlelse.newscatchr.backend.apis.UrlShortenerApi
-import jlelse.newscatchr.backend.apis.askForSharingService
+import jlelse.newscatchr.backend.apis.share
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.*
 import jlelse.readit.R
@@ -83,14 +82,9 @@ class Article(
 	}
 
 	fun share(context: Activity) {
-		askForSharingService(context, { network ->
-			async {
-				val newUrl = await { if (Preferences.urlShortener) UrlShortenerApi().getShortUrl(url) ?: url else url }
-				SharingApi(context, network).share("\"$title\"", when (network) {
-					SharingApi.SocialNetwork.Twitter -> "${title?.take(136 - (newUrl?.length ?: 0))}... $newUrl"
-					SharingApi.SocialNetwork.Native, SharingApi.SocialNetwork.Facebook -> "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}"
-				})
-			}
-		})
+		async {
+			val newUrl = await { if (Preferences.urlShortener) UrlShortenerApi().getShortUrl(url) ?: url else url }
+			context.share("\"$title\"", "$title - $newUrl\n\n${R.string.shared_with_nc.resStr()}")
+		}
 	}
 }

@@ -21,11 +21,9 @@ package jlelse.newscatchr.extensions
 import android.content.Context
 import com.afollestad.materialdialogs.MaterialDialog
 import jlelse.newscatchr.backend.Feed
-import jlelse.newscatchr.backend.apis.AutoCompleteAdapter
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.ui.fragments.FeedListView
 import jlelse.newscatchr.ui.views.ProgressDialog
-import jlelse.newscatchr.ui.views.SearchDialogView
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.doAsync
@@ -51,13 +49,10 @@ fun searchForFeeds(context: Context, fragmentNavigation: ViewManagerView, query:
 		}
 	}
 	if (query.isNullOrBlank()) {
-		val textView = SearchDialogView(context)
-		textView.setAdapter(AutoCompleteAdapter(context))
 		MaterialDialog.Builder(context)
 				.title(android.R.string.search_go)
-				.customView(textView, true)
-				.onPositive { _, _ ->
-					load(textView.text.toString())
+				.input(null, null) { _, input ->
+					load(input.toString())
 				}
 				.negativeText(android.R.string.cancel)
 				.positiveText(android.R.string.search_go)
