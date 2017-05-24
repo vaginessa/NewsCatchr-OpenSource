@@ -39,11 +39,11 @@ object Preferences {
 		get() = read().getBoolean(R.string.prefs_key_custom_tabs.resStr(), true)
 
 	var amp: Boolean
-		get() = read().getBoolean(R.string.prefs_key_amp.resStr(), false)
+		get() = read().getBoolean(R.string.prefs_key_amp.resStr(), true)
 		set(value) = write { e -> e.putBoolean(R.string.prefs_key_amp.resStr(), value) }
 
 	var urlShortener: Boolean
-		get() = read().getBoolean(R.string.prefs_key_url_shortener.resStr(), false)
+		get() = read().getBoolean(R.string.prefs_key_url_shortener.resStr(), true)
 		set(value) = write { e -> e.putBoolean(R.string.prefs_key_url_shortener.resStr(), value) }
 
 	var pocketUserName: String

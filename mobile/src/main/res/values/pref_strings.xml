@@ -40,5 +40,6 @@
 	<string name="prefs_key_pocket_sync" translatable="false">pocket_sync</string>
 	<string name="prefs_key_pocket_login" translatable="false">pocket_login</string>
 	<string name="prefs_key_issue" translatable="false">issue</string>
+	<string name="prefs_key_privacy" translatable="false">privacy</string>
 
 </resources>

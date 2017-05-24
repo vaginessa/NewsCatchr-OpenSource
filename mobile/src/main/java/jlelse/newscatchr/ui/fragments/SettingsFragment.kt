@@ -67,6 +67,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val pocketLoginPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_login.resStr()) }
 	private val pocketSyncPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_sync.resStr()) }
 	private val issuePref: Preference? by lazy { findPreference(R.string.prefs_key_issue.resStr()) }
+	private val privacyPref: Preference? by lazy { findPreference(R.string.prefs_key_privacy.resStr()) }
 
 	// Pocket stuff
 	val progressDialog: ProgressDialog? by lazy { ProgressDialog(context) }
@@ -107,6 +108,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		nightModePref?.onPreferenceClickListener = this
 		pocketLoginPref?.onPreferenceClickListener = this
 		issuePref?.onPreferenceClickListener = this
+		privacyPref?.onPreferenceClickListener = this
 
 		// Add ChangeListeners
 		syncPref?.onPreferenceChangeListener = this
@@ -138,7 +140,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			supportPref -> if (activity is MainActivity) (activity as MainActivity).purchaseSupport()
 			viewLibsPref -> {
 				val html = listOf(
-						Library("Material Dialogs", "A beautiful, easy-to-use, and customizable dialogs API, enabling you to use Material designed dialogs down to API 8.", "https://github.com/afollestad/material-dialogs"),
+						Library("Material Dialogs", "A beautiful, fluid, and customizable dialogs API.", "https://github.com/afollestad/material-dialogs"),
 						Library("FastAdapter", "The bullet proof, fast and easy to use adapter library, which minimizes developing time to a fraction...", "https://github.com/mikepenz/FastAdapter/"),
 						Library("jsoup", "Java HTML Parser, with best of DOM, CSS, and jquery", "https://github.com/jhy/jsoup"),
 						Library("Bridge", "A simple but powerful HTTP networking library for Java. It features a Fluent chainable API, powered by Java URLConnection classes for maximum compatibility and speed.", "https://github.com/afollestad/bridge"),
@@ -147,9 +149,10 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("Android In-App Billing v3 Library", "A lightweight implementation of Android In-app Billing Version 3", "https://github.com/anjlab/android-inapp-billing-v3"),
 						Library("FlexboxLayout", "FlexboxLayout is a library project which brings the similar capabilities of CSS Flexible Box Layout Module to Android.", "https://github.com/google/flexbox-layout"),
 						Library("Android-Job", "Android library to handle jobs in the background.", "https://github.com/evernote/android-job"),
-						Library("CustomTabsHelper", "Custom tabs, made easy.", "https://github.com/DreaminginCodeZH/CustomTabsHelper")
-				).map { "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}<br><br>" }.joinToString(separator = "")
-				if (html.length > 8) html.removeRange(html.lastIndex - 8, html.lastIndex) // Remove last useless linebreaks
+						Library("CustomTabsHelper", "Custom tabs, made easy.", "https://github.com/DreaminginCodeZH/CustomTabsHelper"),
+						Library("Async/Await", "async/await for Android built upon coroutines introduced in Kotlin 1.1", "https://github.com/metalabdesign/AsyncAwait"),
+						Library("Anko", "Pleasant Android application development", "https://github.com/Kotlin/anko", true)
+				).map { "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}${if (!it.isLast) "<br><br>" else ""}" }.joinToString(separator = "")
 				MaterialDialog.Builder(context)
 						.title(R.string.used_libraries)
 						.content(html.toHtml())
@@ -165,9 +168,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("feedly Cloud API", "", "https://developer.feedly.com"),
 						Library("Pocket API", "", "https://getpocket.com/developer/"),
 						Library("Google URL Shortener", "", "https://developers.google.com/url-shortener/"),
-						Library("Mercury by Postlight", "", "https://mercury.postlight.com/")
-				).map { "<b><a href=\"${it.link}\">${it.name}</a></b><br><br>" }.joinToString(separator = "")
-				if (html.length > 8) html.removeRange(html.lastIndex - 8, html.lastIndex)
+						Library("Mercury by Postlight", "", "https://mercury.postlight.com/", true)
+				).map { "<b><a href=\"${it.link}\">${it.name}</a></b>${if (!it.isLast) "<br><br>" else ""}" }.joinToString(separator = "")
 				MaterialDialog.Builder(context)
 						.title(R.string.used_libraries)
 						.content(html.toHtml())
@@ -269,6 +271,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				}
 			}
 			issuePref -> "https://github.com/jlelse/NewsCatchr-OpenSource/issues".openUrl(activity, amp = false)
+			privacyPref -> "https://newscatchr.jlelse.eu/privacy.html".openUrl(activity, amp = false)
 		}
 		return true
 	}
@@ -331,5 +334,5 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		}
 	}
 
-	private class Library(var name: String, var description: String, var link: String)
+	private class Library(val name: String, val description: String, val link: String, val isLast: Boolean = false)
 }
