@@ -24,7 +24,6 @@ import android.content.Context
 import co.metalab.asyncawait.async
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.Article
-import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
 
 fun <T> T?.saveToCache(key: String?) = KeyObjectStore(name = "cache", cache = true).write<T>(key?.formatForCache(), this)
@@ -42,7 +41,7 @@ fun getCachedArticle(id: String): Article? = tryOrNull {
 
 fun Article.saveToCache() {
 	process()
-	if (id.notNullOrBlank() && id.notNullOrBlank()) KeyObjectStore(name = "article_cache", cache = true).write<Article>(id!!.formatForCache(), this)
+	if (!id.isNullOrBlank()) KeyObjectStore(name = "article_cache", cache = true).write<Article>(id!!.formatForCache(), this)
 }
 
 fun Context.clearCache(finished: () -> Unit) {

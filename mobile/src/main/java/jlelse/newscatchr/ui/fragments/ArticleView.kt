@@ -111,23 +111,23 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 
 	private fun details(author: String? = "", originTitle: String? = "", published: Long? = 0) {
 		var details: String? = ""
-		details += author.blankNull()
-		if (originTitle.notNullOrBlank()) {
-			if (details.notNullOrBlank()) details += " - "
+		if (!author.isNullOrBlank()) details += author
+		if (!originTitle.isNullOrBlank()) {
+			if (!details.isNullOrBlank()) details += " - "
 			details += originTitle
 		}
 		if ((published?.toInt() ?: 0) != 0) {
-			if (details.notNullOrBlank()) details += "\n"
+			if (!details.isNullOrBlank()) details += "\n"
 			details += DateUtils.getRelativeTimeSpanString(published!!)
 		}
-		if (details.notNullOrBlank()) detailsView?.apply {
+		if (!details.isNullOrBlank()) detailsView?.apply {
 			showView()
 			text = details
 		} else detailsView?.hideView()
 	}
 
 	private fun content(content: String? = "") {
-		if (content.notNullOrBlank()) articleContentView?.apply {
+		if (!content.isNullOrBlank()) articleContentView?.apply {
 			showView()
 			text = content?.toHtml()
 		} else articleContentView?.hideView()

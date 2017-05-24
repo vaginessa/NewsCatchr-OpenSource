@@ -21,7 +21,6 @@ package jlelse.newscatchr.backend.helpers
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Pocket
-import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
 import org.jetbrains.anko.doAsync
 
@@ -81,7 +80,7 @@ object Database {
 
 	fun addBookmark(article: Article?) {
 		tryOrNull(execute = article.safeBookmark()) {
-			if (Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
+			if (Preferences.pocketSync && !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()) {
 				doAsync {
 					article!!.pocketId = PocketHandler().addToPocket(article)
 					article.fromPocket = true
@@ -94,7 +93,7 @@ object Database {
 	}
 
 	fun deleteBookmark(url: String?) {
-		tryOrNull(execute = url.notNullOrBlank()) {
+		tryOrNull(execute = !url.isNullOrBlank()) {
 			if (Preferences.pocketSync && !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank())
 				allBookmarks.filter { it.url == url }.forEach {
 					if (it.fromPocket) doAsync {

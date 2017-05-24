@@ -228,7 +228,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				doAsync { sync(context) }
 			}
 			pocketLoginPref -> {
-				val loggedIn = Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
+				val loggedIn = !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()
 				if (loggedIn) {
 					Preferences.pocketAccessToken = ""
 					Preferences.pocketUserName = ""
@@ -308,7 +308,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	}
 
 	private fun refreshPocket() {
-		val loggedIn = Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()
+		val loggedIn = !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()
 		pocketSyncPref?.isVisible = loggedIn
 		pocketLoginPref?.let {
 			it.title = (if (loggedIn) R.string.pocket_logout else R.string.pocket_login).resStr()

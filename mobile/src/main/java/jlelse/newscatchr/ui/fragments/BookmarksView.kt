@@ -31,7 +31,6 @@ import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.loaders.PocketLoader
 import jlelse.newscatchr.extensions.notNullAndEmpty
-import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
@@ -59,7 +58,7 @@ class BookmarksView : ViewManagerView() {
 	fun loadArticles(cache: Boolean = false) = async {
 		refreshOne?.showIndicator()
 		val articles = await {
-			if (!cache && Preferences.pocketSync && Preferences.pocketUserName.notNullOrBlank() && Preferences.pocketAccessToken.notNullOrBlank()) {
+			if (!cache && Preferences.pocketSync && !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()) {
 				tryOrNull { Database.allBookmarks = PocketLoader().items() }
 			}
 			Database.allBookmarks

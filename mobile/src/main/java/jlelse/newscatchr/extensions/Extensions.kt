@@ -58,9 +58,7 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 }
 
 
-fun String.buildExcerpt(words: Int) = split(" ").toMutableList().filter { it.notNullOrBlank() && it != "\n" }.take(words).joinToString(separator = " ", postfix = "...").trim()
-
-fun String?.notNullOrBlank() = !isNullOrBlank()
+fun String.buildExcerpt(words: Int) = split(" ").toMutableList().filter { !it.isNullOrBlank() && it != "\n" }.take(words).joinToString(separator = " ", postfix = "...").trim()
 
 fun String?.blankNull() = if (isNullOrBlank()) null else this
 
@@ -68,11 +66,7 @@ fun <T> Array<out T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
 fun <T> Collection<T>?.notNullAndEmpty() = this != null && isNotEmpty()
 
-fun Array<out String?>.cleanNullable() = this.toList().cleanNullable().toTypedArray()
-
-fun <T> List<T?>.cleanNullable() = mutableListOf<T>().apply { this@cleanNullable.filter { it != null && (if (it is String) it != "" else true) }.forEach { add(it!!) } }.toList()
-
-fun String.cleanHtml(): String? = if (notNullOrBlank()) Jsoup.clean(this, Whitelist.basic().addTags("h2", "h3", "h4", "h5", "h6")) else this
+fun String.cleanHtml(): String? = if (!isNullOrBlank()) Jsoup.clean(this, Whitelist.basic()) else this
 
 fun String.toHtml(): Spanned = if (android.os.Build.VERSION.SDK_INT < 24) {
 	@Suppress("DEPRECATION")

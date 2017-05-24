@@ -146,7 +146,7 @@ class MainActivity : ViewManagerActivity() {
 			intent.getStringExtra("feedid")?.let {
 				resetStack()
 				val feedTitle = intent.getStringExtra("feedtitle")
-				if (it.notNullOrBlank()) openView(FeedView(feed = Feed(feedId = it, title = feedTitle)).apply { title = feedTitle })
+				if (!it.isNullOrBlank()) openView(FeedView(feed = Feed(feedId = it, title = feedTitle)).apply { title = feedTitle })
 			}
 			// Browser
 			if (intent.scheme == "http" || intent.scheme == "https") {

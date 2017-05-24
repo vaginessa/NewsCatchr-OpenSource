@@ -23,7 +23,6 @@ import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.readFromCache
 import jlelse.newscatchr.backend.helpers.saveToCache
-import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.tryOrNull
 
 class Feedly {
@@ -38,8 +37,8 @@ class Feedly {
 	fun streamIds(id: String?, count: Int?, continuation: String?, ranked: String?): Ids? = tryOrNull {
 		var url = "$BASE_URL/streams/ids?$STREAM_ID%s"
 		if (count != null) url += "&$COUNT$count"
-		if (continuation.notNullOrBlank()) url += "&$CONTINUATION$continuation"
-		if (ranked.notNullOrBlank()) url += "&$RANKED$ranked"
+		if (!continuation.isNullOrBlank()) url += "&$CONTINUATION$continuation"
+		if (!ranked.isNullOrBlank()) url += "&$RANKED$ranked"
 		Bridge.get(url, id).asClass(Ids::class.java)
 	}
 
@@ -61,7 +60,7 @@ class Feedly {
 		tryOrNull {
 			var url = "$BASE_URL/search/feeds?$QUERY%s"
 			if (count != null) url += "&$COUNT$count"
-			if (locale.notNullOrBlank()) url += "&locale=$locale"
+			if (!locale.isNullOrBlank()) url += "&locale=$locale"
 			if (promoted != null) url += "&promoted=$promoted"
 			val search = Bridge.get(url, query).asClass(FeedSearch::class.java)
 			feeds = search?.results

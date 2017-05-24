@@ -39,7 +39,10 @@ import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.loaders.FeedlyLoader
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.notNullAndEmpty
+import jlelse.newscatchr.extensions.nothingFound
+import jlelse.newscatchr.extensions.resDrw
+import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
@@ -191,7 +194,7 @@ class FeedView(val feed: Feed) : ViewManagerView() {
 				MaterialDialog.Builder(context)
 						.title(R.string.edit_feed_title)
 						.input(null, feed.title, { _, input ->
-							if (input.toString().notNullOrBlank()) {
+							if (!input.toString().isNullOrBlank()) {
 								Database.updateFavoriteTitle(feed.url(), input.toString())
 								feed.title = input.toString()
 								title = feed.title

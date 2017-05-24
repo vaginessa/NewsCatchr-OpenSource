@@ -49,7 +49,7 @@ class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fr
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
 		super.bindView(viewHolder, payloads)
 		val context = viewHolder.itemView.context
-		if (article?.title.notNullOrBlank()) {
+		if (!article?.title.isNullOrBlank()) {
 			viewHolder.title.showView()
 			viewHolder.title.text = article?.title
 			viewHolder.title.setTypeface(null, if (Database.isSavedReadUrl(article?.url)) Typeface.BOLD_ITALIC else Typeface.BOLD)
@@ -61,7 +61,7 @@ class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fr
 		} else {
 			viewHolder.details.hideView()
 		}
-		if (article?.content.notNullOrBlank()) {
+		if (!article?.content.isNullOrBlank()) {
 			viewHolder.content.showView()
 			viewHolder.content.text = article?.excerpt
 		} else {
@@ -76,7 +76,7 @@ class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fr
 		} else {
 			//viewHolder.tagsBox.hideView()
 		}
-		if (article?.visualUrl.notNullOrBlank()) {
+		if (!article?.visualUrl.isNullOrBlank()) {
 			viewHolder.visual.showView()
 			viewHolder.visual.loadImage(article?.visualUrl)
 		} else {

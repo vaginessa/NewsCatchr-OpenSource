@@ -38,7 +38,6 @@ import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.convertOpmlToFeeds
 import jlelse.newscatchr.extensions.notNullAndEmpty
-import jlelse.newscatchr.extensions.notNullOrBlank
 import jlelse.newscatchr.extensions.readString
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
@@ -106,7 +105,7 @@ class FavoritesView : ViewManagerView(), ItemTouchCallback {
 	private fun importOpml(opml: String?) = async {
 		var imported = 0
 		var feeds: Array<Feed>?
-		if (opml.notNullOrBlank()) await {
+		if (!opml.isNullOrBlank()) await {
 			feeds = opml?.convertOpmlToFeeds()
 			feeds?.forEach { Database.addFavorites(it) }
 			imported = feeds?.size ?: 0
