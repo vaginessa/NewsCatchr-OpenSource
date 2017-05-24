@@ -59,10 +59,8 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	private val fastAdapterThree = NCAdapter<NCAbstractItem<*, *>>(order = 700)
 	private val fastAdapterFour = NCAdapter<NCAbstractItem<*, *>>(order = 800)
 	private val refresh: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.homefragment_refresh) }
-	private var lastFeedReceiver: LastFeedUpdateReceiver? = null
+	private var feedStateUpdateReceiver: FeedStateUpdateReceiver? = null
 	private var lastFeedReceiverRegistered = false
-	private var favoritesReceiver: LastFeedUpdateReceiver? = null
-	private var favoritesReceiverRegistered = false
 
 	override val fabDrawable = R.drawable.ic_search
 
@@ -75,22 +73,11 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	override fun onCreateView(): View? {
 		super.onCreateView()
 		if (!lastFeedReceiverRegistered) {
-			lastFeedReceiver = LastFeedUpdateReceiver(this)
-			context.registerReceiver(lastFeedReceiver, IntentFilter("last_feed_updated"))
+			feedStateUpdateReceiver = FeedStateUpdateReceiver(this)
+			context.registerReceiver(feedStateUpdateReceiver, IntentFilter("feed_state"))
 			lastFeedReceiverRegistered = true
 		}
-		if (!favoritesReceiverRegistered) {
-			favoritesReceiver = LastFeedUpdateReceiver(this)
-			context.registerReceiver(favoritesReceiver, IntentFilter("favorites_updated"))
-			favoritesReceiverRegistered = true
-		}
 		fragmentView = HomeFragmentUI().createView(AnkoContext.create(context, this))
-		val loadAll = { cache: Boolean ->
-			if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapterFour.wrap(fastAdapterThree.wrap(fastAdapterTwo.wrap(fastAdapterOne)))
-			loadLastFeeds()
-			loadFavoriteFeeds()
-			loadRecommendedFeeds(cache)
-		}
 		refresh?.setOnRefreshListener { loadAll(false) }
 		loadAll(true)
 		return fragmentView
@@ -120,6 +107,13 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 						.show()
 			}
 		}
+	}
+
+	private fun loadAll(cache: Boolean = true) {
+		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapterFour.wrap(fastAdapterThree.wrap(fastAdapterTwo.wrap(fastAdapterOne)))
+		loadLastFeeds()
+		loadFavoriteFeeds()
+		loadRecommendedFeeds(cache)
 	}
 
 	private fun loadLastFeeds() = async {
@@ -165,20 +159,13 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	}
 
 	override fun onDestroy() {
-		tryOrNull { context.unregisterReceiver(lastFeedReceiver) }
-		tryOrNull { context.unregisterReceiver(favoritesReceiver) }
+		tryOrNull { context.unregisterReceiver(feedStateUpdateReceiver) }
 		super.onDestroy()
 	}
 
-	private class LastFeedUpdateReceiver(val fragment: HomeView) : BroadcastReceiver() {
+	private class FeedStateUpdateReceiver(val homeView: HomeView) : BroadcastReceiver() {
 		override fun onReceive(context: Context?, intent: Intent?) {
-			fragment.loadLastFeeds()
-		}
-	}
-
-	private class FavoritesUpdateReceiver(val fragment: HomeView) : BroadcastReceiver() {
-		override fun onReceive(context: Context?, intent: Intent?) {
-			fragment.loadFavoriteFeeds()
+			homeView.loadAll()
 		}
 	}
 }

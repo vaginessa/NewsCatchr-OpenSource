@@ -83,7 +83,7 @@ class FeedView(val feed: Feed) : ViewManagerView() {
 		loadArticles(true)
 		Tracking.track(type = Tracking.TYPE.FEED, url = feed.url())
 		Database.addLastFeed(feed)
-		context.sendBroadcast(Intent("last_feed_updated"))
+		context.sendBroadcast(Intent("feed_state"))
 		return fragmentView
 	}
 

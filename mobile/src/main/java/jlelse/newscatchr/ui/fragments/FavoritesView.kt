@@ -77,7 +77,7 @@ class FavoritesView : ViewManagerView(), ItemTouchCallback {
 		fastAdapter.notifyAdapterItemMoved(oldPosition, newPosition)
 		Collections.swap(feeds, oldPosition, newPosition)
 		if (feeds != null) Database.allFavorites = feeds!!.toTypedArray()
-		context.sendBroadcast(Intent("favorites_updated"))
+		context.sendBroadcast(Intent("feed_state"))
 		return true
 	}
 
@@ -110,7 +110,7 @@ class FavoritesView : ViewManagerView(), ItemTouchCallback {
 			feeds?.forEach { Database.addFavorites(it) }
 			imported = feeds?.size ?: 0
 		}
-		context.sendBroadcast(Intent("favorites_updated"))
+		context.sendBroadcast(Intent("feed_state"))
 		MaterialDialog.Builder(context)
 				.title(R.string.import_opml)
 				.content(if (imported != 0) R.string.suc_import else R.string.import_failed)

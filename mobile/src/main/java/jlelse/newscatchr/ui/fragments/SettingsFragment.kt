@@ -130,7 +130,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				doAsync {
 					Database.allLastFeeds = arrayOf<Feed>()
 					uiThread {
-						context.sendBroadcast(Intent("last_feed_updated"))
+						context.sendBroadcast(Intent("feed_state"))
 						Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()
 					}
 				}
