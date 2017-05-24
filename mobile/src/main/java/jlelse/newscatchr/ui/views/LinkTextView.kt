@@ -26,7 +26,7 @@ import android.text.style.ClickableSpan
 import android.text.style.URLSpan
 import android.view.View
 import android.widget.TextView
-import jlelse.newscatchr.backend.helpers.openUrl
+import jlelse.newscatchr.backend.apis.openUrl
 
 class LinkTextView {
 

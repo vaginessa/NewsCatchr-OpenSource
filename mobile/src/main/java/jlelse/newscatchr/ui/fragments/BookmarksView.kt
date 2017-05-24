@@ -59,7 +59,7 @@ class BookmarksView : ViewManagerView() {
 		refreshOne?.showIndicator()
 		val articles = await {
 			if (!cache && Preferences.pocketSync && !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()) {
-				tryOrNull { Database.allBookmarks = PocketLoader().items() }
+				tryOrNull { Database.allBookmarks = PocketLoader().items()?.toTypedArray() ?: arrayOf() }
 			}
 			Database.allBookmarks
 		}

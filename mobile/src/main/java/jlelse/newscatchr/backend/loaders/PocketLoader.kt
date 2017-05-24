@@ -22,21 +22,13 @@ import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Pocket
 
 class PocketLoader {
-	fun items(): Array<Article> {
-		return mutableListOf<Article>().apply {
-			Pocket().get()?.forEach {
-				try {
-					add(Article(
-							url = it.given_url,
-							title = it.resolved_title,
-							content = it.excerpt,
-							pocketId = it.item_id,
-							fromPocket = true
-					).process())
-				} catch (e: Exception) {
-					e.printStackTrace()
-				}
-			}
-		}.toTypedArray()
-	}
+	fun items(): List<Article>? = Pocket().get()?.map {
+		Article(
+				url = it.given_url,
+				title = it.resolved_title,
+				content = it.excerpt,
+				pocketId = it.item_id,
+				fromPocket = true
+		).process()
+	}?.filterNotNull()
 }

@@ -35,6 +35,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.PocketAuth
 import jlelse.newscatchr.backend.apis.backupRestore
+import jlelse.newscatchr.backend.apis.openUrl
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
@@ -271,7 +272,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 					}).apply { startAuth() }
 				}
 			}
-			issuePref -> "https://github.com/jlelse/NewsCatchr-OpenSource/issues".openUrl(activity)
+			issuePref -> "https://github.com/jlelse/NewsCatchr-OpenSource/issues".openUrl(activity, amp = false)
 		}
 		return true
 	}

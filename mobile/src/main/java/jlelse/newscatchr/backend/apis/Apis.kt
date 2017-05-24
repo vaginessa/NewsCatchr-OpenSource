@@ -18,14 +18,20 @@
 
 package jlelse.newscatchr.backend.apis
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.support.customtabs.CustomTabsIntent
 import com.afollestad.ason.Ason
 import com.afollestad.bridge.Bridge
 import jlelse.newscatchr.backend.Article
+import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.blankNull
+import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.resStr
 import jlelse.readit.R
+import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
 // Share
 fun Context.share(title: String, text: String) {
@@ -97,3 +103,26 @@ fun String.fetchArticle(oldArticle: Article? = null): Article? {
 
 // AMP
 fun String.ampUrl() = "https://mercury.postlight.com/amp?url=$this"
+
+// Open Url
+fun String.openUrl(activity: Activity, amp: Boolean = true) {
+	val finalUrl = if (Preferences.amp && amp) this@openUrl.ampUrl() else this@openUrl
+	val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
+	if (Preferences.customTabs) {
+		try {
+			val customTabsIntent = CustomTabsIntent.Builder()
+					.setToolbarColor(R.color.colorPrimary.resClr(activity)!!)
+					.setShowTitle(true)
+					.addDefaultShareMenuItem()
+					.enableUrlBarHiding()
+					.build()
+			CustomTabsHelperFragment.open(activity, customTabsIntent, Uri.parse(finalUrl)) { activity, _ ->
+				activity.startActivity(alternateIntent)
+			}
+		} catch (e: Exception) {
+			activity.startActivity(alternateIntent)
+		}
+	} else {
+		activity.startActivity(alternateIntent)
+	}
+}

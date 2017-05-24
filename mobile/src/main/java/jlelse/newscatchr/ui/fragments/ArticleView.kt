@@ -33,9 +33,9 @@ import com.google.android.flexbox.FlexboxLayout
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.apis.fetchArticle
+import jlelse.newscatchr.backend.apis.openUrl
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Tracking
-import jlelse.newscatchr.backend.helpers.openUrl
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FAB
@@ -160,7 +160,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 			R.id.browser -> article.url?.openUrl(context)
 			R.id.readability -> async {
 				refreshOne?.showIndicator()
-				await { showArticle(article.url?.fetchArticle(article) ?: article) }
+				await { showArticle(tryOrNull { article.url?.fetchArticle(article) } ?: article) }
 			}
 		}
 	}
