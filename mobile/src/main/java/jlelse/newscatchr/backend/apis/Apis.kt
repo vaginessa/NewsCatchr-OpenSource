@@ -94,3 +94,6 @@ fun String.fetchArticle(oldArticle: Article? = null): Article? {
 			}
 	return null
 }
+
+// AMP
+fun String.ampUrl() = "https://mercury.postlight.com/amp?url=$this"

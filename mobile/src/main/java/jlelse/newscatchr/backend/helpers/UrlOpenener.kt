@@ -24,14 +24,13 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.support.customtabs.CustomTabsIntent
-import co.metalab.asyncawait.async
-import jlelse.newscatchr.backend.apis.AmpApi
+import jlelse.newscatchr.backend.apis.ampUrl
 import jlelse.newscatchr.extensions.resClr
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
-fun String.openUrl(activity: Activity) = async {
-	val finalUrl = await { if (Preferences.amp) AmpApi().getAmpUrl(this@openUrl) ?: this@openUrl else this@openUrl }
+fun String.openUrl(activity: Activity) {
+	val finalUrl = if (Preferences.amp) this@openUrl.ampUrl() else this@openUrl
 	val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
 	if (Preferences.customTabs) {
 		try {
