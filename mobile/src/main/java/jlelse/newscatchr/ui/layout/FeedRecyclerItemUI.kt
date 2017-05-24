@@ -22,14 +22,16 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import com.google.android.flexbox.FlexboxLayout
-import jlelse.newscatchr.extensions.*
-import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
+import jlelse.newscatchr.extensions.dpToPx
+import jlelse.newscatchr.extensions.getPrimaryTextColor
+import jlelse.newscatchr.extensions.resClr
+import jlelse.newscatchr.extensions.setTextStyle
+import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
 import jlelse.readit.R
 import org.jetbrains.anko.*
 
-class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
-	override fun createView(ui: AnkoContext<ArticleRecyclerItem>): View = with(ui) {
+class FeedRecyclerItemUI : AnkoComponent<FeedRecyclerItem> {
+	override fun createView(ui: AnkoContext<FeedRecyclerItem>): View = with(ui) {
 		verticalLayout {
 			lparams(width = matchParent, height = wrapContent) {
 				setPadding(16.dpToPx(), 16.dpToPx(), 16.dpToPx(), 0)
@@ -39,69 +41,41 @@ class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
 			}.recycle()
 			verticalLayout {
 				lparams(width = matchParent, height = wrapContent) {
-					bottomPadding = 8.dpToPx()
+					bottomPadding = 16.dpToPx()
 				}
 				orientation = LinearLayout.HORIZONTAL
 				gravity = Gravity.TOP
-				textView {
+				verticalLayout {
 					lparams(width = 0.dpToPx(), height = wrapContent, weight = 1f) {
 						rightMargin = 16.dpToPx()
 					}
-					id = R.id.articlerecycleritem_title
-					setTextStyle(context, R.style.TextAppearance_AppCompat_Medium)
-					textColor = context.getPrimaryTextColor()
-					typeface = Typeface.DEFAULT_BOLD
+					textView {
+						lparams(width = matchParent, height = wrapContent)
+						id = R.id.feedrecycleritem_title
+						setTextStyle(context, R.style.TextAppearance_AppCompat_Medium)
+						textColor = context.getPrimaryTextColor()
+						typeface = Typeface.DEFAULT_BOLD
+					}
+					textView {
+						lparams(width = matchParent, height = wrapContent)
+						id = R.id.feedrecycleritem_website
+						setTextStyle(context, R.style.TextAppearance_AppCompat_Small)
+						textColor = R.color.colorSecondaryText.resClr(context)!!
+					}
 				}
 				imageView {
 					lparams(width = 36.dpToPx(), height = 36.dpToPx()) {
 						padding = 6.dpToPx()
 					}
-					id = R.id.articlerecycleritem_bookmark
+					id = R.id.feedrecycleritem_favorite
 					context.obtainStyledAttributes(intArrayOf(R.attr.selectableItemBackgroundBorderless)).apply {
 						backgroundResource = getResourceId(0, 0)
 					}.recycle()
 				}
-				imageView {
-					lparams(width = 36.dpToPx(), height = 36.dpToPx()) {
-						padding = 6.dpToPx()
-					}
-					id = R.id.articlerecycleritem_share
-					context.obtainStyledAttributes(intArrayOf(R.attr.selectableItemBackgroundBorderless)).apply {
-						backgroundResource = getResourceId(0, 0)
-					}.recycle()
-				}
-			}
-			imageView {
-				lparams(width = matchParent, height = wrapContent) {
-					bottomMargin = 8.dpToPx()
-				}
-				adjustViewBounds = true
-				id = R.id.articlerecycleritem_visual
-			}
-			textView {
-				lparams(width = matchParent, height = wrapContent) {
-					bottomMargin = 8.dpToPx()
-				}
-				id = R.id.articlerecycleritem_details
-				setTextStyle(context, R.style.TextAppearance_AppCompat_Caption)
-			}
-			textView {
-				lparams(width = matchParent, height = wrapContent) {
-					bottomMargin = 8.dpToPx()
-				}
-				id = R.id.articlerecycleritem_content
-				setTextStyle(context, R.style.TextAppearance_AppCompat_Body1)
-			}
-			flexboxLayout {
-				lparams(width = matchParent, height = wrapContent) {
-					bottomMargin = 16.dpToPx()
-				}
-				id = R.id.articlerecycleritem_tagsbox
-				flexWrap = FlexboxLayout.FLEX_WRAP_WRAP
-				justifyContent = FlexboxLayout.JUSTIFY_CONTENT_FLEX_START
 			}
 			view {
 				lparams(width = matchParent, height = 1)
+				id = R.id.feedrecycleritem_divider
 				backgroundColor = R.color.colorDivider.resClr(context)!!
 			}
 		}

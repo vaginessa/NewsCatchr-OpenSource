@@ -148,7 +148,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 			recyclerOne?.adapter = headerAdapterOne
 		}
 		val lastFeeds = await { Database.allLastFeeds.takeLast(5).reversed() }
-		fastAdapterOne.setNewList(lastFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == lastFeeds.lastIndex) })
+		fastAdapterOne.setNewList(lastFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == lastFeeds.lastIndex) })
 		moreAdapterOne.setNewList(listOf(MoreRecyclerItem(context) {
 			openView(FeedListView(feeds = Database.allLastFeeds.reversed().toTypedArray()).withTitle(R.string.last_feeds.resStr()))
 		}))
@@ -163,7 +163,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 			recyclerTwo?.adapter = headerAdapterTwo
 		}
 		val favoriteFeeds = await { Database.allFavorites.take(5) }
-		fastAdapterTwo.setNewList(favoriteFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == favoriteFeeds.lastIndex) })
+		fastAdapterTwo.setNewList(favoriteFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == favoriteFeeds.lastIndex) })
 		moreAdapterTwo.setNewList(listOf(MoreRecyclerItem(context) {
 			openView(FavoritesView().withTitle(R.string.favorites.resStr()))
 		}))
@@ -186,7 +186,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 		}
 		val tempRecFeeds = recFeeds?.take(15)
 		if (tempRecFeeds != null) {
-			fastAdapterThree.setNewList(tempRecFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == tempRecFeeds.lastIndex) })
+			fastAdapterThree.setNewList(tempRecFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == tempRecFeeds.lastIndex) })
 			moreAdapterThree.setNewList(listOf(MoreRecyclerItem(context) {
 				openView(FeedListView(feeds = recFeeds, tags = recRelated).withTitle(R.string.recommendations.resStr()))
 			}))

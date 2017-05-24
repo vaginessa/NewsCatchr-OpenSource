@@ -54,5 +54,9 @@
 	<item name="articlerecycleritem_visual" type="id" />
 	<item name="articlerecycleritem_details" type="id" />
 	<item name="articlerecycleritem_content" type="id" />
+	<item name="feedrecycleritem_title" type="id" />
+	<item name="feedrecycleritem_website" type="id" />
+	<item name="feedrecycleritem_divider" type="id" />
+	<item name="feedrecycleritem_favorite" type="id" />
 
 </resources>

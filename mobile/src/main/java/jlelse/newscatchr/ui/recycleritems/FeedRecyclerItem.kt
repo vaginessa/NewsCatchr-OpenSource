@@ -18,14 +18,13 @@
 
 package jlelse.newscatchr.ui.recycleritems
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
-import com.mikepenz.fastadapter.items.AbstractItem
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.getPrimaryTextColor
@@ -33,18 +32,20 @@ import jlelse.newscatchr.extensions.hideView
 import jlelse.newscatchr.extensions.resDrw
 import jlelse.newscatchr.extensions.showView
 import jlelse.newscatchr.ui.fragments.FeedView
+import jlelse.newscatchr.ui.layout.FeedRecyclerItemUI
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: ViewManagerView? = null, val adapter: FastItemAdapter<FeedRecyclerItem>? = null) : AbstractItem<FeedRecyclerItem, FeedRecyclerItem.ViewHolder>() {
+class FeedRecyclerItem(val ctx: Context, val feed: Feed? = null, val isLast: Boolean = false, val fragment: ViewManagerView? = null) : NCAbstractItem<FeedRecyclerItem, FeedRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.feed_item_id
 	}
 
-	override fun getLayoutRes(): Int {
-		return R.layout.feedlistrecycleritem
+	override fun getItemView(): View {
+		return FeedRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
@@ -78,9 +79,9 @@ class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val 
 	override fun getViewHolder(p0: View) = ViewHolder(p0)
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var title: TextView = view.find<TextView>(R.id.title)
-		var website: TextView = view.find<TextView>(R.id.website)
-		var favorite: ImageView = view.find<ImageView>(R.id.favorite)
-		var divider: View = view.find<View>(R.id.divider)
+		var title: TextView = view.find<TextView>(R.id.feedrecycleritem_title)
+		var website: TextView = view.find<TextView>(R.id.feedrecycleritem_website)
+		var favorite: ImageView = view.find<ImageView>(R.id.feedrecycleritem_favorite)
+		var divider: View = view.find<View>(R.id.feedrecycleritem_divider)
 	}
 }
