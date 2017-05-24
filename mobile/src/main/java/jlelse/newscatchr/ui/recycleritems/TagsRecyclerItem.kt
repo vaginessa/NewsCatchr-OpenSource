@@ -18,26 +18,28 @@
 
 package jlelse.newscatchr.ui.recycleritems
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
-import com.mikepenz.fastadapter.items.AbstractItem
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.fragments.MixView
+import jlelse.newscatchr.ui.layout.TagsRecyclerItemUI
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
+import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: ViewManagerView? = null) : AbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHolder>() {
+class TagsRecyclerItem(val ctx: Context, val tags: Array<String>? = null, val fragment: ViewManagerView? = null) : NCAbstractItem<TagsRecyclerItem, TagsRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.tags_item_id
 	}
 
-	override fun getLayoutRes(): Int {
-		return R.layout.recyclertagsitem
+	override fun getItemView(): View {
+		return TagsRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
@@ -51,7 +53,7 @@ class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: ViewManage
 	override fun getViewHolder(p0: View) = ViewHolder(p0)
 
 	class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-		var tagsBox: FlexboxLayout = view.find<FlexboxLayout>(R.id.tagsBox)
+		var tagsBox: FlexboxLayout = view.find<FlexboxLayout>(R.id.tagsrecycleritem_box)
 	}
 }
 

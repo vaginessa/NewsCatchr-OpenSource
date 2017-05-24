@@ -92,7 +92,7 @@ fun Int.resStrArr(): Array<out String>? = tryOrNull { appContext?.resources?.get
 
 fun Int.resIntArr() = tryOrNull { appContext?.resources?.getIntArray(this) }
 
-fun Int.resDrw(context: Context?, color: Int?) = tryOrNull {
+fun Int.resDrw(context: Context?, color: Int? = null) = tryOrNull {
 	AppCompatResources.getDrawable(context ?: appContext!!, this)?.apply {
 		if (color != null) DrawableCompat.setTint(this, color)
 	}

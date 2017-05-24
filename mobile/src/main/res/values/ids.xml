@@ -58,5 +58,7 @@
 	<item name="feedrecycleritem_website" type="id" />
 	<item name="feedrecycleritem_divider" type="id" />
 	<item name="feedrecycleritem_favorite" type="id" />
+	<item name="tagsrecycleritem_box" type="id" />
+	<item name="tag_text" type="id" />
 
 </resources>

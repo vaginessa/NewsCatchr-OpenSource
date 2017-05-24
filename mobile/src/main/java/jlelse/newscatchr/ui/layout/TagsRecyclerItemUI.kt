@@ -18,25 +18,24 @@
 
 package jlelse.newscatchr.ui.layout
 
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import jlelse.newscatchr.extensions.swipeRefreshLayout
-import jlelse.newscatchr.ui.fragments.HomeView
+import com.google.android.flexbox.FlexboxLayout
+import jlelse.newscatchr.extensions.dpToPx
+import jlelse.newscatchr.extensions.flexboxLayout
+import jlelse.newscatchr.ui.recycleritems.TagsRecyclerItem
 import jlelse.readit.R
-import org.jetbrains.anko.AnkoComponent
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.matchParent
-import org.jetbrains.anko.recyclerview.v7.recyclerView
-import org.jetbrains.anko.wrapContent
+import org.jetbrains.anko.*
 
-class HomeFragmentUI : AnkoComponent<HomeView> {
-	override fun createView(ui: AnkoContext<HomeView>): View = with(ui) {
-		swipeRefreshLayout {
-			id = R.id.homefragment_refresh
-			recyclerView {
-				lparams(width = matchParent, height = wrapContent)
-				id = R.id.homefragment_recyclerone
-				layoutManager = LinearLayoutManager(context)
+class TagsRecyclerItemUI : AnkoComponent<TagsRecyclerItem> {
+	override fun createView(ui: AnkoContext<TagsRecyclerItem>): View = with(ui) {
+		verticalLayout {
+			flexboxLayout {
+				lparams(width = matchParent, height = wrapContent) {
+					padding = 12.dpToPx()
+				}
+				id = R.id.tagsrecycleritem_box
+				flexWrap = FlexboxLayout.FLEX_WRAP_WRAP
+				justifyContent = FlexboxLayout.JUSTIFY_CONTENT_FLEX_START
 			}
 		}
 	}

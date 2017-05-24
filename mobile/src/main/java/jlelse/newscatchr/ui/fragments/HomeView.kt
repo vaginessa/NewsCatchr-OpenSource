@@ -25,17 +25,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
-import android.support.v4.widget.NestedScrollView
 import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.TextView
 import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
-import com.google.android.flexbox.FlexboxLayout
-import com.mikepenz.fastadapter.adapters.HeaderAdapter
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Feedly
@@ -58,21 +54,11 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	private var recRelated: Array<String>? = null
 	private var fragmentView: View? = null
 	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerone) }
-	private val recyclerTwo: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclertwo) }
-	private val recyclerThree: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.homefragment_recyclerthree) }
-	private val fastAdapterOne = FastItemAdapter<FeedRecyclerItem>()
-	private val headerAdapterOne = HeaderAdapter<HeaderRecyclerItem>()
-	private val moreAdapterOne = NCAdapter<MoreRecyclerItem>(order = 1000)
-	private val fastAdapterTwo = FastItemAdapter<FeedRecyclerItem>()
-	private val headerAdapterTwo = HeaderAdapter<HeaderRecyclerItem>()
-	private val moreAdapterTwo = NCAdapter<MoreRecyclerItem>(order = 1000)
-	private val fastAdapterThree = FastItemAdapter<FeedRecyclerItem>()
-	private val headerAdapterThree = HeaderAdapter<HeaderRecyclerItem>()
-	private val moreAdapterThree = NCAdapter<MoreRecyclerItem>(order = 1000)
-	private val tagsTitle: TextView? by lazy { fragmentView?.find<TextView>(R.id.homefragment_tagstitle) }
-	private val tagsBox: FlexboxLayout? by lazy { fragmentView?.find<FlexboxLayout>(R.id.homefragment_tagsbox) }
+	private val fastAdapterOne = FastItemAdapter<NCAbstractItem<*, *>>()
+	private val fastAdapterTwo = NCAdapter<NCAbstractItem<*, *>>(order = 600)
+	private val fastAdapterThree = NCAdapter<NCAbstractItem<*, *>>(order = 700)
+	private val fastAdapterFour = NCAdapter<NCAbstractItem<*, *>>(order = 800)
 	private val refresh: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.homefragment_refresh) }
-	private val scrollView: NestedScrollView? by lazy { fragmentView?.find<NestedScrollView>(R.id.homefragment_scrollview) }
 	private var lastFeedReceiver: LastFeedUpdateReceiver? = null
 	private var lastFeedReceiverRegistered = false
 	private var favoritesReceiver: LastFeedUpdateReceiver? = null
@@ -99,18 +85,14 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 			favoritesReceiverRegistered = true
 		}
 		fragmentView = HomeFragmentUI().createView(AnkoContext.create(context, this))
-		tagsTitle?.apply {
-			hideView()
-			text = R.string.rec_topics.resStr()
-		}
-		refresh?.setOnRefreshListener {
+		val loadAll = { cache: Boolean ->
+			if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapterFour.wrap(fastAdapterThree.wrap(fastAdapterTwo.wrap(fastAdapterOne)))
 			loadLastFeeds()
 			loadFavoriteFeeds()
-			loadRecommendedFeeds()
+			loadRecommendedFeeds(cache)
 		}
-		loadLastFeeds()
-		loadFavoriteFeeds()
-		loadRecommendedFeeds(true)
+		refresh?.setOnRefreshListener { loadAll(false) }
+		loadAll(true)
 		return fragmentView
 	}
 
@@ -141,42 +123,28 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	}
 
 	private fun loadLastFeeds() = async {
-		if (recyclerOne?.adapter == null) {
-			moreAdapterOne.wrap(fastAdapterOne)
-			headerAdapterOne.wrap(moreAdapterOne)
-			headerAdapterOne.add(HeaderRecyclerItem(title = R.string.last_feeds.resStr()!!, ctx = context))
-			recyclerOne?.adapter = headerAdapterOne
-		}
+		fastAdapterOne.setNewList(listOf())
 		val lastFeeds = await { Database.allLastFeeds.takeLast(5).reversed() }
-		fastAdapterOne.setNewList(lastFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == lastFeeds.lastIndex) })
-		moreAdapterOne.setNewList(listOf(MoreRecyclerItem(context) {
-			openView(FeedListView(feeds = Database.allLastFeeds.reversed().toTypedArray()).withTitle(R.string.last_feeds.resStr()))
-		}))
-		if (lastFeeds.notNullAndEmpty()) recyclerOne?.showView() else recyclerOne?.hideView()
+		if (lastFeeds.notNullAndEmpty()) {
+			fastAdapterOne.add(HeaderRecyclerItem(title = R.string.last_feeds.resStr()!!, ctx = context))
+			fastAdapterOne.add(lastFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == lastFeeds.lastIndex) })
+			fastAdapterOne.add(MoreRecyclerItem(context) { openView(FeedListView(feeds = Database.allLastFeeds.reversed().toTypedArray()).withTitle(R.string.last_feeds.resStr())) })
+		}
 	}
 
 	private fun loadFavoriteFeeds() = async {
-		if (recyclerTwo?.adapter == null) {
-			moreAdapterTwo.wrap(fastAdapterTwo)
-			headerAdapterTwo.wrap(moreAdapterTwo)
-			headerAdapterTwo.add(HeaderRecyclerItem(title = R.string.favorites.resStr()!!, ctx = context))
-			recyclerTwo?.adapter = headerAdapterTwo
-		}
+		fastAdapterTwo.setNewList(listOf())
 		val favoriteFeeds = await { Database.allFavorites.take(5) }
-		fastAdapterTwo.setNewList(favoriteFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == favoriteFeeds.lastIndex) })
-		moreAdapterTwo.setNewList(listOf(MoreRecyclerItem(context) {
-			openView(FavoritesView().withTitle(R.string.favorites.resStr()))
-		}))
-		if (favoriteFeeds.notNullAndEmpty()) recyclerOne?.showView() else recyclerTwo?.hideView()
+		if (favoriteFeeds.notNullAndEmpty()) {
+			fastAdapterTwo.add(HeaderRecyclerItem(title = R.string.favorites.resStr()!!, ctx = context))
+			fastAdapterTwo.add(favoriteFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == favoriteFeeds.lastIndex) })
+			fastAdapterTwo.add(MoreRecyclerItem(context) { openView(FavoritesView().withTitle(R.string.favorites.resStr())) })
+		}
 	}
 
 	private fun loadRecommendedFeeds(cache: Boolean = false) = async {
-		if (recyclerThree?.adapter == null) {
-			moreAdapterThree.wrap(fastAdapterThree)
-			headerAdapterThree.wrap(moreAdapterThree)
-			headerAdapterThree.add(HeaderRecyclerItem(title = R.string.recommendations.resStr()!!, ctx = context))
-			recyclerThree?.adapter = headerAdapterThree
-		}
+		fastAdapterThree.setNewList(listOf())
+		fastAdapterFour.setNewList(listOf())
 		refresh?.showIndicator()
 		await {
 			if (recFeeds == null || !cache) Feedly().recommendedFeeds(Preferences.recommendationsLanguage, cache) { feeds, related ->
@@ -185,22 +153,14 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 			}
 		}
 		val tempRecFeeds = recFeeds?.take(15)
-		if (tempRecFeeds != null) {
-			fastAdapterThree.setNewList(tempRecFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == tempRecFeeds.lastIndex) })
-			moreAdapterThree.setNewList(listOf(MoreRecyclerItem(context) {
+		if (recFeeds.notNullAndEmpty() && tempRecFeeds != null) {
+			fastAdapterThree.add(HeaderRecyclerItem(title = R.string.recommendations.resStr()!!, ctx = context))
+			fastAdapterThree.add(tempRecFeeds.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, fragment = this@HomeView, isLast = i == tempRecFeeds.lastIndex) })
+			fastAdapterThree.add(listOf(MoreRecyclerItem(context) {
 				openView(FeedListView(feeds = recFeeds, tags = recRelated).withTitle(R.string.recommendations.resStr()))
 			}))
 		}
-		if (recFeeds.notNullAndEmpty()) recyclerThree?.showView() else recyclerThree?.hideView()
-		if (recRelated.notNullAndEmpty()) {
-			tagsTitle?.showView()
-			tagsBox?.showView()
-			tagsBox?.removeAllViews()
-			recRelated?.forEach { tagsBox?.addTagView(this@HomeView, it) }
-		} else {
-			tagsTitle?.hideView()
-			tagsBox?.hideView()
-		}
+		if (recRelated.notNullAndEmpty()) fastAdapterFour.add(TagsRecyclerItem(context, recRelated, this@HomeView))
 		refresh?.hideIndicator()
 	}
 

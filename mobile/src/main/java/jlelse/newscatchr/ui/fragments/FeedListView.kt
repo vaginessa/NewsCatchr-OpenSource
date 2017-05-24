@@ -41,13 +41,10 @@ class FeedListView(val feeds: Array<Feed>? = null, val tags: Array<String>? = nu
 	override fun onCreateView(): View? {
 		super.onCreateView()
 		fragmentView = BasicRecyclerUI().createView(AnkoContext.create(context, this))
-		if (recyclerOne?.adapter == null) {
-			tagsAdapter.wrap(fastAdapter)
-			recyclerOne?.adapter = tagsAdapter
-		}
+		if (recyclerOne?.adapter == null) recyclerOne?.adapter = tagsAdapter.wrap(fastAdapter)
 		if (feeds.notNullAndEmpty()) fastAdapter.setNewList(feeds?.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, isLast = i == feeds.lastIndex, fragment = this@FeedListView) })
 		else fastAdapter.setNewList(listOf())
-		if (tags.notNullAndEmpty()) tagsAdapter.setNewList(listOf(TagsRecyclerItem(fragment = this, tags = tags)))
+		if (tags.notNullAndEmpty()) tagsAdapter.setNewList(listOf(TagsRecyclerItem(context, fragment = this, tags = tags)))
 		else tagsAdapter.setNewList(listOf())
 		return fragmentView
 	}
