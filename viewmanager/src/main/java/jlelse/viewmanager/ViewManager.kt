@@ -147,6 +147,11 @@ abstract class ViewManagerView : LinearLayout(viewManagerActivity) {
 		orientation = LinearLayout.VERTICAL
 	}
 
+	fun withTitle(title: String?): ViewManagerView {
+		this.title = title
+		return this
+	}
+
 	fun onShow() {
 		if (contentView.childCount == 0) contentView.addView(onCreateView())
 	}

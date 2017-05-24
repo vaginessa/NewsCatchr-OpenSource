@@ -83,9 +83,7 @@ class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fr
 			viewHolder.visual.hideView()
 		}
 		viewHolder.itemView.setOnClickListener {
-			if (article != null) fragment?.openView(ArticleView(article = article).apply {
-				title = article.originTitle
-			})
+			if (article != null) fragment?.openView(ArticleView(article = article).withTitle(article.originTitle))
 		}
 		viewHolder.bookmark.setImageDrawable((if (Database.isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
 		viewHolder.bookmark.setOnClickListener {

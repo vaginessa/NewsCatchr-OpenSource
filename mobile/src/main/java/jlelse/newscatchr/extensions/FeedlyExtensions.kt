@@ -42,7 +42,7 @@ fun searchForFeeds(context: Context, query: String? = null) {
 			}
 			uiThread {
 				progressDialog.dismiss()
-				if (foundFeeds.notNullAndEmpty()) mainAcivity?.openView(FeedListView(feeds = foundFeeds, tags = foundRelated).apply { title = "${R.string.search_results_for.resStr()} $finalQuery" })
+				if (foundFeeds.notNullAndEmpty()) mainAcivity?.openView(FeedListView(feeds = foundFeeds, tags = foundRelated).withTitle("${R.string.search_results_for.resStr()} $finalQuery"))
 				else context.nothingFound()
 			}
 		}

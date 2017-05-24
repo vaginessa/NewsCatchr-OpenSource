@@ -60,9 +60,7 @@ fun FlexboxLayout.addTagView(fragment: ViewManagerView, tagString: String?) = tr
 		find<TextView>(R.id.tagView).apply {
 			text = "#$tagString"
 			setOnClickListener {
-				fragment.openView(MixView(feedId = "topic/$tagString").apply {
-					title = "#$tagString"
-				})
+				fragment.openView(MixView(feedId = "topic/$tagString").withTitle("#$tagString"))
 			}
 		}
 	})

@@ -181,7 +181,7 @@ class FeedView(val feed: Feed) : ViewManagerView() {
 									}.items(false)
 								}
 								progressDialog.dismiss()
-								if (foundArticles.notNullAndEmpty()) openView(ArticleSearchResultView(articles = foundArticles!!).apply { title = "Results for " + query.toString() })
+								if (foundArticles.notNullAndEmpty()) openView(ArticleSearchResultView(articles = foundArticles!!).withTitle("Results for " + query.toString()))
 								else context.nothingFound()
 							}
 						})

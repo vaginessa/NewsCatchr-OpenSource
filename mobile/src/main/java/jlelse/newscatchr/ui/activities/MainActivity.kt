@@ -77,9 +77,9 @@ class MainActivity : ViewManagerActivity() {
 
 	override val initViewStacks: List<Stack<ViewManagerView>>
 		get() = listOf(
-				Stack<ViewManagerView>().apply { add(HomeView().apply { title = R.string.news.resStr() }) },
-				Stack<ViewManagerView>().apply { add(BookmarksView().apply { title = R.string.bookmarks.resStr() }) },
-				Stack<ViewManagerView>().apply { add(SettingsView().apply { title = R.string.settings.resStr() }) }
+				Stack<ViewManagerView>().apply { add(HomeView().withTitle(R.string.news.resStr())) },
+				Stack<ViewManagerView>().apply { add(BookmarksView().withTitle(R.string.bookmarks.resStr())) },
+				Stack<ViewManagerView>().apply { add(SettingsView().withTitle(R.string.settings.resStr())) }
 		)
 	override val containerView: FrameLayout
 		get() = find(R.id.mainactivity_container)
@@ -146,13 +146,13 @@ class MainActivity : ViewManagerActivity() {
 			intent.getStringExtra("feedid")?.let {
 				resetStack()
 				val feedTitle = intent.getStringExtra("feedtitle")
-				if (!it.isNullOrBlank()) openView(FeedView(feed = Feed(feedId = it, title = feedTitle)).apply { title = feedTitle })
+				if (!it.isNullOrBlank()) openView(FeedView(feed = Feed(feedId = it, title = feedTitle)).withTitle(feedTitle))
 			}
 			// Browser
 			if (intent.scheme == "http" || intent.scheme == "https") {
 				intent.dataString?.let {
 					MaterialDialog.Builder(this)
-							.items("Feed", "Article")
+							.items(R.string.search_for_feeds.resStr(), R.string.this_is_article.resStr())
 							.itemsCallback { _, _, i, _ ->
 								when (i) {
 									0 -> searchForFeeds(this, it)
@@ -160,7 +160,7 @@ class MainActivity : ViewManagerActivity() {
 										val progressDialog = ProgressDialog(this@MainActivity).apply { show() }
 										val article = await { tryOrNull { it.fetchArticle() } }
 										if (article != null) {
-											this@MainActivity.openView(ArticleView(article = article))
+											this@MainActivity.openView(ArticleView(article = article).withTitle(article.title))
 										}
 										progressDialog.dismiss()
 									}

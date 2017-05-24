@@ -123,9 +123,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	override fun onOptionsItemSelected(item: MenuItem?) {
 		super.onOptionsItemSelected(item)
 		when (item?.itemId) {
-			R.id.favorites -> {
-				openView(FavoritesView().apply { title = R.string.favorites.resStr() })
-			}
+			R.id.favorites -> openView(FavoritesView().withTitle(R.string.favorites.resStr()))
 			R.id.language -> {
 				val availableLocales = Locale.getAvailableLocales()
 				MaterialDialog.Builder(context)
@@ -152,7 +150,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 		val lastFeeds = await { Database.allLastFeeds.takeLast(5).reversed() }
 		fastAdapterOne.setNewList(lastFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == lastFeeds.lastIndex) })
 		moreAdapterOne.setNewList(listOf(MoreRecyclerItem(context) {
-			openView(FeedListView(feeds = Database.allLastFeeds.reversed().toTypedArray()).apply { title = R.string.last_feeds.resStr() })
+			openView(FeedListView(feeds = Database.allLastFeeds.reversed().toTypedArray()).withTitle(R.string.last_feeds.resStr()))
 		}))
 		if (lastFeeds.notNullAndEmpty()) recyclerOne?.showView() else recyclerOne?.hideView()
 	}
@@ -167,7 +165,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 		val favoriteFeeds = await { Database.allFavorites.take(5) }
 		fastAdapterTwo.setNewList(favoriteFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == favoriteFeeds.lastIndex) })
 		moreAdapterTwo.setNewList(listOf(MoreRecyclerItem(context) {
-			openView(FavoritesView().apply { title = R.string.favorites.resStr() })
+			openView(FavoritesView().withTitle(R.string.favorites.resStr()))
 		}))
 		if (favoriteFeeds.notNullAndEmpty()) recyclerOne?.showView() else recyclerTwo?.hideView()
 	}
@@ -190,7 +188,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 		if (tempRecFeeds != null) {
 			fastAdapterThree.setNewList(tempRecFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == tempRecFeeds.lastIndex) })
 			moreAdapterThree.setNewList(listOf(MoreRecyclerItem(context) {
-				openView(FeedListView(feeds = recFeeds, tags = recRelated).apply { title = R.string.recommendations.resStr() })
+				openView(FeedListView(feeds = recFeeds, tags = recRelated).withTitle(R.string.recommendations.resStr()))
 			}))
 		}
 		if (recFeeds.notNullAndEmpty()) recyclerThree?.showView() else recyclerThree?.hideView()

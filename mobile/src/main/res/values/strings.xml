@@ -26,7 +26,7 @@
 	<string name="favorites">Favorites</string>
 	<string name="about">About</string>
 	<string name="news">News</string>
-	<string name="readability" translatable="false">Readability</string>
+	<string name="readability">Readability</string>
 	<string name="search_results_for">Search results for</string>
 	<string name="suc_import">Import completed successfully!</string>
 	<string name="import_failed">Import failed!</string>
@@ -77,13 +77,11 @@
 	<string name="subscribe_support">Get the donate subscription</string>
 	<string name="subscribe_support_desc">Support the development with just a few coins on a regular base</string>
 	<string name="prefs_amp">Accelerated Mobile Pages</string>
-	<string name="prefs_amp_desc">Load the accelerated website instead of the original one page. When AMP isn\'t
-        available for the article, the app tries to use Google Web Light.
-    </string>
+	<string name="prefs_amp_desc">Load an accelerated version of the website</string>
 	<string name="share_app">Share NewsCatchr</string>
 	<string name="edit_feed_title">Edit title</string>
 	<string name="backup_restore">Backup &amp; Restore</string>
-	<string name="backup_desc">Backup or restore all favorite feeds, bookmarks and the read status.</string>
+	<string name="backup_desc">Backup or restore all favorite feeds, bookmarks and the read state</string>
 	<string name="sort">Sort</string>
 	<string name="set">Set</string>
 	<string name="sync">Synchronization</string>
@@ -96,11 +94,6 @@
 	<string name="last_feeds">Last feeds</string>
 	<string name="recommendations">Recommendations</string>
 	<string name="rec_topics">Recommended topics</string>
-	<string name="twitter" translatable="false">Twitter</string>
-	<string name="facebook" translatable="false">Facebook</string>
-	<string name="dropbox" translatable="false">Dropbox</string>
-	<string name="onedrive" translatable="false">OneDrive</string>
-	<string name="google_drive" translatable="false">Google Drive</string>
 	<string name="never">Never</string>
 	<string name="last_suc_sync">Last successful synchronization</string>
 	<string name="newest_first">Newest first</string>
@@ -112,4 +105,7 @@
 	<string name="submit_issue">Submit issue</string>
 	<string name="restore_key">Restore Key</string>
 	<string name="restore_key_desc">You need to copy this key to restore your backup within 30 days.</string>
+	<string name="this_is_article">This is an article</string>
+	<string name="search_for_feeds">Search for feeds from this website</string>
+	<string name="article">Article</string>
 </resources>

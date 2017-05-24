@@ -54,9 +54,7 @@ class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val 
 			setTitleText(feed.title, viewHolder.title)
 			viewHolder.website.text = Uri.parse(feed.website ?: feed.url()).host
 			viewHolder.itemView.setOnClickListener {
-				fragment?.openView(FeedView(feed = feed).apply {
-					title = feed.title
-				})
+				fragment?.openView(FeedView(feed = feed).withTitle(feed.title))
 			}
 			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
 			viewHolder.favorite.setOnClickListener {
