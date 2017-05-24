@@ -33,7 +33,7 @@ class KeyObjectStore(name: String = "default", cache: Boolean = false) {
 
 	fun <T> write(key: String?, item: Any?): KeyObjectStore {
 		val file = File(folder, key + ".nc")
-		if (item == null) tryOrNull { file.delete() }
+		if (item == null) delete(key)
 		else if (key != null && key.isNotBlank()) {
 			if (item.javaClass.isArray) tryOrNull { saveAsonArray(file, Ason.serializeArray<T>(item)) }
 			else tryOrNull { saveAson(file, Ason.serialize(item)) }
@@ -42,9 +42,7 @@ class KeyObjectStore(name: String = "default", cache: Boolean = false) {
 	}
 
 	fun delete(key: String?): KeyObjectStore {
-		if (key != null && key.isNotBlank()) {
-			tryOrNull { File(folder, key + ".nc").delete() }
-		}
+		if (key != null && key.isNotBlank()) tryOrNull { File(folder, key + ".nc").delete() }
 		return this
 	}
 
@@ -63,7 +61,7 @@ class KeyObjectStore(name: String = "default", cache: Boolean = false) {
 	fun exists(key: String?): Boolean = if (key != null && key.isNotBlank()) File(folder, key + ".nc").exists() else false
 
 	private fun saveAson(file: File, ason: Ason) {
-		if (!file.exists()) tryOrNull(print = true) { file.createNewFile() }
+		if (!file.exists()) tryOrNull { file.createNewFile() }
 		tryOrNull { file.writeText(ason.toString()) }
 	}
 

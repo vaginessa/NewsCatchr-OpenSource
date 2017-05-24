@@ -16,13 +16,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.backend.helpers
 
+import co.metalab.asyncawait.async
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Pocket
 import jlelse.newscatchr.extensions.tryOrNull
-import org.jetbrains.anko.doAsync
 
 /**
  * Database
@@ -46,7 +48,8 @@ object Database {
 			tryOrNull { favoritesStore.write<Array<Feed>>(FAVORITES, value.filter { it.safeFavorite() }.distinctBy { it.url() }.toTypedArray()) }
 		}
 
-	val allFavoritesUrls = allFavorites.map { it.url() }
+	val allFavoritesUrls
+		get() = allFavorites.map { it.url() }
 
 	fun addFavorites(vararg feeds: Feed?) {
 		allFavorites += feeds.filterNotNull().filter { !isSavedFavorite(it.url()) }
@@ -72,7 +75,8 @@ object Database {
 			tryOrNull { bookmarksStore.write<Array<Article>>(BOOKMARKS, value.filter { it.safeBookmark() }.distinctBy { it.url }.toTypedArray()) }
 		}
 
-	val allBookmarkUrls = allBookmarks.map { it.url }
+	val allBookmarkUrls
+		get() = allBookmarks.map { it.url }
 
 	private fun addBookmarks(vararg articles: Article?) {
 		allBookmarks += articles.filterNotNull().filter { !isSavedBookmark(it.url) }
@@ -81,10 +85,12 @@ object Database {
 	fun addBookmark(article: Article?) {
 		tryOrNull(execute = article.safeBookmark()) {
 			if (Preferences.pocketSync && !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()) {
-				doAsync {
-					article!!.pocketId = PocketHandler().addToPocket(article)
-					article.fromPocket = true
-					addBookmarks(article)
+				async {
+					if (article != null) {
+						await { article.pocketId = PocketHandler().addToPocket(article) }
+						article.fromPocket = true
+						addBookmarks(article)
+					}
 				}
 			} else {
 				addBookmarks(article)
@@ -96,9 +102,7 @@ object Database {
 		tryOrNull(execute = !url.isNullOrBlank()) {
 			if (Preferences.pocketSync && !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank())
 				allBookmarks.filter { it.url == url }.forEach {
-					if (it.fromPocket) doAsync {
-						PocketHandler().archiveOnPocket(it)
-					}
+					if (it.fromPocket) async { await { PocketHandler().archiveOnPocket(it) } }
 				}
 			allBookmarks = allBookmarks.filter { it.url != url }.toTypedArray()
 		}
