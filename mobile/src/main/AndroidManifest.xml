@@ -81,6 +81,11 @@
 			</intent-filter>
 		</activity>
 
+		<!-- Fix -->
+		<service
+			android:name="com.evernote.android.job.gcm.PlatformGcmService"
+			tools:node="remove" />
+
 	</application>
 
 </manifest>

@@ -82,7 +82,7 @@ dependencies {
     compile 'me.zhanghai.android.customtabshelper:library:1.0.3'
     // Firebase
     compile "com.google.firebase:firebase-core:$PLAY_SERVICES"
-    compile "com.google.firebase:firebase-messaging:$PLAY_SERVICES"
+    compile "com.google.firebase:firebase-crash:$PLAY_SERVICES"
     // Support libraries
     compile "com.android.support:support-v4:$SUPPORT_LIBS"
     compile "com.android.support:appcompat-v7:$SUPPORT_LIBS"

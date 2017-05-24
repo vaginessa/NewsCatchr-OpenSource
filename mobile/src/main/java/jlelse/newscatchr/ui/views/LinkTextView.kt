@@ -30,22 +30,22 @@ import jlelse.newscatchr.backend.apis.openUrl
 
 class LinkTextView {
 
-	fun apply(textView: TextView?, activity: Activity) {
+	fun apply(textView: TextView?, activity: Activity, amp: Boolean = true) {
 		textView?.movementMethod = LinkMovementMethod.getInstance()
 		val text = textView?.text
 		if (text is Spannable) {
 			textView.text = SpannableStringBuilder(text).apply {
 				clearSpans()
 				text.getSpans(0, text.length, URLSpan::class.java).forEach {
-					setSpan(CustomTextClick(it.url, activity), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+					setSpan(CustomTextClick(it.url, activity, amp), text.getSpanStart(it), text.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 				}
 			}
 		}
 	}
 
-	private class CustomTextClick(private val url: String, private val activity: Activity) : ClickableSpan() {
+	private class CustomTextClick(val url: String, val activity: Activity, val amp: Boolean = true) : ClickableSpan() {
 		override fun onClick(view: View?) {
-			url.openUrl(activity)
+			url.openUrl(activity, amp)
 		}
 	}
 

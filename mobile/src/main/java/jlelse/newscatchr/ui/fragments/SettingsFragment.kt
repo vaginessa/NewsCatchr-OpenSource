@@ -141,15 +141,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("Material Dialogs", "A beautiful, easy-to-use, and customizable dialogs API, enabling you to use Material designed dialogs down to API 8.", "https://github.com/afollestad/material-dialogs"),
 						Library("FastAdapter", "The bullet proof, fast and easy to use adapter library, which minimizes developing time to a fraction...", "https://github.com/mikepenz/FastAdapter/"),
 						Library("jsoup", "Java HTML Parser, with best of DOM, CSS, and jquery", "https://github.com/jhy/jsoup"),
-						Library("Bridge", "A simple but powerful HTTP networking library for Android. It features a Fluent chainable API, powered by Java/Android's URLConnection classes for maximum compatibility and speed.", "https://github.com/afollestad/bridge"),
+						Library("Bridge", "A simple but powerful HTTP networking library for Java. It features a Fluent chainable API, powered by Java URLConnection classes for maximum compatibility and speed.", "https://github.com/afollestad/bridge"),
+						Library("Ason", "JSON in Java made easy! Catch less exceptions, serialize/deserialize with ease, plus some other useful tricks and conveniences!", "https://github.com/afollestad/ason"),
 						Library("Glide", "An image loading and caching library for Android focused on smooth scrolling", "https://github.com/bumptech/glide"),
-						Library("Paper", "Fast and simple data storage library for Android", "https://github.com/pilgr/Paper"),
-						Library("google-gson", "A Java serialization/deserialization library that can convert Java Objects into JSON and back.", "https://github.com/google/gson"),
-						Library("CloudRail", "Integrate Multiple Services With Just One API", "https://github.com/CloudRail/cloudrail-si-android-sdk"),
 						Library("Android In-App Billing v3 Library", "A lightweight implementation of Android In-app Billing Version 3", "https://github.com/anjlab/android-inapp-billing-v3"),
 						Library("FlexboxLayout", "FlexboxLayout is a library project which brings the similar capabilities of CSS Flexible Box Layout Module to Android.", "https://github.com/google/flexbox-layout"),
 						Library("Android-Job", "Android library to handle jobs in the background.", "https://github.com/evernote/android-job"),
-						Library("android-issue-reporter", "A powerful and simple library to open issues on GitHub directly from your app.", "https://github.com/HeinrichReimer/android-issue-reporter"),
 						Library("CustomTabsHelper", "Custom tabs, made easy.", "https://github.com/DreaminginCodeZH/CustomTabsHelper")
 				).map { "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}<br><br>" }.joinToString(separator = "")
 				if (html.length > 8) html.removeRange(html.lastIndex - 8, html.lastIndex) // Remove last useless linebreaks
@@ -159,7 +156,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.positiveText(android.R.string.ok)
 						.build()
 						.apply {
-							LinkTextView().apply(contentView, activity)
+							LinkTextView().apply(contentView, activity, false)
 							show()
 						}
 			}
@@ -168,8 +165,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("feedly Cloud API", "", "https://developer.feedly.com"),
 						Library("Pocket API", "", "https://getpocket.com/developer/"),
 						Library("Google URL Shortener", "", "https://developers.google.com/url-shortener/"),
-						Library("Google AMP Cache", "", "https://developers.google.com/amp/cache/"),
-						Library("Mercury Web Parser", "", "https://mercury.postlight.com/web-parser/")
+						Library("Mercury by Postlight", "", "https://mercury.postlight.com/")
 				).map { "<b><a href=\"${it.link}\">${it.name}</a></b><br><br>" }.joinToString(separator = "")
 				if (html.length > 8) html.removeRange(html.lastIndex - 8, html.lastIndex)
 				MaterialDialog.Builder(context)
@@ -178,12 +174,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.positiveText(android.R.string.ok)
 						.build()
 						.apply {
-							LinkTextView().apply(contentView, activity)
+							LinkTextView().apply(contentView, activity, false)
 							show()
 						}
 			}
 			aboutPref -> {
-				val description: String = "<b>The best newsreader for Android<br><i>It's the way of reading news in 2020</i></b><br><br>Developer: <a href=\"https://plus.google.com/+JanLkElse\">Jan-Lukas Else</a><br>Icon designer: <a href=\"https://plus.google.com/+KevinAguilarC\">Kevin Aguilar</a><br>Banner designer: <a href=\"https://plus.google.com/+%C5%BDan%C4%8Cerne\">&#381;an &#268;erne</a><br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><a href=\"https://github.com/jlelse/NewsCatchr-OpenSource\">Source code on GitHub</a><br><br>"
+				val description: String = "<b>The best newsreader for Android<br><i>It's the way of reading news in the future</i></b><br><br>Developer: Jan-Lukas Else<br>Icon designer: Kevin Aguilar<br>Banner designer: &#381;an &#268;erne<br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><a href=\"https://github.com/jlelse/NewsCatchr-OpenSource\">Source code on GitHub</a><br><br>"
 				val statsDesc = "You already opened ${Database.allReadUrls.size} articles. Thanks for that!"
 				MaterialDialog.Builder(context)
 						.title(R.string.app_name)
@@ -191,7 +187,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.positiveText(android.R.string.ok)
 						.build()
 						.apply {
-							LinkTextView().apply(contentView, activity)
+							LinkTextView().apply(contentView, activity, false)
 							show()
 						}
 			}
