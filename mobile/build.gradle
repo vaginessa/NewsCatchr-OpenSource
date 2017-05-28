@@ -60,10 +60,10 @@ kotlin {
 }
 
 dependencies {
-    compile('com.mikepenz:fastadapter:2.5.2@aar') {
+    compile('com.mikepenz:fastadapter:2.5.3@aar') {
         transitive = true
     }
-    compile 'com.mikepenz:fastadapter-commons:2.5.2@aar'
+    compile 'com.mikepenz:fastadapter-commons:2.5.3@aar'
     compile 'com.mikepenz:fastadapter-extensions:2.5.2@aar'
     compile 'com.afollestad.material-dialogs:core:0.9.4.5'
     compile('com.afollestad:bridge:5.1.2') {
