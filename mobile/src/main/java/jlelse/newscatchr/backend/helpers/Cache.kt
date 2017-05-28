@@ -44,7 +44,7 @@ fun Article.saveToCache() {
 	if (!id.isNullOrBlank()) KeyObjectStore(name = "article_cache", cache = true).write<Article>(id!!.formatForCache(), this)
 }
 
-fun Context.clearCache(finished: () -> Unit) {
+fun Context.clearCache(finished: () -> Unit?) {
 	async {
 		await {
 			KeyObjectStore(name = "cache", cache = true).destroy()
