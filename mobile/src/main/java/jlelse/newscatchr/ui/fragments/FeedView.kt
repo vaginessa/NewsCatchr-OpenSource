@@ -97,7 +97,7 @@ class FeedView(val feed: Feed) : ViewManagerView() {
 		}
 		if (articles.notNullAndEmpty()) {
 			recyclerOne?.clearOnScrollListeners()
-			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@FeedView) })
+			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(article = it, fragment = this@FeedView) })
 			recyclerOne?.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
 				override fun onLoadMore(currentPage: Int) {
 					async {
@@ -105,7 +105,7 @@ class FeedView(val feed: Feed) : ViewManagerView() {
 						continuation = feedlyLoader?.continuation
 						if (newArticles != null) {
 							articles.addAll(newArticles)
-							fastAdapter.add(newArticles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@FeedView) })
+							fastAdapter.add(newArticles.map { ArticleRecyclerItem(article = it, fragment = this@FeedView) })
 						}
 					}
 				}

@@ -21,19 +21,20 @@ package jlelse.newscatchr.ui.recycleritems
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import jlelse.newscatchr.ui.layout.MoreRecyclerItemUI
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class MoreRecyclerItem(val ctx: Context, val callback: () -> Unit = {}) : NCAbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
+class MoreRecyclerItem(val callback: () -> Unit = {}) : NCAbstractItem<MoreRecyclerItem, MoreRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.more_item_id
 	}
 
-	override fun getItemView(): View {
+	override fun createView(ctx: Context, parent: ViewGroup?): View {
 		return MoreRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 

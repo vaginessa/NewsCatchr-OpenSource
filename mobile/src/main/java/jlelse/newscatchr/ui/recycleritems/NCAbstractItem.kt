@@ -18,29 +18,13 @@
 
 package jlelse.newscatchr.ui.recycleritems
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.view.ViewGroup
 import com.mikepenz.fastadapter.IClickable
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.items.AbstractItem
-import java.util.*
 
 abstract class NCAbstractItem<Item, VH : RecyclerView.ViewHolder> : AbstractItem<Item, VH>() where Item : IItem<*, *>, Item : IClickable<*> {
 
-	override fun generateView(ctx: Context?): View {
-		val viewHolder = getViewHolder(null)
-		bindView(viewHolder, Collections.EMPTY_LIST)
-		return viewHolder.itemView
-	}
-
-	override fun generateView(ctx: Context?, parent: ViewGroup) = generateView(ctx)
-
-	override fun getViewHolder(parent: ViewGroup?): VH = getViewHolder(getItemView())
-
 	override fun getLayoutRes() = 0
-
-	abstract fun getItemView(): View
 
 }

@@ -23,6 +23,7 @@ import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
 import android.text.format.DateUtils
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
@@ -36,13 +37,13 @@ import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class ArticleRecyclerItem(val ctx: Context, val article: Article? = null, val fragment: ViewManagerView? = null) : NCAbstractItem<ArticleRecyclerItem, ArticleRecyclerItem.ViewHolder>() {
+class ArticleRecyclerItem(val article: Article? = null, val fragment: ViewManagerView? = null) : NCAbstractItem<ArticleRecyclerItem, ArticleRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.article_item_id
 	}
 
-	override fun getItemView(): View {
+	override fun createView(ctx: Context, parent: ViewGroup?): View {
 		return ArticleRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 

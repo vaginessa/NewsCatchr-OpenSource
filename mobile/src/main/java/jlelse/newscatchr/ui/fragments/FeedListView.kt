@@ -24,8 +24,8 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.ui.layout.BasicRecyclerUI
+import jlelse.newscatchr.ui.recycleritems.CustomOrderAdapter
 import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
-import jlelse.newscatchr.ui.recycleritems.NCAdapter
 import jlelse.newscatchr.ui.recycleritems.TagsRecyclerItem
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -36,15 +36,15 @@ class FeedListView(val feeds: Array<Feed>? = null, val tags: Array<String>? = nu
 	private var fragmentView: View? = null
 	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.basicrecyclerview_recycler) }
 	private var fastAdapter = FastItemAdapter<FeedRecyclerItem>()
-	private var tagsAdapter = NCAdapter<TagsRecyclerItem>(order = 100)
+	private var tagsAdapter = CustomOrderAdapter<TagsRecyclerItem>(order = 100)
 
 	override fun onCreateView(): View? {
 		super.onCreateView()
 		fragmentView = BasicRecyclerUI().createView(AnkoContext.create(context, this))
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = tagsAdapter.wrap(fastAdapter)
-		if (feeds.notNullAndEmpty()) fastAdapter.setNewList(feeds?.mapIndexed { i, feed -> FeedRecyclerItem(context, feed = feed, isLast = i == feeds.lastIndex, fragment = this@FeedListView) })
+		if (feeds.notNullAndEmpty()) fastAdapter.setNewList(feeds?.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, isLast = i == feeds.lastIndex, fragment = this@FeedListView) })
 		else fastAdapter.setNewList(listOf())
-		if (tags.notNullAndEmpty()) tagsAdapter.setNewList(listOf(TagsRecyclerItem(context, fragment = this, tags = tags)))
+		if (tags.notNullAndEmpty()) tagsAdapter.setNewList(listOf(TagsRecyclerItem(fragment = this, tags = tags)))
 		else tagsAdapter.setNewList(listOf())
 		return fragmentView
 	}

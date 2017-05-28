@@ -22,7 +22,7 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 
-class NCAdapter<Item : IItem<*, *>>(val order: Int? = null) : ItemAdapter<Item>() {
+class CustomOrderAdapter<Item : IItem<*, *>>(val order: Int? = null) : ItemAdapter<Item>() {
 
 	override fun getOrder(): Int {
 		return order ?: super.getOrder()

@@ -23,6 +23,7 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import jlelse.newscatchr.backend.Feed
@@ -38,13 +39,13 @@ import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class FeedRecyclerItem(val ctx: Context, val feed: Feed? = null, val isLast: Boolean = false, val fragment: ViewManagerView? = null) : NCAbstractItem<FeedRecyclerItem, FeedRecyclerItem.ViewHolder>() {
+class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val fragment: ViewManagerView? = null) : NCAbstractItem<FeedRecyclerItem, FeedRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.feed_item_id
 	}
 
-	override fun getItemView(): View {
+	override fun createView(ctx: Context, parent: ViewGroup?): View {
 		return FeedRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 

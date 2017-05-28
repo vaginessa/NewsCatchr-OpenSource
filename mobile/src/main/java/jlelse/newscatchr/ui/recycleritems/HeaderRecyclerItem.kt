@@ -21,19 +21,20 @@ package jlelse.newscatchr.ui.recycleritems
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import jlelse.newscatchr.ui.layout.HeaderRecyclerItemUI
 import jlelse.readit.R
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
-class HeaderRecyclerItem(val ctx: Context, val title: String? = null) : NCAbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
+class HeaderRecyclerItem(val title: String? = null) : NCAbstractItem<HeaderRecyclerItem, HeaderRecyclerItem.ViewHolder>() {
 
 	override fun getType(): Int {
 		return R.id.header_item_id
 	}
 
-	override fun getItemView(): View {
+	override fun createView(ctx: Context, parent: ViewGroup?): View {
 		return HeaderRecyclerItemUI().createView(AnkoContext.create(ctx, this))
 	}
 

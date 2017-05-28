@@ -63,7 +63,7 @@ class BookmarksView : ViewManagerView() {
 			}
 			Database.allBookmarks
 		}
-		if (articles.notNullAndEmpty()) fastAdapter.setNewList(articles.map { ArticleRecyclerItem(ctx = context, article = it, fragment = this@BookmarksView) })
+		if (articles.notNullAndEmpty()) fastAdapter.setNewList(articles.map { ArticleRecyclerItem(it, this@BookmarksView) })
 		else fastAdapter.setNewList(listOf())
 		refreshOne?.hideIndicator()
 	}
