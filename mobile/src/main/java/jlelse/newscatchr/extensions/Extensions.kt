@@ -84,8 +84,6 @@ fun <T> tryOrNull(print: Boolean = false, execute: Boolean = true, code: () -> T
 
 fun sharedPref(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext)
 
-fun Int.resDim() = tryOrNull { appContext?.resources?.getDimension(this) }
-
 fun Int.resStr() = tryOrNull { appContext?.resources?.getString(this) }
 
 fun Int.resStrArr(): Array<out String>? = tryOrNull { appContext?.resources?.getStringArray(this) }
