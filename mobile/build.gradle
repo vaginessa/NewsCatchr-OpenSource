@@ -24,7 +24,7 @@ android {
     buildToolsVersion BUILD_TOOLS
     defaultConfig {
         applicationId APP_ID
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion TARGET_SDK
         versionCode VERSION_CODE
         versionName VERSION_NAME
