@@ -19,10 +19,8 @@
 package jlelse.newscatchr.ui.layout
 
 import android.graphics.Color
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.extensions.resDrw
 import jlelse.readit.R
 import org.jetbrains.anko.*
@@ -31,18 +29,17 @@ class TagUI : AnkoComponent<View> {
 	override fun createView(ui: AnkoContext<View>): View = with(ui) {
 		frameLayout {
 			lparams(width = wrapContent, height = wrapContent) {
-				padding = 4.dpToPx()
+				padding = dip(4)
 			}
 			verticalLayout {
 				textView {
-					lparams(width = wrapContent, height = 32.dpToPx()) {
-						leftPadding = 12.dpToPx()
-						rightPadding = 12.dpToPx()
+					lparams(width = wrapContent, height = dip(32)) {
+						horizontalPadding = dip(12)
 					}
 					gravity = Gravity.CENTER
 					backgroundDrawable = R.drawable.chip.resDrw(context)
 					textColor = Color.WHITE
-					setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
+					textSize = 13f
 				}
 			}
 		}

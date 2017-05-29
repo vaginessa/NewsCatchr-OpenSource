@@ -20,7 +20,6 @@ package jlelse.newscatchr.ui.layout
 
 import android.graphics.Color
 import android.view.View
-import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.ui.recycleritems.MoreRecyclerItem
 import jlelse.readit.R
@@ -30,8 +29,9 @@ class MoreRecyclerItemUI : AnkoComponent<MoreRecyclerItem> {
 	override fun createView(ui: AnkoContext<MoreRecyclerItem>): View = with(ui) {
 		verticalLayout {
 			button {
-				lparams(width = wrapContent, height = 48.dpToPx()) {
-					setMargins(16.dpToPx(), 8.dpToPx(), 16.dpToPx(), 8.dpToPx())
+				lparams(width = wrapContent, height = dip(48)) {
+					horizontalMargin = dip(16)
+					verticalMargin = dip(8)
 				}
 				id = R.id.morerecycleritem_button
 				maxLines = 1

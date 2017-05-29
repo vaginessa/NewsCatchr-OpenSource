@@ -22,7 +22,6 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.extensions.getPrimaryTextColor
 import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.setTextStyle
@@ -34,20 +33,21 @@ class FeedRecyclerItemUI : AnkoComponent<FeedRecyclerItem> {
 	override fun createView(ui: AnkoContext<FeedRecyclerItem>): View = with(ui) {
 		verticalLayout {
 			lparams(width = matchParent, height = wrapContent) {
-				setPadding(16.dpToPx(), 16.dpToPx(), 16.dpToPx(), 0)
+				topPadding = dip(16)
+				horizontalPadding = dip(16)
 			}
 			context.obtainStyledAttributes(intArrayOf(R.attr.selectableItemBackground)).apply {
 				backgroundResource = getResourceId(0, 0)
 			}.recycle()
 			verticalLayout {
 				lparams(width = matchParent, height = wrapContent) {
-					bottomPadding = 16.dpToPx()
+					bottomPadding = dip(16)
 				}
 				orientation = LinearLayout.HORIZONTAL
 				gravity = Gravity.TOP
 				verticalLayout {
-					lparams(width = 0.dpToPx(), height = wrapContent, weight = 1f) {
-						rightMargin = 16.dpToPx()
+					lparams(width = 0, height = wrapContent, weight = 1f) {
+						rightMargin = dip(16)
 					}
 					textView {
 						lparams(width = matchParent, height = wrapContent)
@@ -64,8 +64,8 @@ class FeedRecyclerItemUI : AnkoComponent<FeedRecyclerItem> {
 					}
 				}
 				imageView {
-					lparams(width = 36.dpToPx(), height = 36.dpToPx()) {
-						padding = 6.dpToPx()
+					lparams(width = dip(36), height = dip(36)) {
+						padding = dip(6)
 					}
 					id = R.id.feedrecycleritem_favorite
 					context.obtainStyledAttributes(intArrayOf(R.attr.selectableItemBackgroundBorderless)).apply {
@@ -74,7 +74,7 @@ class FeedRecyclerItemUI : AnkoComponent<FeedRecyclerItem> {
 				}
 			}
 			view {
-				lparams(width = matchParent, height = 1)
+				lparams(width = matchParent, height = dip(1))
 				id = R.id.feedrecycleritem_divider
 				backgroundColor = R.color.colorDivider.resClr(context)!!
 			}

@@ -60,5 +60,13 @@
 	<item name="feedrecycleritem_favorite" type="id" />
 	<item name="tagsrecycleritem_box" type="id" />
 	<item name="tag_text" type="id" />
+	<item name="mainactivity_appbar" type="id" />
+	<item name="mainactivity_collapsingtoolbar" type="id" />
+	<item name="mainactivity_toolbarbackground" type="id" />
+	<item name="mainactivity_toolbarsubtitle" type="id" />
+	<item name="mainactivity_toolbar" type="id" />
+	<item name="mainactivity_container" type="id" />
+	<item name="mainactivity_navigationview" type="id" />
+	<item name="mainactivity_fab" type="id" />
 
 </resources>

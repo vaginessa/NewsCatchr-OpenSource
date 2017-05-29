@@ -20,10 +20,12 @@ package jlelse.newscatchr.ui.layout
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
-import android.util.TypedValue
 import android.view.View
 import com.google.android.flexbox.FlexboxLayout
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.flexboxLayout
+import jlelse.newscatchr.extensions.setTextStyle
+import jlelse.newscatchr.extensions.swipeRefreshLayout
+import jlelse.newscatchr.extensions.zoomTextView
 import jlelse.newscatchr.ui.fragments.ArticleView
 import jlelse.readit.R
 import org.jetbrains.anko.*
@@ -38,12 +40,11 @@ class ArticleFragmentUI : AnkoComponent<ArticleView> {
 				id = R.id.articlefragment_scrollview
 				verticalLayout {
 					lparams(width = matchParent, height = wrapContent)
-					view().lparams(width = matchParent, height = 32.dpToPx())
 					textView {
 						lparams(width = matchParent, height = wrapContent) {
-							bottomMargin = 8.dpToPx()
-							rightMargin = 16.dpToPx()
-							leftMargin = 16.dpToPx()
+							topMargin = dip(32)
+							bottomMargin = dip(8)
+							horizontalMargin = dip(16)
 						}
 						id = R.id.articlefragment_title
 						setTextStyle(context, R.style.TextAppearance_AppCompat_Headline)
@@ -51,37 +52,34 @@ class ArticleFragmentUI : AnkoComponent<ArticleView> {
 					}
 					imageView {
 						lparams(width = matchParent, height = wrapContent) {
-							bottomMargin = 8.dpToPx()
-							rightMargin = 16.dpToPx()
-							leftMargin = 16.dpToPx()
+							bottomMargin = dip(8)
+							horizontalMargin = dip(16)
 						}
 						id = R.id.articlefragment_visual
 						adjustViewBounds = true
 					}
 					textView {
 						lparams(width = matchParent, height = wrapContent) {
-							bottomMargin = 8.dpToPx()
-							rightMargin = 16.dpToPx()
-							leftMargin = 16.dpToPx()
+							bottomMargin = dip(8)
+							horizontalMargin = dip(16)
 						}
 						id = R.id.articlefragment_details
 						setTextStyle(context, R.style.TextAppearance_AppCompat_Caption)
 					}
 					zoomTextView {
 						lparams(width = matchParent, height = wrapContent) {
-							bottomMargin = 8.dpToPx()
-							rightMargin = 16.dpToPx()
-							leftMargin = 16.dpToPx()
+							bottomMargin = dip(8)
+							horizontalMargin = dip(16)
 						}
 						id = R.id.articlefragment_content
 						setTextStyle(context, R.style.TextAppearance_AppCompat_Body1)
 						setTextIsSelectable(true)
-						setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+						textSize = 16f
 					}
 					flexboxLayout {
 						lparams(width = matchParent, height = wrapContent) {
-							bottomMargin = 16.dpToPx()
-							setPadding(12.dpToPx(), 0, 12.dpToPx(), 0)
+							bottomMargin = dip(16)
+							horizontalPadding = dip(12)
 							visibility = View.GONE
 						}
 						id = R.id.articlefragment_tagsbox

@@ -19,15 +19,16 @@
 package jlelse.newscatchr.extensions
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.support.v7.app.AppCompatDelegate
+import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
+import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.readit.R
 
 fun View.hideView() {
@@ -67,20 +68,20 @@ fun Context.getPrimaryTextColor(): Int {
 	return color
 }
 
-fun setNightMode() {
-	AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-	/*when (Preferences.nightMode) {
-		0 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO)
-		1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-		2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-		3 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-	}*/
+fun View.actionBarSize(): Int {
+	val tv = TypedValue()
+	if (context.theme.resolveAttribute(R.attr.actionBarSize, tv, true)) {
+		return TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+	}
+	return 0
 }
 
-fun Int.dpToPx(): Int {
-	val metrics = Resources.getSystem().displayMetrics
-	val px = this * (metrics.densityDpi / 160f)
-	return Math.round(px)
+fun setNightMode() {
+	AppCompatDelegate.setDefaultNightMode(when (Preferences.nightMode) {
+		0 -> AppCompatDelegate.MODE_NIGHT_AUTO
+		1 -> AppCompatDelegate.MODE_NIGHT_YES
+		else -> AppCompatDelegate.MODE_NIGHT_NO
+	})
 }
 
 fun TextView.setTextStyle(context: Context, id: Int) {

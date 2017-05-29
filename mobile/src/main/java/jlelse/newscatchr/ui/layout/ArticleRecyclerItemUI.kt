@@ -23,7 +23,10 @@ import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
 import com.google.android.flexbox.FlexboxLayout
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.flexboxLayout
+import jlelse.newscatchr.extensions.getPrimaryTextColor
+import jlelse.newscatchr.extensions.resClr
+import jlelse.newscatchr.extensions.setTextStyle
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
 import jlelse.readit.R
 import org.jetbrains.anko.*
@@ -32,20 +35,21 @@ class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
 	override fun createView(ui: AnkoContext<ArticleRecyclerItem>): View = with(ui) {
 		verticalLayout {
 			lparams(width = matchParent, height = wrapContent) {
-				setPadding(16.dpToPx(), 16.dpToPx(), 16.dpToPx(), 0)
+				topPadding = dip(16)
+				horizontalPadding = dip(16)
 			}
 			context.obtainStyledAttributes(intArrayOf(R.attr.selectableItemBackground)).apply {
 				backgroundResource = getResourceId(0, 0)
 			}.recycle()
 			verticalLayout {
 				lparams(width = matchParent, height = wrapContent) {
-					bottomPadding = 8.dpToPx()
+					bottomPadding = dip(8)
 				}
 				orientation = LinearLayout.HORIZONTAL
 				gravity = Gravity.TOP
 				textView {
-					lparams(width = 0.dpToPx(), height = wrapContent, weight = 1f) {
-						rightMargin = 16.dpToPx()
+					lparams(width = 0, height = wrapContent, weight = 1f) {
+						rightMargin = dip(16)
 					}
 					id = R.id.articlerecycleritem_title
 					setTextStyle(context, R.style.TextAppearance_AppCompat_Medium)
@@ -53,8 +57,8 @@ class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
 					typeface = Typeface.DEFAULT_BOLD
 				}
 				imageView {
-					lparams(width = 36.dpToPx(), height = 36.dpToPx()) {
-						padding = 6.dpToPx()
+					lparams(width = dip(36), height = dip(36)) {
+						padding = dip(6)
 					}
 					id = R.id.articlerecycleritem_bookmark
 					context.obtainStyledAttributes(intArrayOf(R.attr.selectableItemBackgroundBorderless)).apply {
@@ -62,8 +66,8 @@ class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
 					}.recycle()
 				}
 				imageView {
-					lparams(width = 36.dpToPx(), height = 36.dpToPx()) {
-						padding = 6.dpToPx()
+					lparams(width = dip(36), height = dip(36)) {
+						padding = dip(6)
 					}
 					id = R.id.articlerecycleritem_share
 					context.obtainStyledAttributes(intArrayOf(R.attr.selectableItemBackgroundBorderless)).apply {
@@ -73,35 +77,35 @@ class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
 			}
 			imageView {
 				lparams(width = matchParent, height = wrapContent) {
-					bottomMargin = 8.dpToPx()
+					bottomMargin = dip(8)
 				}
 				adjustViewBounds = true
 				id = R.id.articlerecycleritem_visual
 			}
 			textView {
 				lparams(width = matchParent, height = wrapContent) {
-					bottomMargin = 8.dpToPx()
+					bottomMargin = dip(8)
 				}
 				id = R.id.articlerecycleritem_details
 				setTextStyle(context, R.style.TextAppearance_AppCompat_Caption)
 			}
 			textView {
 				lparams(width = matchParent, height = wrapContent) {
-					bottomMargin = 8.dpToPx()
+					bottomMargin = dip(8)
 				}
 				id = R.id.articlerecycleritem_content
 				setTextStyle(context, R.style.TextAppearance_AppCompat_Body1)
 			}
 			flexboxLayout {
 				lparams(width = matchParent, height = wrapContent) {
-					bottomMargin = 16.dpToPx()
+					bottomMargin = dip(16)
 				}
 				id = R.id.articlerecycleritem_tagsbox
 				flexWrap = FlexboxLayout.FLEX_WRAP_WRAP
 				justifyContent = FlexboxLayout.JUSTIFY_CONTENT_FLEX_START
 			}
 			view {
-				lparams(width = matchParent, height = 1)
+				lparams(width = matchParent, height = dip(1))
 				backgroundColor = R.color.colorDivider.resClr(context)!!
 			}
 		}

@@ -23,11 +23,9 @@ import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.text.TextUtils
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.readit.R
 import org.jetbrains.anko.*
@@ -42,8 +40,8 @@ class MainActivityUI : AnkoComponent<MainActivity> {
 			find<CollapsingToolbarLayout>(R.id.mainactivity_collapsingtoolbar).apply {
 				fitsSystemWindows = true
 				setContentScrimResource(R.color.colorPrimary)
-				expandedTitleMarginBottom = 64.dpToPx()
-				expandedTitleMarginStart = 16.dpToPx()
+				expandedTitleMarginBottom = dip(64)
+				expandedTitleMarginStart = dip(16)
 			}
 			find<ImageView>(R.id.mainactivity_toolbarbackground).apply {
 				fitsSystemWindows = true
@@ -54,9 +52,9 @@ class MainActivityUI : AnkoComponent<MainActivity> {
 				ellipsize = TextUtils.TruncateAt.END
 				maxLines = 2
 				textColor = Color.parseColor("#B3FFFFFF")
-				setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+				textSize = 14f
 			}
 		}
 	}
-	
+
 }

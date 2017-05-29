@@ -19,9 +19,7 @@
 package jlelse.newscatchr.ui.layout
 
 import android.graphics.Typeface
-import android.util.TypedValue
 import android.view.View
-import jlelse.newscatchr.extensions.dpToPx
 import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.ui.recycleritems.HeaderRecyclerItem
 import jlelse.readit.R
@@ -32,11 +30,11 @@ class HeaderRecyclerItemUI : AnkoComponent<HeaderRecyclerItem> {
 		verticalLayout {
 			textView {
 				lparams(width = wrapContent, height = wrapContent) {
-					margin = 16.dpToPx()
+					margin = dip(16)
 				}
 				id = R.id.headerrecycleritem_textview
 				textColor = R.color.colorAccent.resClr(context)!!
-				setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+				textSize = 16f
 				setTypeface(typeface, Typeface.BOLD)
 			}
 		}
