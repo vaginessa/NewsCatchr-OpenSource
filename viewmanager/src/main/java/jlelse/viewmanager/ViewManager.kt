@@ -21,10 +21,7 @@ package jlelse.viewmanager
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import java.util.*
@@ -79,6 +76,7 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 	private fun switchView(view: ViewManagerView?) {
 		if (view != null) containerView.apply {
 			removeAllViews()
+			view.apply { (parent as ViewGroup?)?.removeView(this) }
 			addView(view.apply { onShow() })
 			supportInvalidateOptionsMenu()
 			onSwitchView()
@@ -128,6 +126,11 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 		super.onActivityResult(requestCode, resultCode, data)
 		currentView().onActivityResult(requestCode, resultCode, data)
 	}
+
+	override fun recreate() {
+		allViews().forEach { it.resetView() }
+		super.recreate()
+	}
 }
 
 private class DummyViewManagerActivity : ViewManagerActivity() {
@@ -168,6 +171,10 @@ abstract class ViewManagerView : LinearLayout(viewManagerActivity) {
 
 	fun closeView() {
 		context.closeView()
+	}
+
+	fun resetView() {
+		contentView.removeAllViews()
 	}
 
 	open fun inflateMenu(inflater: MenuInflater, menu: Menu?) {

@@ -22,7 +22,6 @@
 		<item>Automatic</item>
 		<item>On</item>
 		<item>Off</item>
-		<item>System settings</item>
 	</string-array>
 	<string-array name="sync_interval_titles">
 		<item>15 minutes</item>

@@ -56,9 +56,9 @@ import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerActivity
 import jlelse.viewmanager.ViewManagerView
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
-import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
+import org.jetbrains.anko.setContentView
 import java.util.*
 
 class MainActivity : ViewManagerActivity() {
@@ -86,7 +86,7 @@ class MainActivity : ViewManagerActivity() {
 
 	override fun onCreate(savedInstanceState: Bundle?) {
 		mainAcivity = this
-		setContentView(MainActivityUI().createView(AnkoContext.create(this, this)))
+		MainActivityUI().setContentView(this)
 		super.onCreate(savedInstanceState)
 		doAsync {
 			// Init Tracking
