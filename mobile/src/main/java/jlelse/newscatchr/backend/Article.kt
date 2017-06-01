@@ -21,6 +21,7 @@
 package jlelse.newscatchr.backend
 
 import android.app.Activity
+import android.support.annotation.Keep
 import co.metalab.asyncawait.async
 import com.afollestad.ason.AsonName
 import com.afollestad.bridge.annotations.ContentType
@@ -31,6 +32,7 @@ import jlelse.newscatchr.extensions.*
 import jlelse.readit.R
 
 @ContentType("application/json")
+@Keep
 class Article(
 		var id: String? = null,
 		var published: Long = 0,

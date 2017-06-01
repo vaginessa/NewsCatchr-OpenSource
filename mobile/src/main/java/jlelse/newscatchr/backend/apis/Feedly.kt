@@ -18,6 +18,7 @@
 
 package jlelse.newscatchr.backend.apis
 
+import android.support.annotation.Keep
 import com.afollestad.bridge.Bridge
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
@@ -25,7 +26,7 @@ import jlelse.newscatchr.backend.helpers.readFromCache
 import jlelse.newscatchr.backend.helpers.saveToCache
 import jlelse.newscatchr.extensions.tryOrNull
 
-class Feedly {
+@Keep class Feedly {
 
 	private val BASE_URL = "https://cloud.feedly.com/v3"
 	private val STREAM_ID = "streamId="
@@ -88,9 +89,9 @@ class Feedly {
 		Bridge.get(url, id, query).asClass(ArticleSearch::class.java)
 	}
 
-	class Ids(var ids: Array<String>? = null, var continuation: String? = null)
-	class FeedSearch(var results: Array<Feed>? = null, var related: Array<String>? = null)
-	class ArticleSearch(var id: String? = null, var title: String? = null, var items: List<Article>? = null)
+	@Keep class Ids(var ids: Array<String>? = null, var continuation: String? = null)
+	@Keep class FeedSearch(var results: Array<Feed>? = null, var related: Array<String>? = null)
+	@Keep class ArticleSearch(var id: String? = null, var title: String? = null, var items: List<Article>? = null)
 
 }
 

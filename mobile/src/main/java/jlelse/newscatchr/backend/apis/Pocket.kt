@@ -18,6 +18,7 @@
 
 package jlelse.newscatchr.backend.apis
 
+import android.support.annotation.Keep
 import com.afollestad.ason.Ason
 import com.afollestad.ason.AsonName
 import com.afollestad.bridge.Bridge
@@ -77,7 +78,7 @@ class Pocket {
 	}
 }
 
-class GetResponseItem(
+@Keep class GetResponseItem(
 		var item_id: String? = null,
 		var given_url: String? = null,
 		var resolved_title: String? = null,

@@ -40,7 +40,7 @@ import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.layout.ArticleFragmentUI
-import jlelse.newscatchr.ui.recycleritems.addTagView
+import jlelse.newscatchr.ui.recycleritems.addTags
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.ZoomTextView
 import jlelse.readit.R
@@ -136,7 +136,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 	private fun keywords(keywords: Array<String>? = null) {
 		if (keywords.notNullAndEmpty()) tagsBox?.apply {
 			removeAllViews()
-			keywords?.forEach { addTagView(this@ArticleView, it) }
+			addTags(this@ArticleView, keywords)
 		} else tagsBox?.removeAllViews()
 	}
 

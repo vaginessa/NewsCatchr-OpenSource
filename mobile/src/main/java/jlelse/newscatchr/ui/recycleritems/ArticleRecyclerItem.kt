@@ -71,9 +71,7 @@ class ArticleRecyclerItem(val article: Article? = null, val fragment: ViewManage
 		if (article?.keywords.notNullAndEmpty()) {
 			viewHolder.tagsBox.showView()
 			viewHolder.tagsBox.removeAllViews()
-			article?.keywords?.take(3)?.forEach {
-				viewHolder.tagsBox.addTagView(fragment!!, it)
-			}
+			viewHolder.tagsBox.addTags(fragment!!, article?.keywords?.take(3)?.toTypedArray())
 		} else {
 			//viewHolder.tagsBox.hideView()
 		}
