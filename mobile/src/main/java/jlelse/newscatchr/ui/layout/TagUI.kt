@@ -21,7 +21,6 @@ package jlelse.newscatchr.ui.layout
 import android.graphics.Color
 import android.view.Gravity
 import android.view.View
-import jlelse.newscatchr.extensions.resDrw
 import jlelse.readit.R
 import org.jetbrains.anko.*
 
@@ -32,16 +31,16 @@ class TagUI : AnkoComponent<View> {
 				padding = dip(4)
 			}
 			verticalLayout {
+				backgroundResource = R.drawable.chip
 				textView {
-					lparams(width = wrapContent, height = dip(32)) {
-						horizontalPadding = dip(12)
-					}
+					id = R.id.tag_text
 					gravity = Gravity.CENTER
-					backgroundDrawable = R.drawable.chip.resDrw(context)
 					textColor = Color.WHITE
 					textSize = 13f
+				}.lparams(width = wrapContent, height = dip(32)) {
+					horizontalPadding = dip(12)
 				}
-			}
+			}.lparams(width = wrapContent, height = wrapContent)
 		}
 	}
 }

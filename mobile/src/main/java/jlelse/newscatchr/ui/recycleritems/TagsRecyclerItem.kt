@@ -20,13 +20,13 @@ package jlelse.newscatchr.ui.recycleritems
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.google.android.flexbox.FlexboxLayout
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.fragments.MixView
+import jlelse.newscatchr.ui.layout.TagUI
 import jlelse.newscatchr.ui.layout.TagsRecyclerItemUI
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -59,8 +59,8 @@ class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: ViewManage
 }
 
 fun FlexboxLayout.addTagView(fragment: ViewManagerView, tagString: String?) = tryOrNull {
-	addView(LayoutInflater.from(fragment.context).inflate(R.layout.tagitem, null)?.apply {
-		find<TextView>(R.id.tagView).apply {
+	addView(TagUI().createView(AnkoContext.Companion.create(context, this)).apply {
+		find<TextView>(R.id.tag_text).apply {
 			text = "#$tagString"
 			setOnClickListener {
 				fragment.openView(MixView(feedId = "topic/$tagString").withTitle("#$tagString"))
