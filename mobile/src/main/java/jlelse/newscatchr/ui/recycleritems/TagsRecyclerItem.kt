@@ -46,9 +46,7 @@ class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: ViewManage
 	override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any?>?) {
 		super.bindView(viewHolder, payloads)
 		viewHolder.tagsBox.removeAllViews()
-		if (fragment != null) tags?.forEach {
-			viewHolder.tagsBox.addTagView(fragment, it)
-		}
+		viewHolder.tagsBox.addTags(fragment, tags)
 	}
 
 	override fun getViewHolder(p0: View) = ViewHolder(p0)
@@ -58,13 +56,16 @@ class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: ViewManage
 	}
 }
 
-fun FlexboxLayout.addTagView(fragment: ViewManagerView, tagString: String?) = tryOrNull {
-	addView(TagUI().createView(AnkoContext.Companion.create(context, this)).apply {
-		find<TextView>(R.id.tag_text).apply {
-			text = "#$tagString"
-			setOnClickListener {
-				fragment.openView(MixView(feedId = "topic/$tagString").withTitle("#$tagString"))
+fun FlexboxLayout.addTags(fragment: ViewManagerView?, tags: Array<out String?>? = null) = tryOrNull {
+	tags?.filterNotNull()?.forEach {
+		addView(TagUI().createView(AnkoContext.Companion.create(context, this)).apply {
+			find<TextView>(R.id.tag_text).apply {
+				val title = "#$it"
+				text = title
+				setOnClickListener {
+					fragment?.openView(MixView(feedId = "topic/$it").withTitle(title))
+				}
 			}
-		}
-	})
+		})
+	}
 }
