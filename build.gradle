@@ -7,7 +7,7 @@ buildscript {
     ext.SUPPORT_LIBS = "25.3.1"
     ext.PLAY_SERVICES = "10.2.6"
     ext.KOTLIN = "1.1.2-4"
-    ext.ANKO = "0.10.0"
+    ext.ANKO = "0.10.1"
     repositories {
         jcenter()
         mavenCentral()
