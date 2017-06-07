@@ -33,6 +33,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
+import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.Database
@@ -73,12 +74,14 @@ class FavoritesView : ViewManagerView(), ItemTouchCallback {
 	}
 
 	override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
-		Collections.swap(fastAdapter.adapterItems, oldPosition, newPosition)
-		fastAdapter.notifyAdapterItemMoved(oldPosition, newPosition)
+		DragDropUtil.onMove(fastAdapter, oldPosition, newPosition)
 		Collections.swap(feeds, oldPosition, newPosition)
-		if (feeds != null) Database.allFavorites = feeds!!.toTypedArray()
+		feeds?.let { Database.allFavorites = it.toTypedArray() }
 		context.sendBroadcast(Intent("feed_state"))
 		return true
+	}
+
+	override fun itemTouchDropped(p0: Int, p1: Int) {
 	}
 
 	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
