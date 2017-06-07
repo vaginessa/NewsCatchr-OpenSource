@@ -46,34 +46,35 @@ class BackupApi(val context: Context) {
 		val readUrls = await { Ason.serializeArray<String>(Database.allReadUrls) }
 		await { backupAson.put("favorites", favorites).put("bookmarks", bookmarks).put("readUrls", readUrls) }
 		progressDialog.dismiss()
-		val key = await { tryOrNull { backupAson.toString().uploadHaste() } }
-		if (key != null) {
-			MaterialDialog.Builder(context)
-					.title(R.string.suc_backup)
-					.content(R.string.restore_key_desc)
-					.input(R.string.restore_key.resStr(), key) { _, _ ->
-						val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-						clipboard.primaryClip = ClipData.newPlainText(R.string.restore_key.resStr(), key)
-					}
-					.negativeText(android.R.string.cancel)
-					.positiveText(android.R.string.copy)
-					.show()
-		} else Snackbar.make(mainAcivity!!.findViewById(R.id.mainactivity_container), R.string.backup_failed, Snackbar.LENGTH_SHORT).show()
+		await { tryOrNull { backupAson.toString().uploadHaste() } }.let { key ->
+			if (key != null) {
+				MaterialDialog.Builder(context)
+						.title(R.string.suc_backup)
+						.content(R.string.restore_key_desc)
+						.input(R.string.restore_key.resStr(), key) { _, _ ->
+							val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+							clipboard.primaryClip = ClipData.newPlainText(R.string.restore_key.resStr(), key)
+						}
+						.negativeText(android.R.string.cancel)
+						.positiveText(android.R.string.copy)
+						.show()
+			} else Snackbar.make(mainAcivity!!.findViewById(R.id.mainactivity_container), R.string.backup_failed, Snackbar.LENGTH_SHORT).show()
+		}
 	}
 
 	fun restore(key: String) = async {
-		val json = await { tryOrNull { key.downloadHaste() } }
-		if (json != null) {
-			val progressDialog: ProgressDialog = ProgressDialog(context).apply { show() }
-			val restoreAson = tryOrNull { Ason(json) }
-			if (restoreAson != null) {
-				await { tryOrNull { Database.allFavorites = restoreAson.get("favorites", Array<Feed>::class.java) } }
-				await { tryOrNull { Database.allBookmarks = restoreAson.get("bookmarks", Array<Article>::class.java) } }
-				await { tryOrNull { Database.allReadUrls = restoreAson.get("readUrls", Array<String>::class.java) } }
-			}
-			progressDialog.dismiss()
-			MaterialDialog.Builder(context).content(R.string.suc_restore).positiveText(android.R.string.ok).show()
-		} else MaterialDialog.Builder(context).content(R.string.restore_failed).positiveText(android.R.string.ok).show()
+		await { tryOrNull { key.downloadHaste() } }.let { json ->
+			if (json != null) {
+				val progressDialog: ProgressDialog = ProgressDialog(context).apply { show() }
+				tryOrNull { Ason(json) }?.let { restoreAson ->
+					await { tryOrNull { Database.allFavorites = restoreAson.get("favorites", Array<Feed>::class.java) } }
+					await { tryOrNull { Database.allBookmarks = restoreAson.get("bookmarks", Array<Article>::class.java) } }
+					await { tryOrNull { Database.allReadUrls = restoreAson.get("readUrls", Array<String>::class.java) } }
+				}
+				progressDialog.dismiss()
+				MaterialDialog.Builder(context).content(R.string.suc_restore).positiveText(android.R.string.ok).show()
+			} else MaterialDialog.Builder(context).content(R.string.restore_failed).positiveText(android.R.string.ok).show()
+		}
 	}
 
 }

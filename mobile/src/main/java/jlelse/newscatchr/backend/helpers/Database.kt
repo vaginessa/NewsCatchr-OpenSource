@@ -86,7 +86,7 @@ object Database {
 		tryOrNull(execute = article.safeBookmark()) {
 			if (Preferences.pocketSync && !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()) {
 				async {
-					if (article != null) {
+					article?.let { article ->
 						await { article.pocketId = PocketHandler().addToPocket(article) }
 						article.fromPocket = true
 						addBookmarks(article)
@@ -114,9 +114,7 @@ object Database {
 			tryOrNull { readUrlsStore.write<Array<String>>(READ_URLS, value.filterNotNull().distinct().toTypedArray()) }
 		}
 
-	fun addReadUrl(url: String?) {
-		if (url != null) allReadUrls += url
-	}
+	fun addReadUrl(url: String?) = url?.let { allReadUrls += it }
 
 	private fun Feed?.safeLastFeed() = this != null && !this.url().isNullOrBlank()
 
