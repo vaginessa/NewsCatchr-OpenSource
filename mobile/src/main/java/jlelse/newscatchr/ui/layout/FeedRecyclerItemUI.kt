@@ -47,7 +47,7 @@ class FeedRecyclerItemUI : AnkoComponent<FeedRecyclerItem> {
 				gravity = Gravity.TOP
 				verticalLayout {
 					lparams(width = 0, height = wrapContent, weight = 1f) {
-						rightMargin = dip(16)
+						marginEnd = dip(16)
 					}
 					textView {
 						lparams(width = matchParent, height = wrapContent)

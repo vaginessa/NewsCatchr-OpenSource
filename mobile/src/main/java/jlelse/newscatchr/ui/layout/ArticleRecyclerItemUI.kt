@@ -49,7 +49,7 @@ class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
 				gravity = Gravity.TOP
 				textView {
 					lparams(width = 0, height = wrapContent, weight = 1f) {
-						rightMargin = dip(16)
+						marginEnd = dip(16)
 					}
 					id = R.id.articlerecycleritem_title
 					setTextStyle(context, R.style.TextAppearance_AppCompat_Medium)

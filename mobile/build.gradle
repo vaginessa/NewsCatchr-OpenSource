@@ -28,7 +28,7 @@ android {
         targetSdkVersion TARGET_SDK
         versionCode VERSION_CODE
         versionName VERSION_NAME
-        resConfigs "en", "de", "fr", "fa", "hr", "zh"
+        resConfigs "en"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
