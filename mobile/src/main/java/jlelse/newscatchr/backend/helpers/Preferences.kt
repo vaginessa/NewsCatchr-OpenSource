@@ -46,6 +46,10 @@ object Preferences {
 		get() = read().getBoolean(R.string.prefs_key_url_shortener.resStr(), true)
 		set(value) = write { e -> e.putBoolean(R.string.prefs_key_url_shortener.resStr(), value) }
 
+	var readability: Boolean
+		get() = read().getBoolean(R.string.prefs_key_readability.resStr(), false)
+		set(value) = write { e -> e.putBoolean(R.string.prefs_key_readability.resStr(), value) }
+
 	var pocketUserName: String
 		get() = read().getString(R.string.prefs_key_user_name.resStr(), "")
 		set(value) = write { e -> e.putString(R.string.prefs_key_user_name.resStr(), value) }

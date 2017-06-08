@@ -27,6 +27,8 @@
 	<string name="about">About</string>
 	<string name="news">News</string>
 	<string name="readability">Readability</string>
+	<string name="prefs_readability">Readability</string>
+	<string name="prefs_readability_desc">Always load the article content from the website instead of the feed</string>
 	<string name="search_results_for">Search results for</string>
 	<string name="suc_import">Import completed successfully!</string>
 	<string name="import_failed">Import failed!</string>

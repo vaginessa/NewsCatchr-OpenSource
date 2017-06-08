@@ -35,6 +35,7 @@ import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.apis.fetchArticle
 import jlelse.newscatchr.backend.apis.openUrl
 import jlelse.newscatchr.backend.helpers.Database
+import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
@@ -76,6 +77,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 			}
 		}
 		showArticle(article)
+		if (Preferences.readability) readability()
 		Database.addReadUrl(article.url)
 		Tracking.track(type = Tracking.TYPE.ARTICLE, url = article.url)
 		return fragmentView
@@ -144,6 +146,11 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 
 	private fun shareArticle() = article.share(context)
 
+	private fun readability() = async {
+		refreshOne?.showIndicator()
+		this@ArticleView.showArticle(await { tryOrNull { article.url?.fetchArticle(article) } ?: article })
+	}
+
 	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
 		super.inflateMenu(inflater, menu)
 		inflater.inflate(R.menu.articlefragment, menu)
@@ -160,10 +167,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 			}
 			R.id.share -> shareArticle()
 			R.id.browser -> article.url?.openUrl(context)
-			R.id.readability -> async {
-				refreshOne?.showIndicator()
-				await { showArticle(tryOrNull { article.url?.fetchArticle(article) } ?: article) }
-			}
+			R.id.readability -> readability()
 		}
 	}
 }

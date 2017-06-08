@@ -26,11 +26,6 @@
 			android:title="@string/subscribe_support" />
 	</android.support.v7.preference.PreferenceCategory>
 	<android.support.v7.preference.PreferenceCategory android:title="@string/general">
-		<android.support.v7.preference.SwitchPreferenceCompat
-			android:defaultValue="true"
-			android:key="@string/prefs_key_custom_tabs"
-			android:summary="@string/use_custom_tabs"
-			android:title="@string/custom_tabs_title" />
 		<!--<android.support.v7.preference.Preference
 			android:defaultValue="0"
 			android:key="@string/prefs_key_night_mode"
@@ -75,6 +70,11 @@
 	<android.support.v7.preference.PreferenceCategory android:title="@string/advanced">
 		<android.support.v7.preference.SwitchPreferenceCompat
 			android:defaultValue="true"
+			android:key="@string/prefs_key_custom_tabs"
+			android:summary="@string/use_custom_tabs"
+			android:title="@string/custom_tabs_title" />
+		<android.support.v7.preference.SwitchPreferenceCompat
+			android:defaultValue="true"
 			android:key="@string/prefs_key_amp"
 			android:summary="@string/prefs_amp_desc"
 			android:title="@string/prefs_amp" />
@@ -83,6 +83,11 @@
 			android:key="@string/prefs_key_url_shortener"
 			android:summary="@string/prefs_url_shortener_desc"
 			android:title="@string/prefs_url_shortener" />
+		<android.support.v7.preference.SwitchPreferenceCompat
+			android:defaultValue="false"
+			android:key="@string/prefs_key_readability"
+			android:summary="@string/prefs_readability_desc"
+			android:title="@string/prefs_readability" />
 	</android.support.v7.preference.PreferenceCategory>
 	<android.support.v7.preference.PreferenceCategory android:title="@string/about">
 		<android.support.v7.preference.Preference
