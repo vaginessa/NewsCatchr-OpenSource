@@ -120,6 +120,7 @@ fun String.openUrl(activity: Activity, amp: Boolean = true) {
 				activity.startActivity(alternateIntent)
 			}
 		} catch (e: Exception) {
+			e.printStackTrace()
 			activity.startActivity(alternateIntent)
 		}
 	} else {

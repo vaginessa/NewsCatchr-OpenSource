@@ -22,13 +22,20 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.support.v7.app.AppCompatDelegate
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.URLSpan
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
+import jlelse.newscatchr.backend.apis.openUrl
 import jlelse.newscatchr.backend.helpers.Preferences
+import jlelse.newscatchr.mainAcivity
 import jlelse.readit.R
 
 fun View.hideView() {
@@ -44,11 +51,7 @@ fun View.showView() {
 }
 
 fun ImageView.loadImage(url: String?) {
-	try {
-		Glide.with(context).load(url).into(this)
-	} catch (e: Exception) {
-		e.printStackTrace()
-	}
+	tryOrNull { Glide.with(context).load(url).into(this) }
 }
 
 fun Context.nothingFound(callback: () -> Unit = {}) {
@@ -88,4 +91,22 @@ fun TextView.setTextStyle(context: Context, id: Int) {
 	@Suppress("DEPRECATION")
 	if (Build.VERSION.SDK_INT < 23) setTextAppearance(context, id)
 	else setTextAppearance(id)
+}
+
+fun TextView.applyLinks(amp: Boolean = true) {
+	movementMethod = LinkMovementMethod.getInstance()
+	text.let { tempText ->
+		if (tempText is Spannable) {
+			text = SpannableStringBuilder(tempText).apply {
+				clearSpans()
+				tempText.getSpans(0, text.length, URLSpan::class.java).forEach {
+					setSpan(object : ClickableSpan() {
+						override fun onClick(view: View?) {
+							mainAcivity?.let { activity -> it.url.openUrl(activity, amp) }
+						}
+					}, tempText.getSpanStart(it), tempText.getSpanEnd(it), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+				}
+			}
+		}
+	}
 }

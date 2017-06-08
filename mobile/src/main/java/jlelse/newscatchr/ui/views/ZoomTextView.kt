@@ -19,33 +19,20 @@
 package jlelse.newscatchr.ui.views
 
 import android.content.Context
-import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.widget.TextView
 import jlelse.newscatchr.backend.helpers.Preferences
 
-class ZoomTextView : TextView {
+class ZoomTextView(context: Context) : TextView(context) {
 	var scaleDetector: ScaleGestureDetector? = null
 	val zoomLimit = 3.0f
 
 	private var scaleFactor = 1.0f
 	private var defaultSize: Float = 0.0f
 
-	constructor(context: Context) : super(context) {
-		initialize()
-	}
-
-	constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-		initialize()
-	}
-
-	constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-		initialize()
-	}
-
-	private fun initialize() {
+	init {
 		defaultSize = textSize
 		scaleDetector = ScaleGestureDetector(context, ScaleListener())
 		scaleFactor = Preferences.textScaleFactor

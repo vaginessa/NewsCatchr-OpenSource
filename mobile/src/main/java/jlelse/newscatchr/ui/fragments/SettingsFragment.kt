@@ -39,7 +39,6 @@ import jlelse.newscatchr.backend.apis.openUrl
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
-import jlelse.newscatchr.ui.views.LinkTextView
 import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
@@ -159,7 +158,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.positiveText(android.R.string.ok)
 						.build()
 						.apply {
-							LinkTextView().apply(contentView, activity, false)
+							contentView?.applyLinks(false)
 							show()
 						}
 			}
@@ -176,7 +175,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.positiveText(android.R.string.ok)
 						.build()
 						.apply {
-							LinkTextView().apply(contentView, activity, false)
+							contentView?.applyLinks(false)
 							show()
 						}
 			}
@@ -189,7 +188,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.positiveText(android.R.string.ok)
 						.build()
 						.apply {
-							LinkTextView().apply(contentView, activity, false)
+							contentView?.applyLinks(false)
 							show()
 						}
 			}

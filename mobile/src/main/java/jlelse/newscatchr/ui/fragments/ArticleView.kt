@@ -66,12 +66,13 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 	override fun onCreateView(): View? {
 		super.onCreateView()
 		fragmentView = ArticleFragmentUI().createView(AnkoContext.create(context, this))
-		refreshOne?.setOnRefreshListener {
-			try {
-				async { showArticle(await { Feedly().entries(listOf(article.id ?: ""))?.firstOrNull() }) }
-			} catch (e: Exception) {
-				e.printStackTrace()
-				refreshOne?.hideIndicator()
+		article.id?.let { articleId ->
+			refreshOne?.setOnRefreshListener {
+				try {
+					async { showArticle(await { Feedly().entries(listOf(articleId))?.firstOrNull() }) }
+				} catch (e: Exception) {
+					refreshOne?.hideIndicator()
+				}
 			}
 		}
 		showArticle(article)
@@ -130,6 +131,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 		if (!content.isNullOrBlank()) articleContentView?.apply {
 			showView()
 			text = content?.toHtml()
+			applyLinks(true)
 		} else articleContentView?.hideView()
 	}
 
