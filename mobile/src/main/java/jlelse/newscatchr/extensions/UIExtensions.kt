@@ -19,9 +19,7 @@
 package jlelse.newscatchr.extensions
 
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
-import android.support.v7.app.AppCompatDelegate
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
@@ -34,7 +32,6 @@ import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.apis.openUrl
-import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.mainAcivity
 import jlelse.readit.R
 
@@ -63,28 +60,12 @@ fun Context.nothingFound(callback: () -> Unit = {}) {
 			.show()
 }
 
-fun Context.getPrimaryTextColor(): Int {
-	var color = 0
-	obtainStyledAttributes(intArrayOf(android.R.attr.textColorPrimary)).apply {
-		color = getColor(0, Color.BLACK)
-	}.recycle()
-	return color
-}
-
 fun View.actionBarSize(): Int {
 	val tv = TypedValue()
 	if (context.theme.resolveAttribute(R.attr.actionBarSize, tv, true)) {
 		return TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
 	}
 	return 0
-}
-
-fun setNightMode() {
-	AppCompatDelegate.setDefaultNightMode(when (Preferences.nightMode) {
-		0 -> AppCompatDelegate.MODE_NIGHT_AUTO
-		1 -> AppCompatDelegate.MODE_NIGHT_YES
-		else -> AppCompatDelegate.MODE_NIGHT_NO
-	})
 }
 
 fun TextView.setTextStyle(context: Context, id: Int) {

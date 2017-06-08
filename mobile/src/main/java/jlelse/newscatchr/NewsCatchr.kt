@@ -26,7 +26,6 @@ import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.SyncJob
 import jlelse.newscatchr.backend.helpers.cancelSync
 import jlelse.newscatchr.backend.helpers.scheduleSync
-import jlelse.newscatchr.extensions.setNightMode
 import jlelse.newscatchr.ui.activities.MainActivity
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 
@@ -38,7 +37,6 @@ class NewsCatchr : Application() {
 		super.onCreate()
 		appContext = applicationContext
 		AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
-		setNightMode()
 		JobManager.create(this@NewsCatchr).addJobCreator { tag ->
 			when (tag) {
 				SyncJob.TAG -> SyncJob()

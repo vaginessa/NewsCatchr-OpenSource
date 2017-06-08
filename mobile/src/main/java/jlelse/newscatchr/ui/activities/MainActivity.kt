@@ -124,10 +124,12 @@ class MainActivity : ViewManagerActivity() {
 					R.id.bb_settings -> 2
 					else -> 0
 				}
-				if (itemNumber == lastTab) resetStack()
-				else switchStack(itemNumber)
+				switchStack(itemNumber)
 				lastTab = itemNumber
 				true
+			}
+			setOnNavigationItemReselectedListener {
+				resetStack()
 			}
 		}
 		checkFragmentDependingThings()

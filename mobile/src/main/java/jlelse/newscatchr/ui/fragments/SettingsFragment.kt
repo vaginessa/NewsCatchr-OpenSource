@@ -77,7 +77,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	}
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		if (activity is MainActivity) (activity as MainActivity).resetToolbarBackground()
 		val view = super.onCreateView(inflater, container, savedInstanceState)
 		if (!purchaseReceiverRegistered) {
 			purchaseReceiver = PurchaseStatusUpdateReceiver(this)

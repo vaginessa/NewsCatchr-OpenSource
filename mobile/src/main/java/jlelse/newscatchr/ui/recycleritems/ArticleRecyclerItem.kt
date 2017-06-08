@@ -84,19 +84,19 @@ class ArticleRecyclerItem(val article: Article? = null, val fragment: ViewManage
 		viewHolder.itemView.setOnClickListener {
 			if (article != null) fragment?.openView(ArticleView(article = article).withTitle(article.originTitle))
 		}
-		viewHolder.bookmark.setImageDrawable((if (Database.isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, context.getPrimaryTextColor()))
+		viewHolder.bookmark.setImageDrawable((if (Database.isSavedBookmark(article?.url)) R.drawable.ic_bookmark_universal else R.drawable.ic_bookmark_border_universal).resDrw(context, R.color.colorPrimaryText.resClr(context)))
 		viewHolder.bookmark.setOnClickListener {
 			if (article != null) {
 				if (Database.isSavedBookmark(article.url)) {
 					Database.deleteBookmark(article.url)
-					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_border_universal.resDrw(context, context.getPrimaryTextColor()))
+					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_border_universal.resDrw(context, R.color.colorPrimaryText.resClr(context)))
 				} else {
 					Database.addBookmark(article)
-					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_universal.resDrw(context, context.getPrimaryTextColor()))
+					viewHolder.bookmark.setImageDrawable(R.drawable.ic_bookmark_universal.resDrw(context, R.color.colorPrimaryText.resClr(context)))
 				}
 			}
 		}
-		viewHolder.share.setImageDrawable(R.drawable.ic_share_universal.resDrw(context, context.getPrimaryTextColor()))
+		viewHolder.share.setImageDrawable(R.drawable.ic_share_universal.resDrw(context, R.color.colorPrimaryText.resClr(context)))
 		viewHolder.share.setOnClickListener {
 			if (fragment != null) article?.share(fragment.context)
 		}

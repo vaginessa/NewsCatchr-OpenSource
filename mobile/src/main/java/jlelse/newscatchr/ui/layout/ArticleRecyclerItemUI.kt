@@ -24,7 +24,6 @@ import android.view.View
 import android.widget.LinearLayout
 import com.google.android.flexbox.FlexboxLayout
 import jlelse.newscatchr.extensions.flexboxLayout
-import jlelse.newscatchr.extensions.getPrimaryTextColor
 import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.setTextStyle
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
@@ -53,7 +52,7 @@ class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
 					}
 					id = R.id.articlerecycleritem_title
 					setTextStyle(context, R.style.TextAppearance_AppCompat_Medium)
-					textColor = context.getPrimaryTextColor()
+					R.color.colorPrimaryText.resClr(context)?.let { textColor = it }
 					typeface = Typeface.DEFAULT_BOLD
 				}
 				imageView {

@@ -28,8 +28,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.extensions.getPrimaryTextColor
 import jlelse.newscatchr.extensions.hideView
+import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.resDrw
 import jlelse.newscatchr.extensions.showView
 import jlelse.newscatchr.ui.fragments.FeedView
@@ -58,14 +58,14 @@ class FeedRecyclerItem(val feed: Feed? = null, val isLast: Boolean = false, val 
 			viewHolder.itemView.setOnClickListener {
 				fragment?.openView(FeedView(feed = feed).withTitle(feed.title))
 			}
-			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, context.getPrimaryTextColor()))
+			viewHolder.favorite.setImageDrawable((if (Database.isSavedFavorite(feed.url())) R.drawable.ic_favorite_universal else R.drawable.ic_favorite_border_universal).resDrw(context, R.color.colorPrimaryText.resClr(context)))
 			viewHolder.favorite.setOnClickListener {
 				if (Database.isSavedFavorite(feed.url())) {
 					Database.deleteFavorite(feed.url())
-					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_border_universal.resDrw(context, context.getPrimaryTextColor()))
+					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_border_universal.resDrw(context, R.color.colorPrimaryText.resClr(context)))
 				} else {
 					Database.addFavorites(feed)
-					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_universal.resDrw(context, context.getPrimaryTextColor()))
+					viewHolder.favorite.setImageDrawable(R.drawable.ic_favorite_universal.resDrw(context, R.color.colorPrimaryText.resClr(context)))
 				}
 				context.sendBroadcast(Intent("favorites_updated"))
 			}

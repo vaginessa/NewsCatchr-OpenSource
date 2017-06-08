@@ -22,7 +22,6 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import jlelse.newscatchr.extensions.getPrimaryTextColor
 import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.setTextStyle
 import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
@@ -53,7 +52,7 @@ class FeedRecyclerItemUI : AnkoComponent<FeedRecyclerItem> {
 						lparams(width = matchParent, height = wrapContent)
 						id = R.id.feedrecycleritem_title
 						setTextStyle(context, R.style.TextAppearance_AppCompat_Medium)
-						textColor = context.getPrimaryTextColor()
+						R.color.colorPrimaryText.resClr(context)?.let { textColor = it }
 						typeface = Typeface.DEFAULT_BOLD
 					}
 					textView {
