@@ -60,7 +60,7 @@ kotlin {
 }
 
 dependencies {
-    compile('com.mikepenz:fastadapter:2.6.0@aar') {
+    compile('com.mikepenz:fastadapter:2.6.2@aar') {
         transitive = true
     }
     compile 'com.mikepenz:fastadapter-commons:2.6.0@aar'
