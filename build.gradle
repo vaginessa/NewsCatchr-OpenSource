@@ -5,7 +5,7 @@ buildscript {
     ext.TARGET_SDK = 26
     ext.MIN_SDK = 17
     ext.BUILD_TOOLS = "26.0.0"
-    ext.SUPPORT_LIBS = "25.3.1"
+    ext.SUPPORT_LIBS = "25.4.0"
     ext.PLAY_SERVICES = "11.0.0"
     ext.KOTLIN = "1.1.2-4"
     ext.ANKO = "0.10.1"

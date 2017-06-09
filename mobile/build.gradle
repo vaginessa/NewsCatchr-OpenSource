@@ -91,6 +91,8 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBS"
     compile "com.android.support:preference-v7:$SUPPORT_LIBS"
     compile "com.android.support:preference-v14:$SUPPORT_LIBS"
+    // Fix
+    compile "com.android.support:support-v13:$SUPPORT_LIBS"
     // Kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN"
     compile 'co.metalab.asyncawait:asyncawait:1.0.0'
