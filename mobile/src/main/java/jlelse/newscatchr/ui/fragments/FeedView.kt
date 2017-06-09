@@ -118,7 +118,8 @@ class FeedView(val feed: Feed) : ViewManagerView() {
 
 	fun createHomeScreenShortcut(title: String, feedId: String) {
 		Intent().apply {
-			putExtras(bundleOf("duplicate" to false, Intent.EXTRA_SHORTCUT_INTENT to context.intentFor<MainActivity>("feedtitle" to title, "feedid" to feedId).newTask().clearTop(), Intent.EXTRA_SHORTCUT_NAME to title, Intent.EXTRA_SHORTCUT_ICON_RESOURCE to Intent.ShortcutIconResource.fromContext(context.applicationContext, R.drawable.icon)))
+			@Suppress("DEPRECATION")
+			putExtras(bundleOf("duplicate" to false, Intent.EXTRA_SHORTCUT_INTENT to context.intentFor<MainActivity>("feedtitle" to title, "feedid" to feedId).newTask().clearTop(), Intent.EXTRA_SHORTCUT_NAME to title, Intent.EXTRA_SHORTCUT_ICON_RESOURCE to Intent.ShortcutIconResource.fromContext(context.applicationContext, R.mipmap.ic_launcher)))
 			action = "com.android.launcher.action.INSTALL_SHORTCUT"
 		}.let { context.applicationContext.sendBroadcast(it) }
 	}
