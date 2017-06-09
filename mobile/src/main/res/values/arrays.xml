@@ -18,11 +18,6 @@
 
 <resources>
 
-	<string-array name="night_mode_pref_titles">
-		<item>Automatic</item>
-		<item>On</item>
-		<item>Off</item>
-	</string-array>
 	<string-array name="sync_interval_titles">
 		<item>15 minutes</item>
 		<item>30 minutes</item>

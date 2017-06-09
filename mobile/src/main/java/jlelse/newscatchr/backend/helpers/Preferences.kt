@@ -70,10 +70,6 @@ object Preferences {
 		get() = read().getFloat("textScaleFactor", 1.0f)
 		set(value) = write { e -> e.putFloat("textScaleFactor", value) }
 
-	var nightMode: Int
-		get() = read().getInt(R.string.prefs_key_night_mode.resStr(), 0)
-		set(value) = write { e -> e.putInt(R.string.prefs_key_night_mode.resStr(), value) }
-
 	var syncEnabled: Boolean
 		get() = read().getBoolean(R.string.prefs_key_sync.resStr(), false)
 		set(value) = write { e -> e.putBoolean(R.string.prefs_key_sync.resStr(), value) }

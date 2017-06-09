@@ -24,7 +24,6 @@
 	<string name="prefs_key_access_token" translatable="false">accesstoken</string>
 	<string name="prefs_key_custom_tabs" translatable="false">custom_tabs</string>
 	<string name="prefs_key_last_version" translatable="false">last_version</string>
-	<string name="prefs_key_night_mode" translatable="false">night_mode</string>
 	<string name="prefs_key_pro_category" translatable="false">pro_category</string>
 	<string name="prefs_key_support_pref" translatable="false">support_pref</string>
 	<string name="prefs_key_about_pro" translatable="false">about_pro</string>

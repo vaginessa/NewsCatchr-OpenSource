@@ -46,9 +46,17 @@ import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
-	private var purchaseReceiver: PurchaseStatusUpdateReceiver? = null
+	private var purchaseReceiver = object : BroadcastReceiver() {
+		override fun onReceive(context: Context?, intent: Intent?) {
+			this@SettingsFragment.handlePurchases()
+		}
+	}
 	private var purchaseReceiverRegistered = false
-	private var syncReceiver: SyncStatusUpdateReceiver? = null
+	private var syncReceiver = object : BroadcastReceiver() {
+		override fun onReceive(context: Context?, intent: Intent?) {
+			this@SettingsFragment.refreshLastSyncTime()
+		}
+	}
 	private var syncReceiverRegistered = false
 
 	private val clearCachePref: Preference? by lazy { findPreference(R.string.prefs_key_clear_cache.resStr()) }
@@ -62,7 +70,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val donateCategory: Preference? by lazy { findPreference(R.string.prefs_key_pro_category.resStr()) }
 	private val syncPref: Preference? by lazy { findPreference(R.string.prefs_key_sync.resStr()) }
 	private val syncIntervalPref: Preference? by lazy { findPreference(R.string.prefs_key_sync_interval.resStr()) }
-	private val nightModePref: Preference? by lazy { findPreference(R.string.prefs_key_night_mode.resStr()) }
 	private val pocketLoginPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_login.resStr()) }
 	private val pocketSyncPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_sync.resStr()) }
 	private val issuePref: Preference? by lazy { findPreference(R.string.prefs_key_issue.resStr()) }
@@ -79,12 +86,10 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view = super.onCreateView(inflater, container, savedInstanceState)
 		if (!purchaseReceiverRegistered) {
-			purchaseReceiver = PurchaseStatusUpdateReceiver(this)
 			activity.registerReceiver(purchaseReceiver, IntentFilter("purchaseStatus"))
 			purchaseReceiverRegistered = true
 		}
 		if (!syncReceiverRegistered) {
-			syncReceiver = SyncStatusUpdateReceiver(this)
 			activity.registerReceiver(syncReceiver, IntentFilter("syncStatus"))
 			syncReceiverRegistered = true
 		}
@@ -103,7 +108,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		backupPref?.onPreferenceClickListener = this
 		syncIntervalPref?.onPreferenceClickListener = this
 		syncNowPref?.onPreferenceClickListener = this
-		nightModePref?.onPreferenceClickListener = this
 		pocketLoginPref?.onPreferenceClickListener = this
 		issuePref?.onPreferenceClickListener = this
 		privacyPref?.onPreferenceClickListener = this
@@ -112,7 +116,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		syncPref?.onPreferenceChangeListener = this
 
 		refreshLastSyncTime()
-		refreshNightModeDesc()
 		refreshSyncIntervalDesc()
 		refreshPocket()
 
@@ -191,23 +194,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							show()
 						}
 			}
-		/*nightModePref -> {
-			val oldValue = Preferences.nightMode
-			MaterialDialog.Builder(context)
-					.title(R.string.night_mode)
-					.items(R.array.night_mode_pref_titles)
-					.itemsCallbackSingleChoice(oldValue) { _, _, which, _ ->
-						val oldPrefValue = Preferences.nightMode
-						Preferences.nightMode = which
-						preference?.summary = R.array.night_mode_pref_titles.resStrArr()!![Preferences.nightMode]
-						if (which != oldPrefValue) {
-							setNightMode()
-							mainAcivity?.recreate()
-						}
-						true
-					}
-					.show()
-		}*/
 			backupPref -> context.backupRestore()
 			syncIntervalPref -> {
 				MaterialDialog.Builder(context)
@@ -301,10 +287,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		syncIntervalPref?.summary = R.array.sync_interval_titles.resStrArr()!![R.array.sync_interval_values.resIntArr()!!.indexOf(Preferences.syncInterval)]
 	}
 
-	private fun refreshNightModeDesc() {
-		nightModePref?.summary = R.array.night_mode_pref_titles.resStrArr()!![Preferences.nightMode]
-	}
-
 	private fun refreshPocket() {
 		val loggedIn = !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()
 		pocketSyncPref?.isVisible = loggedIn
@@ -318,18 +300,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		tryOrNull { activity.unregisterReceiver(purchaseReceiver) }
 		tryOrNull { activity.unregisterReceiver(syncReceiver) }
 		super.onDestroy()
-	}
-
-	private class PurchaseStatusUpdateReceiver(val fragment: SettingsFragment) : BroadcastReceiver() {
-		override fun onReceive(context: Context?, intent: Intent?) {
-			fragment.handlePurchases()
-		}
-	}
-
-	private class SyncStatusUpdateReceiver(val fragment: SettingsFragment) : BroadcastReceiver() {
-		override fun onReceive(context: Context?, intent: Intent?) {
-			fragment.refreshLastSyncTime()
-		}
 	}
 
 	private class Library(val name: String, val description: String, val link: String, val isLast: Boolean = false)
