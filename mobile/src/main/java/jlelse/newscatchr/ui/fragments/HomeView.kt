@@ -40,7 +40,7 @@ import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
-import jlelse.newscatchr.ui.layout.HomeFragmentUI
+import jlelse.newscatchr.ui.layout.HomeViewUI
 import jlelse.newscatchr.ui.recycleritems.*
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
@@ -77,7 +77,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 			context.registerReceiver(feedStateUpdateReceiver, IntentFilter("feed_state"))
 			lastFeedReceiverRegistered = true
 		}
-		fragmentView = HomeFragmentUI().createView(AnkoContext.create(context, this))
+		fragmentView = HomeViewUI().createView(AnkoContext.create(context, this))
 		refresh?.setOnRefreshListener { loadAll(false) }
 		loadAll(true)
 		return fragmentView

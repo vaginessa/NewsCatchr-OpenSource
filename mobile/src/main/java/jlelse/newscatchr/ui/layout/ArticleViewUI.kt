@@ -31,7 +31,7 @@ import jlelse.readit.R
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.nestedScrollView
 
-class ArticleFragmentUI : AnkoComponent<ArticleView> {
+class ArticleViewUI : AnkoComponent<ArticleView> {
 	@SuppressLint("PrivateResource")
 	override fun createView(ui: AnkoContext<ArticleView>): View = with(ui) {
 		swipeRefreshLayout {

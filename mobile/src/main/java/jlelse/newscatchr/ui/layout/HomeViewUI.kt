@@ -29,7 +29,7 @@ import org.jetbrains.anko.matchParent
 import org.jetbrains.anko.recyclerview.v7.recyclerView
 import org.jetbrains.anko.wrapContent
 
-class HomeFragmentUI : AnkoComponent<HomeView> {
+class HomeViewUI : AnkoComponent<HomeView> {
 	override fun createView(ui: AnkoContext<HomeView>): View = with(ui) {
 		swipeRefreshLayout {
 			id = R.id.homefragment_refresh

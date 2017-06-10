@@ -40,7 +40,7 @@ import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FAB
-import jlelse.newscatchr.ui.layout.ArticleFragmentUI
+import jlelse.newscatchr.ui.layout.ArticleViewUI
 import jlelse.newscatchr.ui.recycleritems.addTags
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.newscatchr.ui.views.ZoomTextView
@@ -66,7 +66,7 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 
 	override fun onCreateView(): View? {
 		super.onCreateView()
-		fragmentView = ArticleFragmentUI().createView(AnkoContext.create(context, this))
+		fragmentView = ArticleViewUI().createView(AnkoContext.create(context, this))
 		article.id?.let { articleId ->
 			refreshOne?.setOnRefreshListener {
 				try {
