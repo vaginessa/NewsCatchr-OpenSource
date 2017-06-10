@@ -38,6 +38,9 @@
 			android:key="@string/prefs_key_backup"
 			android:summary="@string/backup_desc"
 			android:title="@string/backup_restore" />
+		<android.support.v7.preference.Preference
+			android:key="@string/prefs_key_import_opml"
+			android:title="@string/import_opml" />
 	</android.support.v7.preference.PreferenceCategory>
 	<android.support.v7.preference.PreferenceCategory android:title="@string/sync">
 		<android.support.v7.preference.SwitchPreferenceCompat

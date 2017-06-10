@@ -24,20 +24,17 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 import android.support.v7.widget.RecyclerView
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import co.metalab.asyncawait.async
-import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.backend.helpers.Preferences
-import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.extensions.notNullAndEmpty
+import jlelse.newscatchr.extensions.resStr
+import jlelse.newscatchr.extensions.searchForFeeds
+import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.layout.HomeViewUI
@@ -47,7 +44,6 @@ import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
-import java.util.*
 
 class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	private var recFeeds: Array<Feed>? = null
@@ -83,32 +79,6 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 		return fragmentView
 	}
 
-	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
-		super.inflateMenu(inflater, menu)
-		inflater.inflate(R.menu.homefragment, menu)
-		menu?.findItem(R.id.favorites)?.icon = R.drawable.ic_favorite_universal.resDrw(context, Color.WHITE)
-	}
-
-	override fun onOptionsItemSelected(item: MenuItem?) {
-		super.onOptionsItemSelected(item)
-		when (item?.itemId) {
-			R.id.favorites -> openView(FavoritesView().withTitle(R.string.favorites.resStr()))
-			R.id.language -> {
-				val availableLocales = Locale.getAvailableLocales()
-				MaterialDialog.Builder(context)
-						.items(mutableListOf<String>().apply {
-							availableLocales.forEach { add(it.displayName) }
-						})
-						.itemsCallback { _, _, i, _ ->
-							Preferences.recommendationsLanguage = availableLocales[i].language
-							loadRecommendedFeeds()
-						}
-						.negativeText(android.R.string.cancel)
-						.show()
-			}
-		}
-	}
-
 	private fun loadAll(cache: Boolean = true) {
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapterFour.wrap(fastAdapterThree.wrap(fastAdapterTwo.wrap(fastAdapterOne)))
 		loadLastFeeds()
@@ -141,7 +111,7 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 		fastAdapterFour.setNewList(listOf())
 		refresh?.showIndicator()
 		await {
-			if (recFeeds == null || !cache) Feedly().recommendedFeeds(Preferences.recommendationsLanguage, cache) { feeds, related ->
+			if (recFeeds == null || !cache) Feedly().recommendedFeeds(cache = cache) { feeds, related ->
 				recFeeds = feeds
 				recRelated = related
 			}

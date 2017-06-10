@@ -23,7 +23,6 @@ import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.extensions.sharedPref
 import jlelse.readit.BuildConfig
 import jlelse.readit.R
-import java.util.*
 
 /**
  * Preferences
@@ -61,10 +60,6 @@ object Preferences {
 	var pocketSync: Boolean
 		get() = read().getBoolean(R.string.prefs_key_pocket_sync.resStr(), true)
 		set(value) = write { e -> e.putBoolean(R.string.prefs_key_pocket_sync.resStr(), value) }
-
-	var recommendationsLanguage: String
-		get() = read().getString("recLanguage", Locale.getDefault().language)
-		set(value) = write { e -> e.putString("recLanguage", value) }
 
 	var textScaleFactor: Float
 		get() = read().getFloat("textScaleFactor", 1.0f)

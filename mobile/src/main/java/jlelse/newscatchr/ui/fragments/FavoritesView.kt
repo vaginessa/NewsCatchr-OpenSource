@@ -21,25 +21,16 @@
 package jlelse.newscatchr.ui.fragments
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
-import co.metalab.asyncawait.async
-import com.afollestad.materialdialogs.MaterialDialog
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback
 import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil
 import jlelse.newscatchr.backend.Feed
-import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.helpers.Database
-import jlelse.newscatchr.extensions.convertOpmlToFeeds
 import jlelse.newscatchr.extensions.notNullAndEmpty
-import jlelse.newscatchr.extensions.readString
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.CustomTextRecyclerItem
@@ -87,50 +78,4 @@ class FavoritesView : ViewManagerView(), ItemTouchCallback {
 	override fun itemTouchDropped(p0: Int, p1: Int) {
 	}
 
-	override fun inflateMenu(inflater: MenuInflater, menu: Menu?) {
-		super.inflateMenu(inflater, menu)
-		inflater.inflate(R.menu.backup, menu)
-		inflater.inflate(R.menu.favoritesfragment, menu)
-	}
-
-	override fun onOptionsItemSelected(item: MenuItem?) {
-		super.onOptionsItemSelected(item)
-		when (item?.itemId) {
-			R.id.backup -> context.backupRestore()
-			R.id.opml -> importFromFile()
-		}
-	}
-
-	private fun importFromFile() {
-		val intent = Intent(Intent.ACTION_GET_CONTENT)
-		intent.type = "*/*"
-		intent.addCategory(Intent.CATEGORY_OPENABLE)
-		context.startActivityForResult(intent, 555)
-	}
-
-	private fun importOpml(opml: String?) = async {
-		var imported = 0
-		var feeds: Array<Feed>?
-		if (!opml.isNullOrBlank()) await {
-			feeds = opml?.convertOpmlToFeeds()
-			feeds?.forEach { Database.addFavorites(it) }
-			imported = feeds?.size ?: 0
-		}
-		context.sendBroadcast(Intent("feed_state"))
-		MaterialDialog.Builder(context)
-				.title(R.string.import_opml)
-				.content(if (imported != 0) R.string.suc_import else R.string.import_failed)
-				.positiveText(android.R.string.ok)
-				.show()
-		load()
-	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		super.onActivityResult(requestCode, resultCode, data)
-		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) async {
-			var opml: String? = null
-			if (data != null && data.data != null) opml = await { context.contentResolver.openInputStream(data.data).readString() }
-			importOpml(opml)
-		}
-	}
 }

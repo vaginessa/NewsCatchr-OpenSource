@@ -25,6 +25,7 @@ import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.readFromCache
 import jlelse.newscatchr.backend.helpers.saveToCache
 import jlelse.newscatchr.extensions.tryOrNull
+import java.util.*
 
 @Keep class Feedly {
 
@@ -35,7 +36,7 @@ import jlelse.newscatchr.extensions.tryOrNull
 	private val RANKED = "ranked="
 	private val QUERY = "query="
 
-	fun streamIds(id: String?, count: Int?, continuation: String?, ranked: String?): Ids? = tryOrNull {
+	fun streamIds(id: String?, count: Int? = null, continuation: String? = null, ranked: String? = null): Ids? = tryOrNull {
 		var url = "$BASE_URL/streams/ids?$STREAM_ID%s"
 		if (count != null) url += "&$COUNT$count"
 		if (!continuation.isNullOrBlank()) url += "&$CONTINUATION$continuation"
@@ -43,7 +44,7 @@ import jlelse.newscatchr.extensions.tryOrNull
 		Bridge.get(url, id).asClass(Ids::class.java)
 	}
 
-	fun mixIds(id: String?, count: Int?): Ids? = tryOrNull {
+	fun mixIds(id: String?, count: Int? = null): Ids? = tryOrNull {
 		var url = "$BASE_URL/mixes/ids?$STREAM_ID%s"
 		if (count != null) url += "&$COUNT$count"
 		Bridge.get(url, id).asClass(Ids::class.java)
@@ -55,7 +56,7 @@ import jlelse.newscatchr.extensions.tryOrNull
 		} else null
 	}
 
-	fun feedSearch(query: String?, count: Int?, locale: String?, promoted: Boolean?, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
+	fun feedSearch(query: String?, count: Int? = null, locale: String? = null, promoted: Boolean? = null, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
 		var feeds: Array<Feed>? = null
 		var related: Array<String>? = null
 		tryOrNull {
@@ -70,7 +71,7 @@ import jlelse.newscatchr.extensions.tryOrNull
 		callback(feeds, related)
 	}
 
-	fun recommendedFeeds(locale: String?, cache: Boolean, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
+	fun recommendedFeeds(locale: String? = Locale.getDefault().language, cache: Boolean, callback: (feeds: Array<Feed>?, related: Array<String>?) -> Unit) {
 		var feeds: Array<Feed>? = if (cache) readFromCache("recFeeds$locale", Array<Feed>::class.java) else null
 		var related: Array<String>? = if (cache) readFromCache("recFeedsRelated$locale", Array<String>::class.java) else null
 		if (!cache || feeds == null) {

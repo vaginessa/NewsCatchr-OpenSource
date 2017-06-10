@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.ui.fragments
 
 import android.content.BroadcastReceiver
@@ -25,12 +27,14 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.PocketAuth
@@ -64,6 +68,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val viewApisPref: Preference? by lazy { findPreference(R.string.prefs_key_view_apis.resStr()) }
 	private val aboutPref: Preference? by lazy { findPreference(R.string.prefs_key_about_nc.resStr()) }
 	private val backupPref: Preference? by lazy { findPreference(R.string.prefs_key_backup.resStr()) }
+	private val importPref: Preference? by lazy { findPreference(R.string.prefs_key_import_opml.resStr()) }
 	private val syncNowPref: Preference? by lazy { findPreference(R.string.prefs_key_sync_now.resStr()) }
 	private val supportPref: Preference? by lazy { findPreference(R.string.prefs_key_support_pref.resStr()) }
 	private val donateCategory: Preference? by lazy { findPreference(R.string.prefs_key_pro_category.resStr()) }
@@ -105,6 +110,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		viewApisPref?.onPreferenceClickListener = this
 		aboutPref?.onPreferenceClickListener = this
 		backupPref?.onPreferenceClickListener = this
+		importPref?.onPreferenceClickListener = this
 		syncIntervalPref?.onPreferenceClickListener = this
 		syncNowPref?.onPreferenceClickListener = this
 		pocketLoginPref?.onPreferenceClickListener = this
@@ -194,6 +200,12 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						}
 			}
 			backupPref -> context.backupRestore()
+			importPref -> {
+				val intent = Intent(Intent.ACTION_GET_CONTENT)
+				intent.type = "*/*"
+				intent.addCategory(Intent.CATEGORY_OPENABLE)
+				startActivityForResult(intent, 555)
+			}
 			syncIntervalPref -> {
 				MaterialDialog.Builder(context)
 						.title(R.string.sync_interval)
@@ -295,10 +307,35 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		}
 	}
 
+	private fun importOpml(opml: String?) = async {
+		var imported = 0
+		var feeds: Array<Feed>?
+		if (!opml.isNullOrBlank()) await {
+			feeds = opml?.convertOpmlToFeeds()
+			feeds?.forEach { Database.addFavorites(it) }
+			imported = feeds?.size ?: 0
+		}
+		context.sendBroadcast(Intent("feed_state"))
+		MaterialDialog.Builder(context)
+				.title(R.string.import_opml)
+				.content(if (imported != 0) R.string.suc_import else R.string.import_failed)
+				.positiveText(android.R.string.ok)
+				.show()
+	}
+
 	override fun onDestroy() {
 		tryOrNull { activity.unregisterReceiver(purchaseReceiver) }
 		tryOrNull { activity.unregisterReceiver(syncReceiver) }
 		super.onDestroy()
+	}
+
+	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+		super.onActivityResult(requestCode, resultCode, data)
+		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) async {
+			var opml: String? = null
+			if (data != null && data.data != null) opml = await { context.contentResolver.openInputStream(data.data).readString() }
+			importOpml(opml)
+		}
 	}
 
 	private class Library(val name: String, val description: String, val link: String, val isLast: Boolean = false)
