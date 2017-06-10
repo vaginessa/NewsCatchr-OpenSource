@@ -25,7 +25,6 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.URLSpan
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -58,14 +57,6 @@ fun Context.nothingFound(callback: () -> Unit = {}) {
 			.onAny { _, _ -> callback() }
 			.cancelListener { callback() }
 			.show()
-}
-
-fun View.actionBarSize(): Int {
-	val tv = TypedValue()
-	if (context.theme.resolveAttribute(R.attr.actionBarSize, tv, true)) {
-		return TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
-	}
-	return 0
 }
 
 fun TextView.setTextStyle(context: Context, id: Int) {
