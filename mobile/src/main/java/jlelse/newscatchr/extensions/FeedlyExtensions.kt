@@ -16,37 +16,38 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("EXPERIMENTAL_FEATURE_WARNING")
+
 package jlelse.newscatchr.extensions
 
 import android.content.Context
+import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.mainAcivity
 import jlelse.newscatchr.ui.fragments.FeedListView
 import jlelse.readit.R
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 fun searchForFeeds(context: Context, query: String? = null) {
 	val progressDialog = context.progressDialog()
 	val load = { finalQuery: String ->
-		progressDialog.show()
-		context.doAsync {
+		context.async {
+			progressDialog.show()
 			var foundFeeds: Array<Feed>? = null
 			var foundRelated: Array<String>? = null
-			Feedly().feedSearch(finalQuery, 100, null, null) { feeds, related ->
-				foundFeeds = feeds
-				foundRelated = related
+			await {
+				Feedly().feedSearch(finalQuery, 100, null, null) { feeds, related ->
+					foundFeeds = feeds
+					foundRelated = related
+				}
 			}
-			uiThread {
-				progressDialog.dismiss()
-				if (foundFeeds.notNullAndEmpty()) mainAcivity?.openView(FeedListView(feeds = foundFeeds, tags = foundRelated).withTitle("${R.string.search_results_for.resStr()} $finalQuery"))
-				else context.nothingFound()
-			}
+			progressDialog.dismiss()
+			if (foundFeeds.notNullAndEmpty()) mainAcivity?.openView(FeedListView(feeds = foundFeeds, tags = foundRelated).withTitle("${R.string.search_results_for.resStr()} $finalQuery"))
+			else context.nothingFound()
 		}
 	}
-	if (query.isNullOrBlank()) {
+	if (query == null || query.isNullOrBlank()) {
 		MaterialDialog.Builder(context)
 				.title(android.R.string.search_go)
 				.input(null, null) { _, input ->
@@ -55,7 +56,5 @@ fun searchForFeeds(context: Context, query: String? = null) {
 				.negativeText(android.R.string.cancel)
 				.positiveText(android.R.string.search_go)
 				.show()
-	} else {
-		load(query!!)
-	}
+	} else load(query)
 }

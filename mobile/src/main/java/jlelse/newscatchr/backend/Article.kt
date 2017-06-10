@@ -54,6 +54,8 @@ class Article(
 		@AsonName(name = "content.content")
 		var content: String? = null,
 		var excerpt: String? = null,
+		var cdnAmpUrl: String? = null,
+		var ampUrl: String? = null,
 		var url: String? = null,
 		var pocketId: String? = null,
 		var fromPocket: Boolean = false,

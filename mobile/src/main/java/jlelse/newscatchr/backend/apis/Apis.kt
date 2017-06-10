@@ -106,25 +106,29 @@ fun String.fetchArticle(oldArticle: Article? = null): Article? {
 fun String.ampUrl() = "https://mercury.postlight.com/amp?url=${URLEncoder.encode(this, "UTF-8")}"
 
 // Open Url
-fun String.openUrl(activity: Activity, amp: Boolean = true) {
-	val finalUrl = if (Preferences.amp && amp) this@openUrl.ampUrl() else this@openUrl
-	val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
-	if (Preferences.customTabs) {
-		try {
-			val customTabsIntent = CustomTabsIntent.Builder()
-					.setToolbarColor(R.color.colorPrimary.resClr(activity)!!)
-					.setShowTitle(true)
-					.addDefaultShareMenuItem()
-					.enableUrlBarHiding()
-					.build()
-			CustomTabsHelperFragment.open(activity, customTabsIntent, Uri.parse(finalUrl)) { activity, _ ->
+fun String?.openUrl(activity: Activity, amp: Boolean = true, isAmp: Boolean = false, notAmpLink: String? = null) {
+	val ampAllowed = Preferences.amp && amp
+	(if (ampAllowed && (!isAmp || (isAmp && this@openUrl.isNullOrBlank()))) (this@openUrl ?: notAmpLink)?.ampUrl()
+	else if (ampAllowed && isAmp) this@openUrl
+	else notAmpLink ?: this@openUrl)?.let { finalUrl ->
+		val alternateIntent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
+		if (Preferences.customTabs) {
+			try {
+				val customTabsIntent = CustomTabsIntent.Builder()
+						.setToolbarColor(R.color.colorPrimary.resClr(activity)!!)
+						.setShowTitle(true)
+						.addDefaultShareMenuItem()
+						.enableUrlBarHiding()
+						.build()
+				CustomTabsHelperFragment.open(activity, customTabsIntent, Uri.parse(finalUrl)) { activity, _ ->
+					activity.startActivity(alternateIntent)
+				}
+			} catch (e: Exception) {
+				e.printStackTrace()
 				activity.startActivity(alternateIntent)
 			}
-		} catch (e: Exception) {
-			e.printStackTrace()
+		} else {
 			activity.startActivity(alternateIntent)
 		}
-	} else {
-		activity.startActivity(alternateIntent)
 	}
 }
