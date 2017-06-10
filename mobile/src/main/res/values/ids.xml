@@ -25,6 +25,7 @@
 	<item name="header_item_id" type="id" />
 	<item name="more_item_id" type="id" />
 	<item name="tags_item_id" type="id" />
+	<item name="customtext_item_id" type="id" />
 
 	<!-- Layout ids -->
 	<item name="homefragment_refresh" type="id" />
@@ -58,6 +59,7 @@
 	<item name="feedrecycleritem_website" type="id" />
 	<item name="feedrecycleritem_divider" type="id" />
 	<item name="feedrecycleritem_favorite" type="id" />
+	<item name="customtextrecycleritem_text" type="id" />
 	<item name="tagsrecycleritem_box" type="id" />
 	<item name="tag_text" type="id" />
 	<item name="mainactivity_appbar" type="id" />

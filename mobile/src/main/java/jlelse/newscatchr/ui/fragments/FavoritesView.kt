@@ -40,8 +40,11 @@ import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.extensions.convertOpmlToFeeds
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.readString
+import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
+import jlelse.newscatchr.ui.recycleritems.CustomTextRecyclerItem
 import jlelse.newscatchr.ui.recycleritems.FeedRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.NCAbstractItem
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -52,7 +55,7 @@ import java.util.*
 class FavoritesView : ViewManagerView(), ItemTouchCallback {
 	private var fragmentView: View? = null
 	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
-	private var fastAdapter = FastItemAdapter<FeedRecyclerItem>()
+	private var fastAdapter = FastItemAdapter<NCAbstractItem<*, *>>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 	private var feeds: MutableList<Feed>? = null
 
@@ -69,7 +72,7 @@ class FavoritesView : ViewManagerView(), ItemTouchCallback {
 	private fun load() {
 		feeds = Database.allFavorites.toMutableList()
 		if (feeds.notNullAndEmpty()) fastAdapter.setNewList(feeds?.map { FeedRecyclerItem(it, fragment = this@FavoritesView) })
-		else fastAdapter.setNewList(listOf())
+		else fastAdapter.setNewList(listOf(CustomTextRecyclerItem(R.string.nothing_marked_favorite.resStr())))
 		refreshOne?.hideIndicator()
 	}
 

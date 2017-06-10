@@ -31,9 +31,12 @@ import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.loaders.PocketLoader
 import jlelse.newscatchr.extensions.notNullAndEmpty
+import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.CustomTextRecyclerItem
+import jlelse.newscatchr.ui.recycleritems.NCAbstractItem
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -43,7 +46,7 @@ import org.jetbrains.anko.find
 class BookmarksView : ViewManagerView() {
 	private var fragmentView: View? = null
 	private val recyclerOne: RecyclerView? by lazy { fragmentView?.find<RecyclerView>(R.id.refreshrecyclerview_recycler) }
-	private var fastAdapter = FastItemAdapter<ArticleRecyclerItem>()
+	private var fastAdapter = FastItemAdapter<NCAbstractItem<*, *>>()
 	private val refreshOne: SwipeRefreshLayout? by lazy { fragmentView?.find<SwipeRefreshLayout>(R.id.refreshrecyclerview_refresh) }
 
 	override fun onCreateView(): View? {
@@ -64,7 +67,7 @@ class BookmarksView : ViewManagerView() {
 			Database.allBookmarks
 		}
 		if (articles.notNullAndEmpty()) fastAdapter.setNewList(articles.map { ArticleRecyclerItem(it, this@BookmarksView) })
-		else fastAdapter.setNewList(listOf())
+		else fastAdapter.setNewList(listOf(CustomTextRecyclerItem(R.string.nothing_bookmarked.resStr())))
 		refreshOne?.hideIndicator()
 	}
 

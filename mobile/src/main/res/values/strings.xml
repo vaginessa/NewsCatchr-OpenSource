@@ -111,4 +111,6 @@
 	<string name="article">Article</string>
 	<string name="privacy_policy">Privacy Policy</string>
 	<string name="article_tip_zoom">Did you know, that you can adjust the text size by doing a zoom gesture?</string>
+	<string name="nothing_bookmarked">Nothing bookmarked yet!</string>
+	<string name="nothing_marked_favorite">Nothing marked as favorite yet!</string>
 </resources>
