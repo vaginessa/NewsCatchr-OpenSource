@@ -57,13 +57,13 @@ class TagsRecyclerItem(val tags: Array<String>? = null, val fragment: ViewManage
 }
 
 fun FlexboxLayout.addTags(fragment: ViewManagerView?, tags: Array<out String?>? = null) = tryOrNull {
-	tags?.filterNotNull()?.forEach {
+	tags?.filterNotNull()?.forEach { tag ->
 		addView(TagUI().createView(AnkoContext.Companion.create(context, this)).apply {
 			find<TextView>(R.id.tag_text).apply {
-				val title = "#$it"
+				val title = "#$tag"
 				text = title
 				setOnClickListener {
-					fragment?.openView(MixView(feedId = "topic/$it").withTitle(title))
+					fragment?.openView(MixView(feedId = "topic/$tag").withTitle(title))
 				}
 			}
 		})
