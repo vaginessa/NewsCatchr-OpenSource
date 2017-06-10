@@ -32,6 +32,7 @@ import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.resStr
 import jlelse.readit.R
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
+import java.net.URLEncoder
 
 // Share
 fun Context.share(title: String, text: String) {
@@ -102,7 +103,7 @@ fun String.fetchArticle(oldArticle: Article? = null): Article? {
 }
 
 // AMP
-fun String.ampUrl() = "https://mercury.postlight.com/amp?url=$this"
+fun String.ampUrl() = "https://mercury.postlight.com/amp?url=${URLEncoder.encode(this, "UTF-8")}"
 
 // Open Url
 fun String.openUrl(activity: Activity, amp: Boolean = true) {
