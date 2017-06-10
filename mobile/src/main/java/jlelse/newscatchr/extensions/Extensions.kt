@@ -31,11 +31,9 @@ import jlelse.newscatchr.backend.Feed
 import org.jsoup.Jsoup
 import org.jsoup.safety.Whitelist
 import org.xml.sax.Attributes
+import org.xml.sax.InputSource
 import org.xml.sax.SAXException
 import org.xml.sax.helpers.DefaultHandler
-import java.io.IOException
-import java.io.InputStream
-import java.nio.charset.Charset
 import javax.xml.parsers.SAXParserFactory
 
 fun String.convertOpmlToFeeds() = tryOrNull {
@@ -52,7 +50,7 @@ fun String.convertOpmlToFeeds() = tryOrNull {
 					}
 				}
 			}
-			parse(this@convertOpmlToFeeds)
+			parse(InputSource(this@convertOpmlToFeeds.byteInputStream()))
 		}
 	}.toTypedArray()
 }
@@ -97,10 +95,3 @@ fun Int.resDrw(context: Context?, color: Int? = null) = tryOrNull {
 }
 
 fun Int.resClr(context: Context?) = tryOrNull { ContextCompat.getColor(context ?: appContext!!, this) }
-
-@Throws(IOException::class)
-@JvmOverloads fun InputStream.readString(charset: Charset = Charsets.UTF_8): String {
-	val buffer = charArrayOf()
-	this.reader(charset).read(buffer)
-	return String(buffer)
-}

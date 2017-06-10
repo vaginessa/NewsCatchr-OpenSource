@@ -59,7 +59,9 @@
 	<string name="language">Language</string>
 	<string name="backup">Backup</string>
 	<string name="restore">Restore</string>
-	<string name="import_opml">Import OPML file</string>
+	<string name="import_opml">Import OPML</string>
+	<string name="import_opml_hint">Paste the content of the OPML file here</string>
+	<string name="pref_import_opml_desc">Import feeds from an OPML file, which you can export from other feed readers like feedly</string>
 	<string name="mark_as_bookmark">Mark as bookmark</string>
 	<string name="used_libraries">Used code libraries</string>
 	<string name="view_all_libraries">View all in this app used libraries</string>

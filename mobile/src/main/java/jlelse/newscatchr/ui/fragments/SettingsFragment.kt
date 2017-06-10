@@ -27,7 +27,6 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.preference.Preference
 import android.support.v7.preference.PreferenceFragmentCompat
 import android.text.format.DateUtils
@@ -201,10 +200,13 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			}
 			backupPref -> context.backupRestore()
 			importPref -> {
-				val intent = Intent(Intent.ACTION_GET_CONTENT)
-				intent.type = "*/*"
-				intent.addCategory(Intent.CATEGORY_OPENABLE)
-				startActivityForResult(intent, 555)
+				MaterialDialog.Builder(context)
+						.title(R.string.import_opml)
+						.input(R.string.import_opml_hint, 0) { _, input ->
+							importOpml(input.toString())
+						}
+						.positiveText(android.R.string.ok)
+						.show()
 			}
 			syncIntervalPref -> {
 				MaterialDialog.Builder(context)
@@ -327,15 +329,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		tryOrNull { activity.unregisterReceiver(purchaseReceiver) }
 		tryOrNull { activity.unregisterReceiver(syncReceiver) }
 		super.onDestroy()
-	}
-
-	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		super.onActivityResult(requestCode, resultCode, data)
-		if (resultCode == AppCompatActivity.RESULT_OK && requestCode == 555) async {
-			var opml: String? = null
-			if (data != null && data.data != null) opml = await { context.contentResolver.openInputStream(data.data).readString() }
-			importOpml(opml)
-		}
 	}
 
 	private class Library(val name: String, val description: String, val link: String, val isLast: Boolean = false)
