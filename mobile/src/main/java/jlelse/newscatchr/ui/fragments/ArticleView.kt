@@ -139,9 +139,10 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 
 	private fun keywords(keywords: Array<String>? = null) {
 		if (keywords.notNullAndEmpty()) tagsBox?.apply {
+			showView()
 			removeAllViews()
 			addTags(this@ArticleView, keywords)
-		} else tagsBox?.removeAllViews()
+		} else tagsBox?.hideView()
 	}
 
 	private fun shareArticle() = article.share(context)

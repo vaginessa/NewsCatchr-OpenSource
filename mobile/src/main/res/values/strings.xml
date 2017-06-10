@@ -110,4 +110,5 @@
 	<string name="search_for_feeds">Search for feeds from this website</string>
 	<string name="article">Article</string>
 	<string name="privacy_policy">Privacy Policy</string>
+	<string name="article_tip_zoom">Did you know, that you can adjust the text size by doing a zoom gesture?</string>
 </resources>

@@ -76,6 +76,15 @@ class ArticleViewUI : AnkoComponent<ArticleView> {
 						setTextIsSelectable(true)
 						textSize = 16f
 					}
+					textView {
+						lparams(width = matchParent, height = wrapContent) {
+							bottomMargin = dip(8)
+							horizontalMargin = dip(16)
+						}
+						textResource = R.string.article_tip_zoom
+						setTextStyle(context, R.style.TextAppearance_AppCompat_Caption)
+						setTypeface(typeface, Typeface.ITALIC)
+					}
 					flexboxLayout {
 						lparams(width = matchParent, height = wrapContent) {
 							bottomMargin = dip(16)
