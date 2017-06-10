@@ -30,16 +30,16 @@ import com.afollestad.materialdialogs.MaterialDialog
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
+import jlelse.newscatchr.extensions.progressDialog
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.extensions.tryOrNull
 import jlelse.newscatchr.mainAcivity
-import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 
 class BackupApi(val context: Context) {
 
 	fun backup() = async {
-		val progressDialog: ProgressDialog = ProgressDialog(context).apply { show() }
+		val progressDialog = context.progressDialog().apply { show() }
 		val backupAson = Ason()
 		val favorites = await { Ason.serializeArray<Feed>(Database.allFavorites) }
 		val bookmarks = await { Ason.serializeArray<Article>(Database.allBookmarks) }
@@ -65,7 +65,7 @@ class BackupApi(val context: Context) {
 	fun restore(key: String) = async {
 		await { tryOrNull { key.downloadHaste() } }.let { json ->
 			if (json != null) {
-				val progressDialog: ProgressDialog = ProgressDialog(context).apply { show() }
+				val progressDialog = context.progressDialog().apply { show() }
 				tryOrNull { Ason(json) }?.let { restoreAson ->
 					await { tryOrNull { Database.allFavorites = restoreAson.get("favorites", Array<Feed>::class.java) } }
 					await { tryOrNull { Database.allBookmarks = restoreAson.get("bookmarks", Array<Article>::class.java) } }

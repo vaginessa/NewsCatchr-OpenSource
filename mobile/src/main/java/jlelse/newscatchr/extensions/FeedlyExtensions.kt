@@ -24,13 +24,12 @@ import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.mainAcivity
 import jlelse.newscatchr.ui.fragments.FeedListView
-import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 fun searchForFeeds(context: Context, query: String? = null) {
-	val progressDialog = ProgressDialog(context)
+	val progressDialog = context.progressDialog()
 	val load = { finalQuery: String ->
 		progressDialog.show()
 		context.doAsync {

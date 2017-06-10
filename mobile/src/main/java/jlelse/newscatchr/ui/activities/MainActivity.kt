@@ -51,7 +51,6 @@ import jlelse.newscatchr.ui.fragments.*
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.interfaces.FragmentManipulation
 import jlelse.newscatchr.ui.layout.MainActivityUI
-import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerActivity
 import jlelse.viewmanager.ViewManagerView
@@ -159,7 +158,7 @@ class MainActivity : ViewManagerActivity() {
 								when (i) {
 									0 -> searchForFeeds(this, it)
 									1 -> async {
-										val progressDialog = ProgressDialog(this@MainActivity).apply { show() }
+										val progressDialog = this@MainActivity.progressDialog().apply { show() }
 										val article = await { tryOrNull { it.fetchArticle() } }
 										if (article != null) {
 											this@MainActivity.openView(ArticleView(article = article).withTitle(article.title))

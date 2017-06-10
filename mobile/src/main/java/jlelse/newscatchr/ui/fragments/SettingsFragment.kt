@@ -39,7 +39,6 @@ import jlelse.newscatchr.backend.apis.openUrl
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
-import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.onUiThread
@@ -76,7 +75,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val privacyPref: Preference? by lazy { findPreference(R.string.prefs_key_privacy.resStr()) }
 
 	// Pocket stuff
-	val progressDialog: ProgressDialog? by lazy { ProgressDialog(context) }
+	val progressDialog by lazy { context.progressDialog() }
 	var pocketAuth: PocketAuth? = null
 
 	override fun onCreatePreferences(p0: Bundle?, p1: String?) {
@@ -217,11 +216,11 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 					Preferences.pocketUserName = ""
 					refreshPocket()
 				} else {
-					progressDialog?.show()
+					progressDialog.show()
 					pocketAuth = PocketAuth("pocketapp45699:authorizationFinished", object : PocketAuth.PocketAuthCallback {
 
 						override fun authorize(url: String) {
-							progressDialog?.dismiss()
+							progressDialog.dismiss()
 							startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
 						}
 
@@ -241,14 +240,14 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 									}
 									uiThread {
 										refreshPocket()
-										progressDialog?.dismiss()
+										progressDialog.dismiss()
 									}
 								}
 							}
 						}
 
 						override fun failed() {
-							progressDialog?.dismiss()
+							progressDialog.dismiss()
 						}
 
 					}).apply { startAuth() }

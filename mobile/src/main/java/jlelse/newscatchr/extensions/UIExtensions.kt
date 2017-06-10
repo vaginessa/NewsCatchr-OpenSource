@@ -91,3 +91,5 @@ fun TextView.applyLinks(amp: Boolean = true) {
 		}
 	}
 }
+
+fun Context.progressDialog(): MaterialDialog = MaterialDialog.Builder(this).content(R.string.loading).cancelable(false).progress(true, 0).build()

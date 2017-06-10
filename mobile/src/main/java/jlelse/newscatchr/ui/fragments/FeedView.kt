@@ -39,14 +39,10 @@ import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.backend.loaders.FeedlyLoader
-import jlelse.newscatchr.extensions.notNullAndEmpty
-import jlelse.newscatchr.extensions.nothingFound
-import jlelse.newscatchr.extensions.resDrw
-import jlelse.newscatchr.extensions.resStr
+import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.layout.RefreshRecyclerUI
 import jlelse.newscatchr.ui.recycleritems.ArticleRecyclerItem
-import jlelse.newscatchr.ui.views.ProgressDialog
 import jlelse.newscatchr.ui.views.SwipeRefreshLayout
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerView
@@ -168,7 +164,7 @@ class FeedView(val feed: Feed) : ViewManagerView() {
 						.show()
 			}
 			R.id.search -> {
-				val progressDialog = ProgressDialog(context)
+				val progressDialog = context.progressDialog()
 				MaterialDialog.Builder(context)
 						.title(android.R.string.search_go)
 						.input(null, null, { _, query ->
