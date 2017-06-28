@@ -22,7 +22,8 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
-import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.JustifyContent
 import jlelse.newscatchr.extensions.flexboxLayout
 import jlelse.newscatchr.extensions.resClr
 import jlelse.newscatchr.extensions.setTextStyle
@@ -100,8 +101,8 @@ class ArticleRecyclerItemUI : AnkoComponent<ArticleRecyclerItem> {
 					bottomMargin = dip(16)
 				}
 				id = R.id.articlerecycleritem_tagsbox
-				flexWrap = FlexboxLayout.FLEX_WRAP_WRAP
-				justifyContent = FlexboxLayout.JUSTIFY_CONTENT_FLEX_START
+				flexWrap = FlexWrap.WRAP
+				justifyContent = JustifyContent.FLEX_START
 			}
 			view {
 				lparams(width = matchParent, height = dip(1))

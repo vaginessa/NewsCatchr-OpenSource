@@ -21,7 +21,8 @@ package jlelse.newscatchr.ui.layout
 import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.view.View
-import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.JustifyContent
 import jlelse.newscatchr.extensions.flexboxLayout
 import jlelse.newscatchr.extensions.setTextStyle
 import jlelse.newscatchr.extensions.swipeRefreshLayout
@@ -92,8 +93,8 @@ class ArticleViewUI : AnkoComponent<ArticleView> {
 							visibility = View.GONE
 						}
 						id = R.id.articlefragment_tagsbox
-						flexWrap = FlexboxLayout.FLEX_WRAP_WRAP
-						justifyContent = FlexboxLayout.JUSTIFY_CONTENT_FLEX_START
+						flexWrap = FlexWrap.WRAP
+						justifyContent = JustifyContent.FLEX_START
 					}
 				}
 			}

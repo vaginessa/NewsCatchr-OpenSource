@@ -19,7 +19,8 @@
 package jlelse.newscatchr.ui.layout
 
 import android.view.View
-import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.JustifyContent
 import jlelse.newscatchr.extensions.flexboxLayout
 import jlelse.newscatchr.ui.recycleritems.TagsRecyclerItem
 import jlelse.readit.R
@@ -33,8 +34,8 @@ class TagsRecyclerItemUI : AnkoComponent<TagsRecyclerItem> {
 					padding = dip(12)
 				}
 				id = R.id.tagsrecycleritem_box
-				flexWrap = FlexboxLayout.FLEX_WRAP_WRAP
-				justifyContent = FlexboxLayout.JUSTIFY_CONTENT_FLEX_START
+				flexWrap = FlexWrap.WRAP
+				justifyContent = JustifyContent.FLEX_START
 			}
 		}
 	}
