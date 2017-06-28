@@ -186,7 +186,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						}
 			}
 			aboutPref -> {
-				val description: String = "<b>The best newsreader for Android<br><i>It's the way of reading news in the future</i></b><br><br>Developer: Jan-Lukas Else<br>Icon designer: Kevin Aguilar<br>Banner designer: &#381;an &#268;erne<br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><a href=\"https://github.com/jlelse/NewsCatchr-OpenSource\">Source code on GitHub</a><br><br>"
+				val description: String = "<b>The best newsreader for Android<br><i>It's the way of reading news in the future</i></b><br><br>Developer: Jan-Lukas Else<br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><a href=\"https://github.com/jlelse/NewsCatchr-OpenSource\">Source code on GitHub</a><br><br>"
 				val statsDesc = "You already opened ${Database.allReadUrls.size} articles. Thanks for that!"
 				MaterialDialog.Builder(context)
 						.title(R.string.app_name)
