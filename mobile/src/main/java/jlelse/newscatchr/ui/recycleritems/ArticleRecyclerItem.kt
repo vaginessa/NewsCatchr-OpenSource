@@ -79,6 +79,7 @@ class ArticleRecyclerItem(val article: Article? = null, val fragment: ViewManage
 			viewHolder.visual.showView()
 			viewHolder.visual.loadImage(article?.visualUrl)
 		} else {
+			viewHolder.visual.clearGlide()
 			viewHolder.visual.hideView()
 		}
 		viewHolder.itemView.setOnClickListener {

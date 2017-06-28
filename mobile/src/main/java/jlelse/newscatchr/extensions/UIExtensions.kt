@@ -47,7 +47,12 @@ fun View.showView() {
 }
 
 fun ImageView.loadImage(url: String?) {
-	tryOrNull { Glide.with(context).load(url).into(this) }
+	clearGlide()
+	tryOrNull { Glide.with(this).load(url).into(this) }
+}
+
+fun ImageView.clearGlide() {
+	tryOrNull { Glide.with(this).clear(this) }
 }
 
 fun Context.nothingFound(callback: () -> Unit = {}) {

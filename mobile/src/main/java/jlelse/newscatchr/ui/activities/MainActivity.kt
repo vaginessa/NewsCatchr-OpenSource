@@ -37,6 +37,7 @@ import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
+import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.fetchArticle
 import jlelse.newscatchr.backend.apis.share
@@ -181,7 +182,12 @@ class MainActivity : ViewManagerActivity() {
 		}
 	}
 
-	fun resetToolbarBackground() = toolbarBackground?.setImageBitmap(null)
+	fun resetToolbarBackground() {
+		toolbarBackground?.let {
+			Glide.with(it).clear(it)
+			it.setImageBitmap(null)
+		}
+	}
 
 	fun loadToolbarBackground(url: String?) = toolbarBackground?.loadImage(url)
 
