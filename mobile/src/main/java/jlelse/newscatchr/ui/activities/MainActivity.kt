@@ -181,12 +181,7 @@ class MainActivity : ViewManagerActivity() {
 		}
 	}
 
-	fun resetToolbarBackground() {
-		toolbarBackground?.let {
-			//Glide.clear(it)
-			it.setImageBitmap(null)
-		}
-	}
+	fun resetToolbarBackground() = toolbarBackground?.setImageBitmap(null)
 
 	fun loadToolbarBackground(url: String?) = toolbarBackground?.loadImage(url)
 
