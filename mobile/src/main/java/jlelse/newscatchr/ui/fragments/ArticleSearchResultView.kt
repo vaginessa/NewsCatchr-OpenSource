@@ -39,9 +39,7 @@ class ArticleSearchResultView(val articles: List<Article>) : ViewManagerView() {
 		super.onCreateView()
 		fragmentView = BasicRecyclerUI().createView(AnkoContext.create(context, this))
 		if (recyclerOne?.adapter == null) recyclerOne?.adapter = fastAdapter
-		if (articles.notNullAndEmpty()) {
-			fastAdapter.setNewList(articles.map { ArticleRecyclerItem(it, this@ArticleSearchResultView) })
-		}
+		if (articles.notNullAndEmpty()) fastAdapter.setNewList(articles.map { ArticleRecyclerItem(it, this@ArticleSearchResultView) })
 		return fragmentView
 	}
 }

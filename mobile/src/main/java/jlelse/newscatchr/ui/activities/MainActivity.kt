@@ -144,7 +144,7 @@ class MainActivity : ViewManagerActivity() {
 			intent.getStringExtra("feedid")?.let {
 				resetStack()
 				val feedTitle = intent.getStringExtra("feedtitle")
-				if (!it.isNullOrBlank()) openView(FeedView(feed = Feed(feedId = it, title = feedTitle)).withTitle(feedTitle))
+				if (!it.isBlank()) openView(FeedView(feed = Feed(feedId = it, title = feedTitle)).withTitle(feedTitle))
 			}
 			// Browser
 			if (intent.scheme == "http" || intent.scheme == "https") {
@@ -225,7 +225,7 @@ class MainActivity : ViewManagerActivity() {
 	}
 
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-		if (!(billingProcessor?.handleActivityResult(requestCode, resultCode, data) ?: false)) super.onActivityResult(requestCode, resultCode, data)
+		if (billingProcessor?.handleActivityResult(requestCode, resultCode, data) != true) super.onActivityResult(requestCode, resultCode, data)
 	}
 
 	override fun onDestroy() {
