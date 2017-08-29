@@ -31,13 +31,11 @@ import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.TextView
 import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
-import com.bumptech.glide.Glide
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.fetchArticle
 import jlelse.newscatchr.backend.apis.share
@@ -65,7 +63,6 @@ class MainActivity : ViewManagerActivity() {
 	private val appbar: AppBarLayout? by lazy { find<AppBarLayout>(R.id.mainactivity_appbar) }
 	private val fab: FloatingActionButton? by lazy { find<FloatingActionButton>(R.id.mainactivity_fab) }
 	private val subtitle: TextView? by lazy { find<TextView>(R.id.mainactivity_toolbarsubtitle) }
-	private val toolbarBackground: ImageView? by lazy { find<ImageView>(R.id.mainactivity_toolbarbackground) }
 	private val bottomNavigationView: BottomNavigationView? by lazy { find<BottomNavigationView>(R.id.mainactivity_navigationview) }
 	private var billingProcessor: BillingProcessor? = null
 
@@ -104,7 +101,7 @@ class MainActivity : ViewManagerActivity() {
 					override fun onBillingError(errorCode: Int, error: Throwable?) {
 					}
 
-					override fun onProductPurchased(productId: String?, details: TransactionDetails?) = checkProStatus()
+					override fun onProductPurchased(productId: String, details: TransactionDetails?) = checkProStatus()
 					override fun onPurchaseHistoryRestored() = checkProStatus()
 				})
 			}
@@ -182,15 +179,6 @@ class MainActivity : ViewManagerActivity() {
 		}
 	}
 
-	fun resetToolbarBackground() {
-		toolbarBackground?.let {
-			Glide.with(it).clear(it)
-			it.setImageBitmap(null)
-		}
-	}
-
-	fun loadToolbarBackground(url: String?) = toolbarBackground?.loadImage(url)
-
 	private fun checkFragmentDependingThings() {
 		val currentFragment = currentView()
 		// Check Back Arrow
@@ -203,8 +191,6 @@ class MainActivity : ViewManagerActivity() {
 		}
 		// Check Title
 		refreshFragmentDependingTitle(currentFragment)
-		// Background images
-		resetToolbarBackground()
 		// Check Help Menu Item
 		invalidateOptionsMenu()
 		// Check FAB

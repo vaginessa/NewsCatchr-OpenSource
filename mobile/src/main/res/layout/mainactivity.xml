@@ -34,12 +34,6 @@
 			android:layout_height="wrap_content"
 			app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-			<ImageView
-				android:id="@+id/mainactivity_toolbarbackground"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				app:layout_collapseMode="parallax" />
-
 			<TextView
 				android:id="@+id/mainactivity_toolbarsubtitle"
 				android:layout_width="match_parent"
@@ -47,7 +41,7 @@
 				android:layout_marginTop="?attr/actionBarSize"
 				android:paddingEnd="16dp"
 				android:paddingStart="16dp"
-				android:paddingTop="72dp"
+				android:paddingTop="92dp"
 				app:layout_collapseMode="parallax" />
 
 			<android.support.v7.widget.Toolbar

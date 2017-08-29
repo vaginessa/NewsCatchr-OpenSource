@@ -38,7 +38,6 @@ import jlelse.newscatchr.backend.helpers.Database
 import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.extensions.*
-import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.newscatchr.ui.interfaces.FAB
 import jlelse.newscatchr.ui.layout.ArticleViewUI
 import jlelse.newscatchr.ui.recycleritems.addTags
@@ -101,7 +100,6 @@ class ArticleView(var article: Article) : ViewManagerView(), FAB {
 		if (!visualUrl.isNullOrBlank()) visualView?.apply {
 			showView()
 			loadImage(visualUrl)
-			tryOrNull(execute = context != null) { (context as MainActivity).loadToolbarBackground(visualUrl) }
 		} else visualView?.hideView()
 	}
 

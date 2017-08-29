@@ -35,12 +35,14 @@ import android.view.View
 import android.view.ViewGroup
 import co.metalab.asyncawait.async
 import com.afollestad.materialdialogs.MaterialDialog
+import jlelse.newscatchr.appContext
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.PocketAuth
 import jlelse.newscatchr.backend.apis.backupRestore
 import jlelse.newscatchr.backend.apis.openUrl
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
+import jlelse.newscatchr.mainAcivity
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
@@ -48,6 +50,8 @@ import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
 
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+	private var settingsContext: Context = context ?: mainAcivity ?: appContext!!
+
 	private var purchaseReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context?, intent: Intent?) {
 			this@SettingsFragment.handlePurchases()
@@ -79,7 +83,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val privacyPref: Preference? by lazy { findPreference(R.string.prefs_key_privacy.resStr()) }
 
 	// Pocket stuff
-	val progressDialog by lazy { context.progressDialog() }
+	val progressDialog by lazy { settingsContext.progressDialog() }
 	var pocketAuth: PocketAuth? = null
 
 	override fun onCreatePreferences(p0: Bundle?, p1: String?) {
@@ -129,15 +133,15 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	override fun onPreferenceClick(preference: Preference?): Boolean {
 		when (preference) {
 			clearCachePref -> {
-				context.clearCache {
+				settingsContext.clearCache {
 					Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.cleared_cache, Snackbar.LENGTH_SHORT).show()
 				}
 			}
 			clearHistoryPref -> {
 				doAsync {
-					Database.allLastFeeds = arrayOf<Feed>()
+					Database.allLastFeeds = arrayOf()
 					uiThread {
-						context.sendBroadcast(Intent("feed_state"))
+						settingsContext.sendBroadcast(Intent("feed_state"))
 						Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()
 					}
 				}
@@ -157,8 +161,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("CustomTabsHelper", "Custom tabs, made easy.", "https://github.com/DreaminginCodeZH/CustomTabsHelper"),
 						Library("Async/Await", "async/await for Android built upon coroutines introduced in Kotlin 1.1", "https://github.com/metalabdesign/AsyncAwait"),
 						Library("Anko", "Pleasant Android application development", "https://github.com/Kotlin/anko", true)
-				).map { "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}${if (!it.isLast) "<br><br>" else ""}" }.joinToString(separator = "")
-				MaterialDialog.Builder(context)
+				).joinToString(separator = "") { "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}${if (!it.isLast) "<br><br>" else ""}" }
+				MaterialDialog.Builder(settingsContext)
 						.title(R.string.used_libraries)
 						.content(html.toHtml())
 						.positiveText(android.R.string.ok)
@@ -174,8 +178,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("Pocket API", "", "https://getpocket.com/developer/"),
 						Library("Google URL Shortener", "", "https://developers.google.com/url-shortener/"),
 						Library("Mercury by Postlight", "", "https://mercury.postlight.com/", true)
-				).map { "<b><a href=\"${it.link}\">${it.name}</a></b>${if (!it.isLast) "<br><br>" else ""}" }.joinToString(separator = "")
-				MaterialDialog.Builder(context)
+				).joinToString(separator = "") { "<b><a href=\"${it.link}\">${it.name}</a></b>${if (!it.isLast) "<br><br>" else ""}" }
+				MaterialDialog.Builder(settingsContext)
 						.title(R.string.used_libraries)
 						.content(html.toHtml())
 						.positiveText(android.R.string.ok)
@@ -186,9 +190,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						}
 			}
 			aboutPref -> {
-				val description: String = "<b>The best newsreader for Android<br><i>It's the way of reading news in the future</i></b><br><br>Developer: Jan-Lukas Else<br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><a href=\"https://github.com/jlelse/NewsCatchr-OpenSource\">Source code on GitHub</a><br><br>"
+				val description = "<b>The best newsreader for Android<br><i>It's the way of reading news in the future</i></b><br><br>Developer: Jan-Lukas Else<br><br><a href=\"https://newscatchr.jlelse.eu\">NewsCatchr Website</a><br><a href=\"https://github.com/jlelse/NewsCatchr-OpenSource\">Source code on GitHub</a><br><br>"
 				val statsDesc = "You already opened ${Database.allReadUrls.size} articles. Thanks for that!"
-				MaterialDialog.Builder(context)
+				MaterialDialog.Builder(settingsContext)
 						.title(R.string.app_name)
 						.content("$description$statsDesc".toHtml())
 						.positiveText(android.R.string.ok)
@@ -198,9 +202,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							show()
 						}
 			}
-			backupPref -> context.backupRestore()
+			backupPref -> settingsContext.backupRestore()
 			importPref -> {
-				MaterialDialog.Builder(context)
+				MaterialDialog.Builder(settingsContext)
 						.title(R.string.import_opml)
 						.input(R.string.import_opml_hint, 0) { _, input ->
 							importOpml(input.toString())
@@ -209,7 +213,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.show()
 			}
 			syncIntervalPref -> {
-				MaterialDialog.Builder(context)
+				MaterialDialog.Builder(settingsContext)
 						.title(R.string.sync_interval)
 						.items(R.array.sync_interval_titles)
 						.itemsCallbackSingleChoice(resources.getIntArray(R.array.sync_interval_values).indexOf(Preferences.syncInterval)) { _, _, which, _ ->
@@ -221,10 +225,10 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.show()
 			}
 			syncNowPref -> {
-				doAsync { sync(context) }
+				doAsync { sync(settingsContext) }
 			}
 			pocketLoginPref -> {
-				val loggedIn = !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()
+				val loggedIn = !Preferences.pocketUserName.isBlank() && !Preferences.pocketAccessToken.isBlank()
 				if (loggedIn) {
 					Preferences.pocketAccessToken = ""
 					Preferences.pocketUserName = ""
@@ -301,7 +305,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	}
 
 	private fun refreshPocket() {
-		val loggedIn = !Preferences.pocketUserName.isNullOrBlank() && !Preferences.pocketAccessToken.isNullOrBlank()
+		val loggedIn = !Preferences.pocketUserName.isBlank() && !Preferences.pocketAccessToken.isBlank()
 		pocketSyncPref?.isVisible = loggedIn
 		pocketLoginPref?.let {
 			it.title = (if (loggedIn) R.string.pocket_logout else R.string.pocket_login).resStr()
@@ -317,8 +321,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			feeds?.forEach { Database.addFavorites(it) }
 			imported = feeds?.size ?: 0
 		}
-		context.sendBroadcast(Intent("feed_state"))
-		MaterialDialog.Builder(context)
+		settingsContext.sendBroadcast(Intent("feed_state"))
+		MaterialDialog.Builder(settingsContext)
 				.title(R.string.import_opml)
 				.content(if (imported != 0) R.string.suc_import else R.string.import_failed)
 				.positiveText(android.R.string.ok)

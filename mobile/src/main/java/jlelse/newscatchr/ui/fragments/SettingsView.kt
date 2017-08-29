@@ -33,7 +33,7 @@ class SettingsView : ViewManagerView() {
 	}
 
 	fun finishPocketAuth(){
-		settingsFragment.progressDialog?.show()
+		settingsFragment.progressDialog.show()
 		settingsFragment.pocketAuth?.authenticate()
 	}
 }

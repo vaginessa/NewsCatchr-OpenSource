@@ -24,7 +24,6 @@ import android.support.design.widget.CollapsingToolbarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.text.TextUtils
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.readit.R
@@ -42,11 +41,6 @@ class MainActivityUI : AnkoComponent<MainActivity> {
 				setContentScrimResource(R.color.colorPrimary)
 				expandedTitleMarginBottom = dip(64)
 				expandedTitleMarginStart = dip(16)
-			}
-			find<ImageView>(R.id.mainactivity_toolbarbackground).apply {
-				fitsSystemWindows = true
-				scaleType = ImageView.ScaleType.CENTER_CROP
-				setColorFilter(Color.parseColor("#33000000"))
 			}
 			find<TextView>(R.id.mainactivity_toolbarsubtitle).apply {
 				ellipsize = TextUtils.TruncateAt.END
