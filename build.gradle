@@ -7,12 +7,12 @@ buildscript {
     ext.BUILD_TOOLS = "26.0.0"
     ext.SUPPORT_LIBS = "26.0.1"
     ext.PLAY_SERVICES = "11.2.0"
-    ext.KOTLIN = "1.1.4-2"
+    ext.KOTLIN = "1.1.4-3"
     ext.ANKO = "0.10.1"
     repositories {
         jcenter()
         mavenCentral()
-        maven { url "https://maven.google.com" }
+        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0-beta3'
@@ -29,9 +29,9 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
+        google()
         maven { url "https://jitpack.io" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         maven { url 'https://dl.bintray.com/jetbrains/anko' }
-        maven { url "https://maven.google.com" }
     }
 }
