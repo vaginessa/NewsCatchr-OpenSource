@@ -39,7 +39,6 @@ import com.anjlab.android.iab.v3.TransactionDetails
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.fetchArticle
 import jlelse.newscatchr.backend.apis.share
-import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.customTabsHelperFragment
 import jlelse.newscatchr.extensions.*
@@ -71,7 +70,10 @@ class MainActivity : ViewManagerActivity() {
 	var IABReady = false
 
 	private val licenceKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAmnVnCUmnyl0MQek4LpMopUVNb5czY+7RVsCl0vV7LU2nAJppZqTtHoZpeFyD9ae6BtVx/f6WW/xV37KCr4Eo/4Bh796e8AYzxfOm8icw7TPU9M2FNUjJ46qtZZl5I9ItfhOoapu5tGAY8i0Z5142046UpMs0XLGeGhVsr/3RSGWSzbHRhWOKVFJqa1JgWSHUGTUUHvkVai3sWKl1acreIivio3kpNh/jY9T9xwd6pl5Xzg32i00m87BMuJaA+QofQjFWTFmsUDC0tx+nERxnUud6S/A/n2nKKkhQ3c0mz961swxarWpzrP131VbYYPmGZ0WhXt6tMsTnpg/G++2l1wIDAQAB"
-	private val PRO_SKU = "prosub"
+	private val PRO_SKU_1 = "prosub"
+	private val PRO_SKU_2 = "prosub2"
+	private val PRO_SKU_3 = "prosub3"
+	private val PRO_SKU_4 = "prosub4"
 
 	override val initViewStacks: List<Stack<ViewManagerView>>
 		get() = listOf(
@@ -97,14 +99,18 @@ class MainActivity : ViewManagerActivity() {
 					override fun onBillingInitialized() {
 						IABReady = true
 						billingProcessor?.loadOwnedPurchasesFromGoogle()
-						checkProStatus()
 					}
 
-					override fun onBillingError(errorCode: Int, error: Throwable?) {
+					override fun onProductPurchased(productId: String, details: TransactionDetails?) {
+						MaterialDialog.Builder(this@MainActivity)
+								.title(R.string.thanks_purchase)
+								.content(R.string.thanks_purchase_desc)
+								.positiveText(android.R.string.ok)
+								.show()
 					}
 
-					override fun onProductPurchased(productId: String, details: TransactionDetails?) = checkProStatus()
-					override fun onPurchaseHistoryRestored() = checkProStatus()
+					override fun onBillingError(errorCode: Int, error: Throwable?) {}
+					override fun onPurchaseHistoryRestored() {}
 				})
 			}
 		}
@@ -213,13 +219,16 @@ class MainActivity : ViewManagerActivity() {
 		subtitle?.text = fragment?.title
 	}
 
-	private fun checkProStatus() {
-		Preferences.supportUser = billingProcessor?.isSubscribed(PRO_SKU) == true
-		sendBroadcast(Intent("purchaseStatus"))
-		checkFragmentDependingThings()
-	}
+	fun getProOptions() = billingProcessor?.getSubscriptionListingDetails(arrayListOf(PRO_SKU_1, PRO_SKU_2, PRO_SKU_3, PRO_SKU_4))?.map { "${it.title}: ${it.priceText} ${it.subscriptionPeriod}" }
 
-	fun purchaseSupport() = billingProcessor?.subscribe(this, PRO_SKU)
+	fun purchaseProSub(number: Int) {
+		billingProcessor?.subscribe(this, when (number) {
+			1 -> PRO_SKU_2
+			2 -> PRO_SKU_3
+			3 -> PRO_SKU_4
+			else -> PRO_SKU_1
+		})
+	}
 
 	fun showTutorial() {
 		FancyShowCaseQueue()

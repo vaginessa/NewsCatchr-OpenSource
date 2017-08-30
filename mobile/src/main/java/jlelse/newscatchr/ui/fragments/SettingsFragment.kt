@@ -43,7 +43,6 @@ import jlelse.newscatchr.backend.apis.openUrl
 import jlelse.newscatchr.backend.helpers.*
 import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.mainAcivity
-import jlelse.newscatchr.ui.activities.MainActivity
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.support.v4.onUiThread
@@ -52,12 +51,6 @@ import org.jetbrains.anko.uiThread
 class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 	private var settingsContext: Context = context ?: mainAcivity ?: appContext!!
 
-	private var purchaseReceiver = object : BroadcastReceiver() {
-		override fun onReceive(context: Context?, intent: Intent?) {
-			this@SettingsFragment.handlePurchases()
-		}
-	}
-	private var purchaseReceiverRegistered = false
 	private var syncReceiver = object : BroadcastReceiver() {
 		override fun onReceive(context: Context?, intent: Intent?) {
 			this@SettingsFragment.refreshLastSyncTime()
@@ -73,8 +66,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val backupPref: Preference? by lazy { findPreference(R.string.prefs_key_backup.resStr()) }
 	private val importPref: Preference? by lazy { findPreference(R.string.prefs_key_import_opml.resStr()) }
 	private val syncNowPref: Preference? by lazy { findPreference(R.string.prefs_key_sync_now.resStr()) }
-	private val supportPref: Preference? by lazy { findPreference(R.string.prefs_key_support_pref.resStr()) }
-	private val donateCategory: Preference? by lazy { findPreference(R.string.prefs_key_pro_category.resStr()) }
+	private val proPref: Preference? by lazy { findPreference(R.string.prefs_key_support_pref.resStr()) }
 	private val syncPref: Preference? by lazy { findPreference(R.string.prefs_key_sync.resStr()) }
 	private val syncIntervalPref: Preference? by lazy { findPreference(R.string.prefs_key_sync_interval.resStr()) }
 	private val pocketLoginPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_login.resStr()) }
@@ -93,12 +85,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 
 	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view = super.onCreateView(inflater, container, savedInstanceState)
-		if (!purchaseReceiverRegistered) {
-			activity.registerReceiver(purchaseReceiver, IntentFilter("purchaseStatus"))
-			purchaseReceiverRegistered = true
-		}
 		if (!syncReceiverRegistered) {
-			activity.registerReceiver(syncReceiver, IntentFilter("syncStatus"))
+			settingsContext.registerReceiver(syncReceiver, IntentFilter("syncStatus"))
 			syncReceiverRegistered = true
 		}
 		return view
@@ -109,7 +97,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		// Add ClickListeners
 		clearCachePref?.onPreferenceClickListener = this
 		clearHistoryPref?.onPreferenceClickListener = this
-		supportPref?.onPreferenceClickListener = this
+		proPref?.onPreferenceClickListener = this
 		viewLibsPref?.onPreferenceClickListener = this
 		viewApisPref?.onPreferenceClickListener = this
 		aboutPref?.onPreferenceClickListener = this
@@ -128,15 +116,13 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		refreshLastSyncTime()
 		refreshSyncIntervalDesc()
 		refreshPocket()
-
-		handlePurchases()
 	}
 
 	override fun onPreferenceClick(preference: Preference?): Boolean {
 		when (preference) {
 			clearCachePref -> {
 				settingsContext.clearCache {
-					Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.cleared_cache, Snackbar.LENGTH_SHORT).show()
+					Snackbar.make(mainAcivity!!.findViewById(R.id.mainactivity_container), R.string.cleared_cache, Snackbar.LENGTH_SHORT).show()
 				}
 			}
 			clearHistoryPref -> {
@@ -144,11 +130,19 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 					Database.allLastFeeds = arrayOf()
 					uiThread {
 						settingsContext.sendBroadcast(Intent("feed_state"))
-						Snackbar.make(activity.findViewById(R.id.mainactivity_container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()
+						Snackbar.make(mainAcivity!!.findViewById(R.id.mainactivity_container), R.string.cleared_history, Snackbar.LENGTH_SHORT).show()
 					}
 				}
 			}
-			supportPref -> if (activity is MainActivity) (activity as MainActivity).purchaseSupport()
+			proPref -> {
+				MaterialDialog.Builder(settingsContext)
+						.items(mainAcivity?.getProOptions() ?: listOf<String>())
+						.itemsCallback { _, _, position, _ ->
+							mainAcivity?.purchaseProSub(position)
+						}
+						.negativeText(android.R.string.cancel)
+						.show()
+			}
 			viewLibsPref -> {
 				val html = listOf(
 						Library("Material Dialogs", "A beautiful, fluid, and customizable dialogs API.", "https://github.com/afollestad/material-dialogs"),
@@ -273,8 +267,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 					}).apply { startAuth() }
 				}
 			}
-			issuePref -> "https://github.com/jlelse/NewsCatchr-OpenSource/issues".openUrl(activity, amp = false)
-			privacyPref -> "https://newscatchr.jlelse.eu/privacy.html".openUrl(activity, amp = false)
+			issuePref -> "https://github.com/jlelse/NewsCatchr-OpenSource/issues".openUrl(mainAcivity!!, amp = false)
+			privacyPref -> "https://newscatchr.jlelse.eu/privacy.html".openUrl(mainAcivity!!, amp = false)
 			showTutorialPref -> {
 				mainAcivity?.showTutorial()
 			}
@@ -287,15 +281,6 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			syncNowPref -> if (Preferences.syncEnabled) scheduleSync(Preferences.syncInterval) else cancelSync()
 		}
 		return true
-	}
-
-	private fun handlePurchases() {
-		if (!(activity is MainActivity && (activity as MainActivity).IABReady && !Preferences.supportUser)) hideAllProPrefs()
-	}
-
-	private fun hideAllProPrefs() {
-		supportPref?.isVisible = false
-		donateCategory?.isVisible = false
 	}
 
 	private fun refreshLastSyncTime() {
@@ -335,8 +320,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	}
 
 	override fun onDestroy() {
-		tryOrNull { activity.unregisterReceiver(purchaseReceiver) }
-		tryOrNull { activity.unregisterReceiver(syncReceiver) }
+		tryOrNull { settingsContext.unregisterReceiver(syncReceiver) }
 		super.onDestroy()
 	}
 

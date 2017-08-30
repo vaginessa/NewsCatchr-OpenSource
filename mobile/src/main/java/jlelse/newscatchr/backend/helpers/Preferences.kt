@@ -77,8 +77,4 @@ object Preferences {
 		get() = read().getLong("lastSync", 0.toLong())
 		set(value) = write { e -> e.putLong("lastSync", value) }
 
-	var supportUser: Boolean
-		get() = read().getBoolean("supportUser", false) || BuildConfig.DEBUG
-		set(value) = write { e -> e.putBoolean("supportUser", value) }
-
 }
