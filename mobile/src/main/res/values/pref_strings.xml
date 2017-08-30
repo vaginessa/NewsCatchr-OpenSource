@@ -41,6 +41,7 @@
 	<string name="prefs_key_issue" translatable="false">issue</string>
 	<string name="prefs_key_privacy" translatable="false">privacy</string>
 	<string name="prefs_key_readability" translatable="false">readability</string>
-	<string name="prefs_key_import_opml" translatable="false">readability</string>
+	<string name="prefs_key_import_opml" translatable="false">import_opml</string>
+	<string name="prefs_key_show_tutorial" translatable="false">show_tutorial</string>
 
 </resources>

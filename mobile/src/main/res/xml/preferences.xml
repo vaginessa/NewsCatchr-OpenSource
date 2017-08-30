@@ -95,6 +95,9 @@
 			android:summary="@string/about_nc_desc"
 			android:title="@string/about_nc" />
 		<android.support.v7.preference.Preference
+			android:key="@string/prefs_key_show_tutorial"
+			android:title="@string/show_tutorial" />
+		<android.support.v7.preference.Preference
 			android:key="@string/prefs_key_view_libs"
 			android:summary="@string/view_all_libraries"
 			android:title="@string/used_libraries" />

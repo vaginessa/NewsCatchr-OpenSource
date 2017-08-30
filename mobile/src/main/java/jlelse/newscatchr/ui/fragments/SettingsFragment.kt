@@ -81,6 +81,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val pocketSyncPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_sync.resStr()) }
 	private val issuePref: Preference? by lazy { findPreference(R.string.prefs_key_issue.resStr()) }
 	private val privacyPref: Preference? by lazy { findPreference(R.string.prefs_key_privacy.resStr()) }
+	private val showTutorialPref: Preference? by lazy { findPreference(R.string.prefs_key_show_tutorial.resStr()) }
 
 	// Pocket stuff
 	val progressDialog by lazy { settingsContext.progressDialog() }
@@ -119,6 +120,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		pocketLoginPref?.onPreferenceClickListener = this
 		issuePref?.onPreferenceClickListener = this
 		privacyPref?.onPreferenceClickListener = this
+		showTutorialPref?.onPreferenceClickListener = this
 
 		// Add ChangeListeners
 		syncPref?.onPreferenceChangeListener = this
@@ -273,6 +275,9 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			}
 			issuePref -> "https://github.com/jlelse/NewsCatchr-OpenSource/issues".openUrl(activity, amp = false)
 			privacyPref -> "https://newscatchr.jlelse.eu/privacy.html".openUrl(activity, amp = false)
+			showTutorialPref -> {
+				mainAcivity?.showTutorial()
+			}
 		}
 		return true
 	}

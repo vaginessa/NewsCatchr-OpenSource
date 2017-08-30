@@ -52,6 +52,8 @@ import jlelse.newscatchr.ui.layout.MainActivityUI
 import jlelse.readit.R
 import jlelse.viewmanager.ViewManagerActivity
 import jlelse.viewmanager.ViewManagerView
+import me.toptas.fancyshowcase.FancyShowCaseQueue
+import me.toptas.fancyshowcase.FancyShowCaseView
 import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
@@ -218,6 +220,23 @@ class MainActivity : ViewManagerActivity() {
 	}
 
 	fun purchaseSupport() = billingProcessor?.subscribe(this, PRO_SKU)
+
+	fun showTutorial() {
+		FancyShowCaseQueue()
+				.add(FancyShowCaseView.Builder(this)
+						.focusOn(bottomNavigationView?.find(R.id.bb_news))
+						.title(R.string.tutorial_1.resStr())
+						.build())
+				.add(FancyShowCaseView.Builder(this)
+						.focusOn(bottomNavigationView?.find(R.id.bb_bookmarks))
+						.title(R.string.tutorial_2.resStr())
+						.build())
+				.add(FancyShowCaseView.Builder(this)
+						.focusOn(bottomNavigationView?.find(R.id.bb_settings))
+						.title(R.string.tutorial_3.resStr())
+						.build())
+				.show()
+	}
 
 	override fun onNewIntent(intent: Intent?) {
 		super.onNewIntent(intent)
