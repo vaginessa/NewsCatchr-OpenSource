@@ -45,6 +45,7 @@ import jlelse.newscatchr.extensions.*
 import jlelse.newscatchr.mainAcivity
 import jlelse.readit.R
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.find
 import org.jetbrains.anko.support.v4.onUiThread
 import org.jetbrains.anko.uiThread
 
@@ -270,6 +271,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 			issuePref -> "https://github.com/jlelse/NewsCatchr-OpenSource/issues".openUrl(mainAcivity!!, amp = false)
 			privacyPref -> "https://newscatchr.jlelse.eu/privacy.html".openUrl(mainAcivity!!, amp = false)
 			showTutorialPref -> {
+				mainAcivity?.bottomNavigationView?.find<View>(R.id.bb_news)?.performClick()
 				mainAcivity?.showTutorial()
 			}
 		}

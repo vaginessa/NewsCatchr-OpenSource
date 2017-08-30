@@ -21,7 +21,6 @@ package jlelse.newscatchr.backend.helpers
 import android.content.SharedPreferences
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.extensions.sharedPref
-import jlelse.readit.BuildConfig
 import jlelse.readit.R
 
 /**
@@ -76,5 +75,9 @@ object Preferences {
 	var lastSync: Long
 		get() = read().getLong("lastSync", 0.toLong())
 		set(value) = write { e -> e.putLong("lastSync", value) }
+
+	var tutorial: Boolean
+		get() = read().getBoolean("tutorial", false)
+		set(value) = write { e -> e.putBoolean("tutorial", value) }
 
 }

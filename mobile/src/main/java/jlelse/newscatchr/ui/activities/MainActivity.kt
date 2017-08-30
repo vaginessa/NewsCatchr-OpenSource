@@ -39,6 +39,7 @@ import com.anjlab.android.iab.v3.TransactionDetails
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.fetchArticle
 import jlelse.newscatchr.backend.apis.share
+import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.backend.helpers.Tracking
 import jlelse.newscatchr.customTabsHelperFragment
 import jlelse.newscatchr.extensions.*
@@ -64,7 +65,7 @@ class MainActivity : ViewManagerActivity() {
 	private val appbar: AppBarLayout? by lazy { find<AppBarLayout>(R.id.mainactivity_appbar) }
 	private val fab: FloatingActionButton? by lazy { find<FloatingActionButton>(R.id.mainactivity_fab) }
 	private val subtitle: TextView? by lazy { find<TextView>(R.id.mainactivity_toolbarsubtitle) }
-	private val bottomNavigationView: BottomNavigationView? by lazy { find<BottomNavigationView>(R.id.mainactivity_navigationview) }
+	val bottomNavigationView: BottomNavigationView? by lazy { find<BottomNavigationView>(R.id.mainactivity_navigationview) }
 	private var billingProcessor: BillingProcessor? = null
 
 	var IABReady = false
@@ -139,6 +140,7 @@ class MainActivity : ViewManagerActivity() {
 		checkFragmentDependingThings()
 		handleIntent(intent)
 		switchStack(currentStack())
+		if (!Preferences.tutorial) showTutorial()
 	}
 
 	override fun onSwitchView() {
@@ -233,6 +235,9 @@ class MainActivity : ViewManagerActivity() {
 	fun showTutorial() {
 		FancyShowCaseQueue()
 				.add(FancyShowCaseView.Builder(this)
+						.title(R.string.tutorial_0.resStr())
+						.build())
+				.add(FancyShowCaseView.Builder(this)
 						.focusOn(bottomNavigationView?.find(R.id.bb_news))
 						.title(R.string.tutorial_1.resStr())
 						.build())
@@ -244,7 +249,15 @@ class MainActivity : ViewManagerActivity() {
 						.focusOn(bottomNavigationView?.find(R.id.bb_settings))
 						.title(R.string.tutorial_3.resStr())
 						.build())
+				.add(FancyShowCaseView.Builder(this)
+						.focusOn(fab)
+						.title(R.string.tutorial_4.resStr())
+						.build())
+				.add(FancyShowCaseView.Builder(this)
+						.title(R.string.tutorial_5.resStr())
+						.build())
 				.show()
+		Preferences.tutorial = true
 	}
 
 	override fun onNewIntent(intent: Intent?) {

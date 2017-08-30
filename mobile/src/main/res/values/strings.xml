@@ -77,8 +77,8 @@
 	<string name="nothing_found">Nothing found!</string>
 	<string name="article_image">Article Image</string>
 	<string name="donate">Donate</string>
-	<string name="subscribe_support">Get the donate subscription</string>
-	<string name="subscribe_support_desc">Support the development with just a few coins on a regular base</string>
+	<string name="subscribe_support">Subscribe to support the development</string>
+	<string name="subscribe_support_desc">Subscribe and make NewsCatchr getting more updates</string>
 	<string name="prefs_amp">Accelerated Mobile Pages</string>
 	<string name="prefs_amp_desc">Load an accelerated version of the website</string>
 	<string name="share_app">Share NewsCatchr</string>
@@ -116,9 +116,12 @@
 	<string name="nothing_bookmarked">Nothing bookmarked yet!</string>
 	<string name="nothing_marked_favorite">Nothing marked as favorite yet!</string>
 	<string name="show_tutorial">Show tutorial again</string>
-	<string name="tutorial_1">Here you can find the latest news, by selecting a feed. Save your favorite feeds for faster access.</string>
+	<string name="tutorial_0">Welcome to NewsCatchr! This tutorial will introduce you to the basic things.</string>
+	<string name="tutorial_1">Here you can find the latest news. Select a feed to read it\'s articles. Save your favorite feeds for faster access.</string>
 	<string name="tutorial_2">If you save an article, it will be available here.</string>
 	<string name="tutorial_3">Change the apps settings to your needs.</string>
+	<string name="tutorial_4">Here you can search for feeds. If you want, you can also enter the RSS url here.</string>
+	<string name="tutorial_5">Have fun!</string>
 	<string name="thanks_purchase">Thanks!</string>
 	<string name="thanks_purchase_desc">Thanks for supporting the development of NewsCatchr! You can cancel your subscription anytime on Google Play.</string>
 </resources>
