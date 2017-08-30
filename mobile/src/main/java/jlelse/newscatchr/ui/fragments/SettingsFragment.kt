@@ -157,7 +157,8 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						Library("Android-Job", "Android library to handle jobs in the background.", "https://github.com/evernote/android-job"),
 						Library("CustomTabsHelper", "Custom tabs, made easy.", "https://github.com/DreaminginCodeZH/CustomTabsHelper"),
 						Library("Async/Await", "async/await for Android built upon coroutines introduced in Kotlin 1.1", "https://github.com/metalabdesign/AsyncAwait"),
-						Library("Anko", "Pleasant Android application development", "https://github.com/Kotlin/anko", true)
+						Library("Anko", "Pleasant Android application development", "https://github.com/Kotlin/anko"),
+						Library("FancyShowCaseView", "An easy-to-use customizable show case view with circular reveal animation.", "https://github.com/faruktoptas/FancyShowCaseView", true)
 				).joinToString(separator = "") { "<b><a href=\"${it.link}\">${it.name}</a></b> ${it.description}${if (!it.isLast) "<br><br>" else ""}" }
 				MaterialDialog.Builder(settingsContext)
 						.title(R.string.used_libraries)
