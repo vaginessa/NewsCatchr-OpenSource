@@ -24,7 +24,6 @@ import android.support.v7.app.AppCompatActivity
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import java.util.*
 
 abstract class ViewManagerActivity : AppCompatActivity() {
 
@@ -34,30 +33,30 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 		if (viewStacks.size == 0) viewStacks += initViewStacks
 	}
 
-	abstract val initViewStacks: List<Stack<ViewManagerView>>
+	abstract val initViewStacks: MutableList<MutableList<ViewManagerView>>
 	abstract val containerView: FrameLayout
 
-	fun currentView(): ViewManagerView = viewStacks[currentStack].peek()
-	fun allViews() = viewStacks.flatten()
+	fun currentView(): ViewManagerView = viewStacks[currentStack].last()
+	private fun allViews() = viewStacks.flatten()
 
 	open fun onSwitchView() {
 	}
 
 	fun switchStack(stack: Int) {
 		currentStack = stack
-		switchView(viewStacks[stack].peek())
+		switchView(viewStacks[stack].last())
 	}
 
 	fun openView(view: ViewManagerView) {
 		view.title = view.title ?: currentView().title ?: ""
-		viewStacks[currentStack].push(view)
+		viewStacks[currentStack].add(view)
 		switchView(view)
 	}
 
 	fun closeView() {
 		viewStacks[currentStack].apply {
-			pop().onDestroy()
-			switchView(peek())
+			if (size > 1) removeAt(lastIndex).onDestroy()
+			switchView(last())
 		}
 	}
 
@@ -69,7 +68,7 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 	fun currentStack() = currentStack
 
 	private fun resetStack(stack: Int) {
-		viewStacks[stack].apply { while (size > 1) pop().onDestroy() }
+		viewStacks[stack].apply { while (size > 1) removeAt(lastIndex).onDestroy() }
 		switchStack(stack)
 	}
 
@@ -78,17 +77,15 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 			removeAllViews()
 			view.apply { (parent as ViewGroup?)?.removeView(this) }
 			addView(view.apply { onShow() })
-			supportInvalidateOptionsMenu()
+			invalidateOptionsMenu()
 			onSwitchView()
 		}
 	}
 
-	override fun onBackPressed() {
-		if (viewStacks[currentStack].size > 1) closeView()
-		else {
-			currentStack = 0
-			super.onBackPressed()
-		}
+	override fun onBackPressed() = when {
+		viewStacks[currentStack].size > 1 -> closeView()
+		currentStack != 0 -> switchStack(0)
+		else -> super.onBackPressed()
 	}
 
 	override fun onDestroy() {
@@ -134,8 +131,8 @@ abstract class ViewManagerActivity : AppCompatActivity() {
 }
 
 private class DummyViewManagerActivity : ViewManagerActivity() {
-	override val initViewStacks: List<Stack<ViewManagerView>>
-		get() = listOf()
+	override val initViewStacks: MutableList<MutableList<ViewManagerView>>
+		get() = mutableListOf()
 	override val containerView: FrameLayout
 		get() = FrameLayout(this)
 }
@@ -187,6 +184,6 @@ abstract class ViewManagerView : LinearLayout(viewManagerActivity) {
 	}
 }
 
-private val viewStacks = mutableListOf<Stack<ViewManagerView>>()
+private val viewStacks = mutableListOf<MutableList<ViewManagerView>>()
 private var currentStack: Int = 0
 private var viewManagerActivity: ViewManagerActivity = DummyViewManagerActivity()

@@ -58,7 +58,6 @@ import me.zhanghai.android.customtabshelper.CustomTabsHelperFragment
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.find
 import org.jetbrains.anko.setContentView
-import java.util.*
 
 class MainActivity : ViewManagerActivity() {
 	private val toolbar: Toolbar? by lazy { find<Toolbar>(R.id.mainactivity_toolbar) }
@@ -76,11 +75,11 @@ class MainActivity : ViewManagerActivity() {
 	private val PRO_SKU_3 = "prosub3"
 	private val PRO_SKU_4 = "prosub4"
 
-	override val initViewStacks: List<Stack<ViewManagerView>>
-		get() = listOf(
-				Stack<ViewManagerView>().apply { add(HomeView().withTitle(R.string.news.resStr())) },
-				Stack<ViewManagerView>().apply { add(BookmarksView().withTitle(R.string.bookmarks.resStr())) },
-				Stack<ViewManagerView>().apply { add(SettingsView().withTitle(R.string.settings.resStr())) }
+	override val initViewStacks: MutableList<MutableList<ViewManagerView>>
+		get() = mutableListOf(
+				mutableListOf(HomeView().withTitle(R.string.news.resStr())),
+				mutableListOf(BookmarksView().withTitle(R.string.bookmarks.resStr())),
+				mutableListOf(SettingsView().withTitle(R.string.settings.resStr()))
 		)
 	override val containerView: FrameLayout
 		get() = find(R.id.mainactivity_container)
