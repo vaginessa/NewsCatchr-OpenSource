@@ -26,6 +26,7 @@
 	<string name="prefs_key_last_version" translatable="false">last_version</string>
 	<string name="prefs_key_pro_category" translatable="false">pro_category</string>
 	<string name="prefs_key_support_pref" translatable="false">support_pref</string>
+	<string name="prefs_key_donate_pref" translatable="false">donate_pref</string>
 	<string name="prefs_key_about_pro" translatable="false">about_pro</string>
 	<string name="prefs_key_view_libs" translatable="false">view_libs</string>
 	<string name="prefs_key_view_apis" translatable="false">view_apis</string>

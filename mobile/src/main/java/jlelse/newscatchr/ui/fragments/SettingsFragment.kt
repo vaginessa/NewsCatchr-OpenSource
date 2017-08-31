@@ -68,6 +68,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 	private val importPref: Preference? by lazy { findPreference(R.string.prefs_key_import_opml.resStr()) }
 	private val syncNowPref: Preference? by lazy { findPreference(R.string.prefs_key_sync_now.resStr()) }
 	private val proPref: Preference? by lazy { findPreference(R.string.prefs_key_support_pref.resStr()) }
+	private val donatePref: Preference? by lazy { findPreference(R.string.prefs_key_donate_pref.resStr()) }
 	private val syncPref: Preference? by lazy { findPreference(R.string.prefs_key_sync.resStr()) }
 	private val syncIntervalPref: Preference? by lazy { findPreference(R.string.prefs_key_sync_interval.resStr()) }
 	private val pocketLoginPref: Preference? by lazy { findPreference(R.string.prefs_key_pocket_login.resStr()) }
@@ -99,6 +100,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		clearCachePref?.onPreferenceClickListener = this
 		clearHistoryPref?.onPreferenceClickListener = this
 		proPref?.onPreferenceClickListener = this
+		donatePref?.onPreferenceClickListener = this
 		viewLibsPref?.onPreferenceClickListener = this
 		viewApisPref?.onPreferenceClickListener = this
 		aboutPref?.onPreferenceClickListener = this
@@ -140,6 +142,15 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.items(mainAcivity?.getProOptions() ?: listOf<String>())
 						.itemsCallback { _, _, position, _ ->
 							mainAcivity?.purchaseProSub(position)
+						}
+						.negativeText(android.R.string.cancel)
+						.show()
+			}
+			donatePref -> {
+				MaterialDialog.Builder(settingsContext)
+						.items(mainAcivity?.getDonationOptions() ?: listOf<String>())
+						.itemsCallback { _, _, position, _ ->
+							mainAcivity?.purchaseDonation(position)
 						}
 						.negativeText(android.R.string.cancel)
 						.show()

@@ -74,6 +74,10 @@ class MainActivity : ViewManagerActivity() {
 	private val PRO_SKU_2 = "prosub2"
 	private val PRO_SKU_3 = "prosub3"
 	private val PRO_SKU_4 = "prosub4"
+	private val DONATION_SKU_1 = "prodonation1"
+	private val DONATION_SKU_2 = "prodonation2"
+	private val DONATION_SKU_3 = "prodonation3"
+	private val DONATION_SKU_4 = "prodonation4"
 
 	override val initViewStacks: MutableList<MutableList<ViewManagerView>>
 		get() = mutableListOf(
@@ -229,6 +233,19 @@ class MainActivity : ViewManagerActivity() {
 			3 -> PRO_SKU_4
 			else -> PRO_SKU_1
 		})
+	}
+
+	fun getDonationOptions() = billingProcessor?.getPurchaseListingDetails(arrayListOf(DONATION_SKU_1, DONATION_SKU_2, DONATION_SKU_3, DONATION_SKU_4))?.map { "${it.title}: ${it.priceText}" }
+
+	fun purchaseDonation(number: Int) {
+		val product = when (number) {
+			1 -> DONATION_SKU_2
+			2 -> DONATION_SKU_3
+			3 -> DONATION_SKU_4
+			else -> DONATION_SKU_1
+		}
+		if (billingProcessor?.isPurchased(product) == true) billingProcessor?.consumePurchase(product)
+		billingProcessor?.purchase(this, product)
 	}
 
 	fun showTutorial() {
