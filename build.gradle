@@ -5,7 +5,7 @@ buildscript {
     ext.TARGET_SDK = 26
     ext.MIN_SDK = 17
     ext.BUILD_TOOLS = "26.0.0"
-    ext.SUPPORT_LIBS = "26.0.1"
+    ext.SUPPORT_LIBS = "26.0.2"
     ext.PLAY_SERVICES = "11.2.0"
     ext.KOTLIN = "1.1.4-3"
     ext.ANKO = "0.10.1"
@@ -15,7 +15,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta3'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN"
         classpath 'com.google.gms:google-services:3.1.0'
     }
