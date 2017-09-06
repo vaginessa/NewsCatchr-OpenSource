@@ -92,6 +92,16 @@
 			android:key="@string/prefs_key_readability"
 			android:summary="@string/prefs_readability_desc"
 			android:title="@string/prefs_readability" />
+		<android.support.v7.preference.SwitchPreferenceCompat
+			android:defaultValue="true"
+			android:key="@string/prefs_key_show_recent_feeds"
+			android:summary="@string/on_the_news_page"
+			android:title="@string/show_recent_feeds" />
+		<android.support.v7.preference.SwitchPreferenceCompat
+			android:defaultValue="true"
+			android:key="@string/prefs_key_show_recommended_feeds"
+			android:summary="@string/on_the_news_page"
+			android:title="@string/show_recommended_feeds" />
 	</android.support.v7.preference.PreferenceCategory>
 	<android.support.v7.preference.PreferenceCategory android:title="@string/about">
 		<android.support.v7.preference.Preference

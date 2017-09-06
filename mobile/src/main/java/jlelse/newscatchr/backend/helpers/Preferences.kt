@@ -80,4 +80,12 @@ object Preferences {
 		get() = read().getBoolean("tutorial", false)
 		set(value) = write { e -> e.putBoolean("tutorial", value) }
 
+	var showRecentFeeds: Boolean
+		get() = read().getBoolean(R.string.prefs_key_show_recent_feeds.resStr(), true)
+		set(value) = write { e -> e.putBoolean(R.string.prefs_key_show_recent_feeds.resStr(), value) }
+
+	var showRecommendedFeeds: Boolean
+		get() = read().getBoolean(R.string.prefs_key_show_recommended_feeds.resStr(), true)
+		set(value) = write { e -> e.putBoolean(R.string.prefs_key_show_recommended_feeds.resStr(), value) }
+
 }

@@ -144,7 +144,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							mainAcivity?.purchaseProSub(position)
 						}
 						.negativeText(android.R.string.cancel)
-						.show()
+						.let { tryOrNull { it.show() } }
 			}
 			donatePref -> {
 				MaterialDialog.Builder(settingsContext)
@@ -153,7 +153,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							mainAcivity?.purchaseDonation(position)
 						}
 						.negativeText(android.R.string.cancel)
-						.show()
+						.let { tryOrNull { it.show() } }
 			}
 			viewLibsPref -> {
 				val html = listOf(
@@ -178,7 +178,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.build()
 						.apply {
 							contentView?.applyLinks(false)
-							show()
+							tryOrNull { show() }
 						}
 			}
 			viewApisPref -> {
@@ -195,7 +195,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.build()
 						.apply {
 							contentView?.applyLinks(false)
-							show()
+							tryOrNull { show() }
 						}
 			}
 			aboutPref -> {
@@ -208,7 +208,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 						.build()
 						.apply {
 							contentView?.applyLinks(false)
-							show()
+							tryOrNull { show() }
 						}
 			}
 			backupPref -> settingsContext.backupRestore()
@@ -219,7 +219,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							importOpml(input.toString())
 						}
 						.positiveText(android.R.string.ok)
-						.show()
+						.let { tryOrNull { it.show() } }
 			}
 			syncIntervalPref -> {
 				MaterialDialog.Builder(settingsContext)
@@ -231,7 +231,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 							refreshSyncIntervalDesc()
 							true
 						}
-						.show()
+						.let { tryOrNull { it.show() } }
 			}
 			syncNowPref -> {
 				doAsync { sync(settingsContext) }
@@ -330,7 +330,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 				.title(R.string.import_opml)
 				.content(if (imported != 0) R.string.suc_import else R.string.import_failed)
 				.positiveText(android.R.string.ok)
-				.show()
+				.let { tryOrNull { it.show() } }
 	}
 
 	override fun onDestroy() {

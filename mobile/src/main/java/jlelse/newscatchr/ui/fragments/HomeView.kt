@@ -20,6 +20,7 @@
 
 package jlelse.newscatchr.ui.fragments
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -31,6 +32,7 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Feedly
 import jlelse.newscatchr.backend.helpers.Database
+import jlelse.newscatchr.backend.helpers.Preferences
 import jlelse.newscatchr.extensions.notNullAndEmpty
 import jlelse.newscatchr.extensions.resStr
 import jlelse.newscatchr.extensions.searchForFeeds
@@ -45,6 +47,7 @@ import jlelse.viewmanager.ViewManagerView
 import org.jetbrains.anko.AnkoContext
 import org.jetbrains.anko.find
 
+@SuppressLint("ViewConstructor")
 class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	private var recFeeds: Array<Feed>? = null
 	private var recRelated: Array<String>? = null
@@ -88,11 +91,13 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 
 	private fun loadLastFeeds() = async {
 		fastAdapterOne.setNewList(listOf())
-		val lastFeeds = await { Database.allLastFeeds.takeLast(5).reversed() }
-		if (lastFeeds.notNullAndEmpty()) {
-			fastAdapterOne.add(HeaderRecyclerItem(title = R.string.last_feeds.resStr()!!))
-			fastAdapterOne.add(lastFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == lastFeeds.lastIndex) })
-			fastAdapterOne.add(MoreRecyclerItem { openView(FeedListView(feeds = Database.allLastFeeds.reversed().toTypedArray()).withTitle(R.string.last_feeds.resStr())) })
+		if (Preferences.showRecentFeeds) {
+			val lastFeeds = await { Database.allLastFeeds.takeLast(5).reversed() }
+			if (lastFeeds.notNullAndEmpty()) {
+				fastAdapterOne.add(HeaderRecyclerItem(title = R.string.last_feeds.resStr()!!))
+				fastAdapterOne.add(lastFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == lastFeeds.lastIndex) })
+				fastAdapterOne.add(MoreRecyclerItem { openView(FeedListView(feeds = Database.allLastFeeds.reversed().toTypedArray()).withTitle(R.string.last_feeds.resStr())) })
+			}
 		}
 	}
 
@@ -109,23 +114,25 @@ class HomeView : ViewManagerView(), FAB, FragmentManipulation {
 	private fun loadRecommendedFeeds(cache: Boolean = false) = async {
 		fastAdapterThree.setNewList(listOf())
 		fastAdapterFour.setNewList(listOf())
-		refresh?.showIndicator()
-		await {
-			if (recFeeds == null || !cache) Feedly().recommendedFeeds(cache = cache) { feeds, related ->
-				recFeeds = feeds
-				recRelated = related
+		if (Preferences.showRecommendedFeeds) {
+			refresh?.showIndicator()
+			await {
+				if (recFeeds == null || !cache) Feedly().recommendedFeeds(cache = cache) { feeds, related ->
+					recFeeds = feeds
+					recRelated = related
+				}
 			}
+			val tempRecFeeds = recFeeds?.take(15)
+			if (recFeeds.notNullAndEmpty() && tempRecFeeds != null) {
+				fastAdapterThree.add(HeaderRecyclerItem(title = R.string.recommendations.resStr()!!))
+				fastAdapterThree.add(tempRecFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == tempRecFeeds.lastIndex) })
+				fastAdapterThree.add(listOf(MoreRecyclerItem {
+					openView(FeedListView(feeds = recFeeds, tags = recRelated).withTitle(R.string.recommendations.resStr()))
+				}))
+			}
+			if (recRelated.notNullAndEmpty()) fastAdapterFour.add(TagsRecyclerItem(recRelated, this@HomeView))
+			refresh?.hideIndicator()
 		}
-		val tempRecFeeds = recFeeds?.take(15)
-		if (recFeeds.notNullAndEmpty() && tempRecFeeds != null) {
-			fastAdapterThree.add(HeaderRecyclerItem(title = R.string.recommendations.resStr()!!))
-			fastAdapterThree.add(tempRecFeeds.mapIndexed { i, feed -> FeedRecyclerItem(feed = feed, fragment = this@HomeView, isLast = i == tempRecFeeds.lastIndex) })
-			fastAdapterThree.add(listOf(MoreRecyclerItem {
-				openView(FeedListView(feeds = recFeeds, tags = recRelated).withTitle(R.string.recommendations.resStr()))
-			}))
-		}
-		if (recRelated.notNullAndEmpty()) fastAdapterFour.add(TagsRecyclerItem(recRelated, this@HomeView))
-		refresh?.hideIndicator()
 	}
 
 	override fun onDestroy() {

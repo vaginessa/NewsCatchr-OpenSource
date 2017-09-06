@@ -126,4 +126,7 @@
 	<string name="tutorial_5">Have fun!</string>
 	<string name="thanks_purchase">Thanks!</string>
 	<string name="thanks_purchase_desc">Thanks for supporting the development of NewsCatchr! You can cancel your subscription anytime on Google Play.</string>
+	<string name="show_recent_feeds">Show last feeds</string>
+	<string name="show_recommended_feeds">Show feed recommendations</string>
+	<string name="on_the_news_page">On the news page</string>
 </resources>

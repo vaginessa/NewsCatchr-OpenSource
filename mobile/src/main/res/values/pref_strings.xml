@@ -44,5 +44,7 @@
 	<string name="prefs_key_readability" translatable="false">readability</string>
 	<string name="prefs_key_import_opml" translatable="false">import_opml</string>
 	<string name="prefs_key_show_tutorial" translatable="false">show_tutorial</string>
+	<string name="prefs_key_show_recent_feeds" translatable="false">show_recent_feeds</string>
+	<string name="prefs_key_show_recommended_feeds" translatable="false">show_recommended_feeds</string>
 
 </resources>
