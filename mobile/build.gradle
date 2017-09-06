@@ -72,13 +72,13 @@ dependencies {
         exclude group: 'org.json', module: 'json'
         exclude group: 'com.intellij', module: 'annotations'
     }
-    implementation 'com.github.bumptech.glide:glide:4.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
     implementation 'com.google.android:flexbox:0.3.0'
     implementation 'com.evernote:android-job:1.1.11'
     implementation 'org.jsoup:jsoup:1.10.3'
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.4'
-    implementation 'com.github.faruktoptas:FancyShowCaseView:0.1.4'
+    implementation 'com.github.faruktoptas:FancyShowCaseView:0.1.7'
     // Firebase
     implementation "com.google.firebase:firebase-core:$PLAY_SERVICES"
     implementation "com.google.firebase:firebase-crash:$PLAY_SERVICES"
