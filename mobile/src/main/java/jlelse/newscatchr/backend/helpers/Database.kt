@@ -21,6 +21,8 @@
 package jlelse.newscatchr.backend.helpers
 
 import co.metalab.asyncawait.async
+import jlelse.kos.KeyObjectStore
+import jlelse.newscatchr.appContext
 import jlelse.newscatchr.backend.Article
 import jlelse.newscatchr.backend.Feed
 import jlelse.newscatchr.backend.apis.Pocket
@@ -32,13 +34,13 @@ import jlelse.newscatchr.extensions.tryOrNull
 object Database {
 
 	private val FAVORITES = "feeds_database"
-	private val favoritesStore = KeyObjectStore(FAVORITES)
+	private val favoritesStore = KeyObjectStore(appContext!!, FAVORITES)
 	private val BOOKMARKS = "bookmarks_database"
-	private val bookmarksStore = KeyObjectStore(BOOKMARKS)
+	private val bookmarksStore = KeyObjectStore(appContext!!, BOOKMARKS)
 	private val READ_URLS = "urls_database"
-	private val readUrlsStore = KeyObjectStore(READ_URLS)
+	private val readUrlsStore = KeyObjectStore(appContext!!, READ_URLS)
 	private val LAST_FEEDS = "last_feeds"
-	private val lastFeedsStore = KeyObjectStore(LAST_FEEDS)
+	private val lastFeedsStore = KeyObjectStore(appContext!!, LAST_FEEDS)
 
 	private fun Feed?.safeFavorite() = this != null && !this.url().isNullOrBlank()
 
