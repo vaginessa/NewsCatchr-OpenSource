@@ -19,12 +19,12 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$KOTLIN"
         classpath 'com.google.gms:google-services:3.1.1'
         classpath 'com.google.gms:oss-licenses:0.9.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
     }
 }
 
 plugins {
     id 'com.github.ben-manes.versions' version '0.15.0'
-    id "com.github.dcendents.android-maven" version "2.0"
 }
 
 allprojects {

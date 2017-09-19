@@ -39,8 +39,6 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:support-v4:$SUPPORT_LIBS"
-    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBS"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$KOTLIN"
     implementation('com.afollestad:ason:1.4.16') {
         exclude group: 'org.json', module: 'json'
