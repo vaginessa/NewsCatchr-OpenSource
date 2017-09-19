@@ -18,6 +18,7 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'com.google.gms.oss.licenses.plugin'
 
 android {
     compileSdkVersion TARGET_SDK
@@ -79,9 +80,12 @@ dependencies {
     implementation 'com.anjlab.android.iab.v3:library:1.0.44'
     implementation 'me.zhanghai.android.customtabshelper:library:1.0.4'
     implementation 'com.github.faruktoptas:FancyShowCaseView:0.1.7'
+    // Payment
+    implementation 'com.android.billingclient:billing:1.0'
     // Firebase
     implementation "com.google.firebase:firebase-core:$PLAY_SERVICES"
     implementation "com.google.firebase:firebase-crash:$PLAY_SERVICES"
+    implementation "com.google.firebase:firebase-analytics:$PLAY_SERVICES"
     // Support libraries
     implementation "com.android.support:support-v4:$SUPPORT_LIBS"
     implementation "com.android.support:appcompat-v7:$SUPPORT_LIBS"
