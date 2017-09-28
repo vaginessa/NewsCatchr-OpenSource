@@ -14,7 +14,7 @@ Things you have to know:
 
 Some things you can help with:
 
-- Translate the app into your language [here](https://translate.jlelse.eu/mobile/sign/in)
+- Translate the app into your language [here](https://translate.jlelse.eu/)
 - Fix bugs, described on the [issue reporter](https://github.com/jlelse/NewsCatchr-OpenSource/issues)
 - Report bugs on the [issue reporter](https://github.com/jlelse/NewsCatchr-OpenSource/issues)
 - And everything else, that comes into your mind
