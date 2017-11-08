@@ -35,7 +35,6 @@ fun scheduleSync(intervalMins: Int) {
 	if (oldIntervalMs == 0.toLong() || oldIntervalMs != intervalMs || allJobs.isEmpty()) {
 		JobRequest.Builder(SyncJob.TAG)
 				.setPeriodic(intervalMs)
-				.setPersisted(true)
 				.setUpdateCurrent(true)
 				.build()
 				.schedule()

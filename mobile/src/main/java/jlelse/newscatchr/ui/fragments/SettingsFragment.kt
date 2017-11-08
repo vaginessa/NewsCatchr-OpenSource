@@ -85,7 +85,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		addPreferencesFromResource(R.xml.preferences)
 	}
 
-	override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 		val view = super.onCreateView(inflater, container, savedInstanceState)
 		if (!syncReceiverRegistered) {
 			settingsContext.registerReceiver(syncReceiver, IntentFilter("syncStatus"))
@@ -94,7 +94,7 @@ class SettingsFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClic
 		return view
 	}
 
-	override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+	override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 		super.onViewCreated(view, savedInstanceState)
 		// Add ClickListeners
 		clearCachePref?.onPreferenceClickListener = this

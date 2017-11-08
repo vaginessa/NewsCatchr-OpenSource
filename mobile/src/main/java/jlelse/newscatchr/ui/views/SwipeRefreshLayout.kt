@@ -25,11 +25,11 @@ import jlelse.readit.R
 
 class SwipeRefreshLayout : SwipeRefreshLayout {
 
-	constructor(context: Context?) : super(context) {
+	constructor(context: Context) : super(context) {
 		setColorSchemeResources(R.color.colorAccent)
 	}
 
-	constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+	constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
 		setColorSchemeResources(R.color.colorAccent)
 	}
 
